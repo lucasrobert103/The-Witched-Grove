@@ -1,111 +1,731 @@
 {
   "quests": [
     {
-      "id": "mq01_grimorio", "title": "O Grimório Incompleto", "giver": "ondina", "category": "main", "act": 1,
+      "id": "mq01_grimorio",
+      "title": "O Grimório Incompleto",
+      "giver": "ondina",
+      "category": "main",
+      "act": 1,
       "summary": "Ondina deixou um grimório pela metade. Talvez ele explique para onde ela foi.",
-      "sequential": true, "auto_complete": true, "can_fail": false, "multiple_solutions": false,
+      "sequential": true,
+      "auto_complete": true,
+      "can_fail": false,
+      "multiple_solutions": false,
       "objectives": [
-        {"id": "ler", "text": "Leia a Folha I no atril da varanda", "complete_when": [{"page_read": "ondina_1"}]},
-        {"id": "lancar", "text": "Lance Crescimento Rápido perto do jardim", "complete_when": [{"flag": "cast.botany:crescimento_rapido"}]},
-        {"id": "salvia", "text": "Visite a Vovó Sálvia, na fonte ao sul", "complete_when": [{"flag": "falou_salvia_1"}]}
+        {
+          "id": "ler",
+          "text": "Leia a Folha I no atril da varanda",
+          "complete_when": [
+            {
+              "page_read": "ondina_1"
+            }
+          ],
+          "target": [
+            -2.3,
+            -2.4
+          ],
+          "hint": "O atril fica na varanda da cabana, à esquerda da porta. A estrelinha dourada flutuando em cima é difícil de não ver."
+        },
+        {
+          "id": "lancar",
+          "text": "Lance Crescimento Rápido perto do jardim",
+          "complete_when": [
+            {
+              "flag": "cast.botany:crescimento_rapido"
+            }
+          ],
+          "target": [
+            -6.6,
+            3.6
+          ],
+          "hint": "Escolha Crescimento Rápido na barra de magia e lance perto dos canteiros, ao lado da cabana."
+        },
+        {
+          "id": "salvia",
+          "text": "Visite a Vovó Sálvia, na fonte ao sul",
+          "complete_when": [
+            {
+              "flag": "falou_salvia_1"
+            }
+          ],
+          "target": [
+            -19,
+            21
+          ],
+          "hint": "Siga a trilha para o sul e depois para oeste. A casa de chá tem telhado de palha e cheiro de camomila."
+        }
       ],
-      "rewards": {"ep": 60, "school": {"botany": 5}},
+      "rewards": {
+        "ep": 60,
+        "school": {
+          "botany": 5
+        }
+      },
       "outcomes": {}
     },
     {
-      "id": "mq02_raizes", "title": "Raízes do Silêncio", "giver": "salvia", "category": "main", "act": 1,
+      "id": "mq02_raizes",
+      "title": "Raízes do Silêncio",
+      "giver": "salvia",
+      "category": "main",
+      "act": 1,
       "summary": "O Guardião Musgo está perdendo a cor. Sálvia acha que você pode ajudá-lo.",
-      "sequential": true, "auto_complete": false, "can_fail": false, "multiple_solutions": true,
+      "sequential": true,
+      "auto_complete": false,
+      "can_fail": false,
+      "multiple_solutions": true,
       "objectives": [
-        {"id": "folhas", "text": "Colete 3 Folhas-de-Orvalho", "complete_when": [{"has_item": ["folha_orvalho", 3]}]},
-        {"id": "tonico", "text": "Prepare um Tônico Revigorante no caldeirão", "complete_when": [{"flag": "crafted.tonico_revigorante"}]},
-        {"id": "levar", "text": "Leve o tônico ao Guardião Musgo, ao norte", "complete_when": [{"flag": "musgo_acordou"}]},
-        {"id": "purificar", "text": "Purifique o Guardião Musgo (alquimia, contra-magia... ou outro caminho)", "complete_when": [{"flag": "musgo_purificado"}]},
-        {"id": "voltar", "text": "Conte tudo à Vovó Sálvia", "complete_when": [{"flag": "contou_salvia_musgo"}]}
+        {
+          "id": "folhas",
+          "text": "Colete 3 Folhas-de-Orvalho",
+          "complete_when": [
+            {
+              "has_item": [
+                "folha_orvalho",
+                3
+              ]
+            }
+          ],
+          "target": [
+            -4,
+            9
+          ],
+          "hint": "Folhas-de-Orvalho brilham com gotinhas. Tem perto da cabana e ao longo da trilha da fonte."
+        },
+        {
+          "id": "tonico",
+          "text": "Prepare um Tônico Revigorante no caldeirão",
+          "complete_when": [
+            {
+              "flag": "crafted.tonico_revigorante"
+            }
+          ],
+          "target": [
+            6.2,
+            -1.2
+          ],
+          "hint": "No caldeirão: Folha-de-Orvalho + Água de Manancial. Técnica: Moer, depois Aquecer."
+        },
+        {
+          "id": "levar",
+          "text": "Leve o tônico ao Guardião Musgo, ao norte",
+          "complete_when": [
+            {
+              "flag": "musgo_acordou"
+            }
+          ],
+          "target": [
+            0,
+            -35
+          ],
+          "hint": "O Guardião Musgo fica ao norte da cabana, onde o chão está cinza."
+        },
+        {
+          "id": "purificar",
+          "text": "Purifique o Guardião Musgo (alquimia, contra-magia... ou outro caminho)",
+          "complete_when": [
+            {
+              "flag": "musgo_purificado"
+            }
+          ],
+          "target": [
+            0,
+            -35
+          ],
+          "hint": "Luz + Claridade + Proteção. Alquimia (Pétala, Cristal Lunar, Trevo)... ou a contra-magia de Tomé, no Portal das Ruínas."
+        },
+        {
+          "id": "voltar",
+          "text": "Conte tudo à Vovó Sálvia",
+          "complete_when": [
+            {
+              "flag": "contou_salvia_musgo"
+            }
+          ],
+          "target": [
+            -19,
+            21
+          ],
+          "hint": "Sálvia vai querer saber de tudo. A chaleira já deve estar no fogo."
+        }
       ],
-      "rewards": {"ep": 220, "school": {"botany": 8}},
+      "rewards": {
+        "ep": 220,
+        "school": {
+          "botany": 8
+        }
+      },
       "outcomes": {
-        "harmonia":     {"if": [{"flag": "purificado_tintura"}], "text": "Você purificou o Guardião com alquimia. Sálvia sorri como quem já sabia.", "effects": [{"rep": ["druidas", 15]}, {"rep": ["alquimistas", 5]}, {"school_xp": ["alchemy", 6]}]},
-        "contra_magia": {"if": [{"flag": "purificado_magia"}],  "text": "Você purificou o Guardião com contra-magia. Os Escribas ouviram falar.", "effects": [{"rep": ["druidas", 10]}, {"rep": ["escribas", 10]}, {"school_xp": ["protection", 6]}]},
-        "atalho":       {"if": [{"flag": "musgo_corrompido"}],  "text": "O Guardião acordou... mas seus olhos brilham em violeta. Sálvia fica em silêncio por muito tempo.", "effects": [{"rep": ["druidas", -25]}, {"rep": ["circulo_sombra", 20]}, {"set_flag": "consequencia_musgo_violeta"}]}
+        "harmonia": {
+          "if": [
+            {
+              "flag": "purificado_tintura"
+            }
+          ],
+          "text": "Você purificou o Guardião com alquimia. Sálvia sorri como quem já sabia.",
+          "effects": [
+            {
+              "rep": [
+                "druidas",
+                15
+              ]
+            },
+            {
+              "rep": [
+                "alquimistas",
+                5
+              ]
+            },
+            {
+              "school_xp": [
+                "alchemy",
+                6
+              ]
+            }
+          ]
+        },
+        "contra_magia": {
+          "if": [
+            {
+              "flag": "purificado_magia"
+            }
+          ],
+          "text": "Você purificou o Guardião com contra-magia. Os Escribas ouviram falar.",
+          "effects": [
+            {
+              "rep": [
+                "druidas",
+                10
+              ]
+            },
+            {
+              "rep": [
+                "escribas",
+                10
+              ]
+            },
+            {
+              "school_xp": [
+                "protection",
+                6
+              ]
+            }
+          ]
+        },
+        "atalho": {
+          "if": [
+            {
+              "flag": "musgo_corrompido"
+            }
+          ],
+          "text": "O Guardião acordou... mas seus olhos brilham em violeta. Sálvia fica em silêncio por muito tempo.",
+          "effects": [
+            {
+              "rep": [
+                "druidas",
+                -25
+              ]
+            },
+            {
+              "rep": [
+                "circulo_sombra",
+                20
+              ]
+            },
+            {
+              "set_flag": "consequencia_musgo_violeta"
+            }
+          ]
+        }
       },
       "next": "mq03_selo"
     },
     {
-      "id": "mq03_selo", "title": "O Selo das Ruínas", "giver": "musgo", "category": "main", "act": 1,
+      "id": "mq03_selo",
+      "title": "O Selo das Ruínas",
+      "giver": "musgo",
+      "category": "main",
+      "act": 1,
       "summary": "O Guardião falou de um diário e de um portal. Ondina foi para o outro lado.",
-      "sequential": true, "auto_complete": true, "can_fail": false, "multiple_solutions": false,
+      "sequential": true,
+      "auto_complete": true,
+      "can_fail": false,
+      "multiple_solutions": false,
       "objectives": [
-        {"id": "diario", "text": "Encontre o Diário de Ondina perto da Árvore do Guardião", "complete_when": [{"page_read": "diario_ondina"}]},
-        {"id": "tome", "text": "Fale com o Escriba Tomé no Portal das Ruínas", "complete_when": [{"flag": "tome_explicou_selo"}]}
+        {
+          "id": "diario",
+          "text": "Encontre o Diário de Ondina perto da Árvore do Guardião",
+          "complete_when": [
+            {
+              "page_read": "diario_ondina"
+            }
+          ],
+          "target": [
+            3.2,
+            -34
+          ],
+          "hint": "O diário está entre as raízes do Guardião, do lado direito."
+        },
+        {
+          "id": "tome",
+          "text": "Fale com o Escriba Tomé no Portal das Ruínas",
+          "complete_when": [
+            {
+              "flag": "tome_explicou_selo"
+            }
+          ],
+          "target": [
+            -12.5,
+            -41
+          ],
+          "hint": "Tomé vigia o Portal das Ruínas, a noroeste da Árvore do Guardião."
+        }
       ],
-      "rewards": {"ep": 150, "school": {"runes": 5, "astral": 3}, "flags": ["ato1_concluido"]},
+      "rewards": {
+        "ep": 150,
+        "school": {
+          "runes": 5,
+          "astral": 3
+        },
+        "flags": [
+          "ato1_concluido"
+        ]
+      },
       "outcomes": {}
     },
     {
-      "id": "sq_cogumelo", "title": "O Cogumelo Resmungão", "giver": "cogumelo_resmungao", "category": "side", "act": 1,
+      "id": "sq_cogumelo",
+      "title": "O Cogumelo Resmungão",
+      "giver": "cogumelo_resmungao",
+      "category": "side",
+      "act": 1,
       "summary": "Um cogumelo gigante e mal-humorado bloqueia a trilha leste.",
-      "sequential": false, "auto_complete": true, "can_fail": false, "multiple_solutions": true,
+      "sequential": false,
+      "auto_complete": true,
+      "can_fail": false,
+      "multiple_solutions": true,
       "objectives": [
-        {"id": "passar", "text": "Encontre um jeito de passar pela Passagem Resmungona", "complete_when": [{"any": [[{"flag": "cogumelo_calmo"}], [{"flag": "cogumelo_driblado"}]]}]}
+        {
+          "id": "passar",
+          "text": "Encontre um jeito de passar pela Passagem Resmungona",
+          "complete_when": [
+            {
+              "any": [
+                [
+                  {
+                    "flag": "cogumelo_calmo"
+                  }
+                ],
+                [
+                  {
+                    "flag": "cogumelo_driblado"
+                  }
+                ]
+              ]
+            }
+          ],
+          "target": [
+            30.5,
+            -4
+          ],
+          "hint": "Ele adora coisas doces e odeia pressa. Um chá calmante... ou passar sem ser vista?"
+        }
       ],
-      "rewards": {"ep": 80},
+      "rewards": {
+        "ep": 80
+      },
       "outcomes": {
-        "amizade": {"if": [{"flag": "cogumelo_calmo"}],    "text": "O Cogumelo Resmungão agora ronca feliz. Passa por ele quem quiser.", "effects": [{"rep": ["druidas", 5]}, {"bestiary": ["cogumelo_resmungao", 2]}]},
-        "furtiva": {"if": [{"flag": "cogumelo_driblado"}], "text": "Você passou sem ser notada. Ele continua resmungando — mas não sabe por quê.", "effects": [{"school_xp": ["illusion", 5]}]}
+        "amizade": {
+          "if": [
+            {
+              "flag": "cogumelo_calmo"
+            }
+          ],
+          "text": "O Cogumelo Resmungão agora ronca feliz. Passa por ele quem quiser.",
+          "effects": [
+            {
+              "rep": [
+                "druidas",
+                5
+              ]
+            },
+            {
+              "bestiary": [
+                "cogumelo_resmungao",
+                2
+              ]
+            }
+          ]
+        },
+        "furtiva": {
+          "if": [
+            {
+              "flag": "cogumelo_driblado"
+            }
+          ],
+          "text": "Você passou sem ser notada. Ele continua resmungando — mas não sabe por quê.",
+          "effects": [
+            {
+              "school_xp": [
+                "illusion",
+                5
+              ]
+            }
+          ]
+        }
       }
     },
     {
-      "id": "sq_mirela", "title": "Rival de Caldeirão", "giver": "mirela", "category": "side", "act": 1,
+      "id": "sq_mirela",
+      "title": "Rival de Caldeirão",
+      "giver": "mirela",
+      "category": "side",
+      "act": 1,
       "summary": "Mirela quer saber quem é a melhor alquimista do vale.",
-      "sequential": true, "auto_complete": false, "can_fail": false, "multiple_solutions": true,
+      "sequential": true,
+      "auto_complete": false,
+      "can_fail": false,
+      "multiple_solutions": true,
       "objectives": [
-        {"id": "responder", "text": "Responda ao desafio de Mirela", "complete_when": [{"any": [[{"flag": "mirela_desafio"}], [{"flag": "mirela_parceria"}]]}]},
-        {"id": "entregar", "text": "Entregue a Mirela uma Poção de Foco Claro (qualidade Refinada para vencer)", "complete_when": [{"flag": "mirela_resolvida"}]}
+        {
+          "id": "responder",
+          "text": "Responda ao desafio de Mirela",
+          "complete_when": [
+            {
+              "any": [
+                [
+                  {
+                    "flag": "mirela_desafio"
+                  }
+                ],
+                [
+                  {
+                    "flag": "mirela_parceria"
+                  }
+                ]
+              ]
+            }
+          ],
+          "target": [
+            21,
+            6
+          ],
+          "hint": "Mirela está no acampamento laranja, a leste."
+        },
+        {
+          "id": "entregar",
+          "text": "Entregue a Mirela uma Poção de Foco Claro (qualidade Refinada para vencer)",
+          "complete_when": [
+            {
+              "flag": "mirela_resolvida"
+            }
+          ],
+          "target": [
+            21,
+            6
+          ],
+          "hint": "Água de Manancial + Raiz de Concentração (Bento vende). Moer, Aquecer, Esfriar — nessa ordem!"
+        }
       ],
-      "rewards": {"ep": 120, "school": {"alchemy": 5}},
+      "rewards": {
+        "ep": 120,
+        "school": {
+          "alchemy": 5
+        }
+      },
       "outcomes": {
-        "parceria": {"if": [{"flag": "mirela_parceria"}], "text": "Vocês dividiram anotações. Mirela agora é uma aliada — competitiva, mas aliada.", "effects": [{"rep": ["alquimistas", 12]}]},
-        "vitoria":  {"if": [{"flag": "mirela_perdeu"}],   "text": "Sua poção brilhou mais que a dela. Mirela entrega o alambique, de cara fechada.", "effects": [{"rep": ["alquimistas", 5]}, {"upgrade_room": "laboratorio"}]},
-        "derrota":  {"if": [{"flag": "mirela_venceu"}],   "text": "Mirela venceu desta vez — mas deixou uma dica, quase sem querer.", "effects": [{"research": ["silencio_cinzento", 5]}, {"give_ep": 30}]}
+        "parceria": {
+          "if": [
+            {
+              "flag": "mirela_parceria"
+            }
+          ],
+          "text": "Vocês dividiram anotações. Mirela agora é uma aliada — competitiva, mas aliada.",
+          "effects": [
+            {
+              "rep": [
+                "alquimistas",
+                12
+              ]
+            }
+          ]
+        },
+        "vitoria": {
+          "if": [
+            {
+              "flag": "mirela_perdeu"
+            }
+          ],
+          "text": "Sua poção brilhou mais que a dela. Mirela entrega o alambique, de cara fechada.",
+          "effects": [
+            {
+              "rep": [
+                "alquimistas",
+                5
+              ]
+            },
+            {
+              "upgrade_room": "laboratorio"
+            }
+          ]
+        },
+        "derrota": {
+          "if": [
+            {
+              "flag": "mirela_venceu"
+            }
+          ],
+          "text": "Mirela venceu desta vez — mas deixou uma dica, quase sem querer.",
+          "effects": [
+            {
+              "research": [
+                "silencio_cinzento",
+                5
+              ]
+            },
+            {
+              "give_ep": 30
+            }
+          ]
+        }
       }
     },
     {
-      "id": "sq_juniper", "title": "A Luz Perdida", "giver": "juniper", "category": "side", "act": 1,
+      "id": "sq_juniper",
+      "title": "A Luz Perdida",
+      "giver": "juniper",
+      "category": "side",
+      "act": 1,
       "summary": "Faísca, a lumécula de Juniper, fugiu para a Lagoa das Luzes.",
-      "sequential": true, "auto_complete": false, "can_fail": false, "multiple_solutions": true,
+      "sequential": true,
+      "auto_complete": false,
+      "can_fail": false,
+      "multiple_solutions": true,
       "objectives": [
-        {"id": "achar", "text": "À noite, use luz para encontrar Faísca na Lagoa das Luzes", "complete_when": [{"has_item": ["lanterna_faisca", 1]}]},
-        {"id": "decidir", "text": "Volte a Juniper", "complete_when": [{"flag": "faisca_resolvida"}]}
+        {
+          "id": "achar",
+          "text": "À noite, use luz para encontrar Faísca na Lagoa das Luzes",
+          "complete_when": [
+            {
+              "has_item": [
+                "lanterna_faisca",
+                1
+              ]
+            }
+          ],
+          "target": [
+            -31,
+            -14
+          ],
+          "hint": "De noite, com o Lume Estelar aceso, as luméculas da lagoa chegam perto. Faísca pisca dourado: pisca-pisca-PAUSA."
+        },
+        {
+          "id": "decidir",
+          "text": "Volte a Juniper",
+          "complete_when": [
+            {
+              "flag": "faisca_resolvida"
+            }
+          ],
+          "target": [
+            6,
+            12
+          ],
+          "hint": "Juniper brinca perto da trilha, ao sul da cabana."
+        }
       ],
-      "rewards": {"ep": 90},
+      "rewards": {
+        "ep": 90
+      },
       "outcomes": {
-        "devolvida": {"if": [{"flag": "faisca_devolvida"}], "text": "Juniper abraça o pote e não para de rir.", "effects": [{"give_item": ["semente_trevo", 2]}, {"rep": ["aldeia_vime", 10]}]},
-        "libertada": {"if": [{"flag": "faisca_libertada"}], "text": "Juniper entendeu. Faísca agora visita a janela dele toda noite — por vontade própria.", "effects": [{"rep": ["druidas", 10]}, {"rep": ["aldeia_vime", 5]}, {"school_xp": ["astral", 5]}, {"give_item": ["semente_trevo", 1]}]}
+        "devolvida": {
+          "if": [
+            {
+              "flag": "faisca_devolvida"
+            }
+          ],
+          "text": "Juniper abraça o pote e não para de rir.",
+          "effects": [
+            {
+              "give_item": [
+                "semente_trevo",
+                2
+              ]
+            },
+            {
+              "rep": [
+                "aldeia_vime",
+                10
+              ]
+            }
+          ]
+        },
+        "libertada": {
+          "if": [
+            {
+              "flag": "faisca_libertada"
+            }
+          ],
+          "text": "Juniper entendeu. Faísca agora visita a janela dele toda noite — por vontade própria.",
+          "effects": [
+            {
+              "rep": [
+                "druidas",
+                10
+              ]
+            },
+            {
+              "rep": [
+                "aldeia_vime",
+                5
+              ]
+            },
+            {
+              "school_xp": [
+                "astral",
+                5
+              ]
+            },
+            {
+              "give_item": [
+                "semente_trevo",
+                1
+              ]
+            }
+          ]
+        }
       }
     },
     {
-      "id": "sq_lyra", "title": "Marcas Estelares", "giver": "lyra", "category": "investigation", "act": 1,
+      "id": "sq_lyra",
+      "title": "Marcas Estelares",
+      "giver": "lyra",
+      "category": "investigation",
+      "act": 1,
       "summary": "Os Primeiros deixaram marcas que só aparecem à noite, sob luz estelar.",
-      "sequential": false, "auto_complete": false, "can_fail": false, "multiple_solutions": false,
+      "sequential": false,
+      "auto_complete": false,
+      "can_fail": false,
+      "multiple_solutions": false,
       "objectives": [
-        {"id": "marca1", "text": "Marca estelar perto do Salgueiro Oco", "complete_when": [{"flag": "marca_estelar_1"}]},
-        {"id": "marca2", "text": "Marca estelar perto do riacho leste", "complete_when": [{"flag": "marca_estelar_2"}]},
-        {"id": "marca3", "text": "Marca estelar na trilha do Guardião", "complete_when": [{"flag": "marca_estelar_3"}]},
-        {"id": "voltar", "text": "Volte a Lyra no Círculo de Pedras (à noite)", "complete_when": [{"flag": "lyra_confia"}]}
+        {
+          "id": "marca1",
+          "text": "Marca estelar perto do Salgueiro Oco",
+          "complete_when": [
+            {
+              "flag": "marca_estelar_1"
+            }
+          ],
+          "target": [
+            -25,
+            9
+          ],
+          "hint": "Perto do Salgueiro Oco, a oeste. Só aparece à noite, com luz estelar."
+        },
+        {
+          "id": "marca2",
+          "text": "Marca estelar perto do riacho leste",
+          "complete_when": [
+            {
+              "flag": "marca_estelar_2"
+            }
+          ],
+          "target": [
+            25.5,
+            13
+          ],
+          "hint": "Na margem oeste do riacho, a leste. À noite, com luz estelar."
+        },
+        {
+          "id": "marca3",
+          "text": "Marca estelar na trilha do Guardião",
+          "complete_when": [
+            {
+              "flag": "marca_estelar_3"
+            }
+          ],
+          "target": [
+            5.5,
+            -28
+          ],
+          "hint": "Na trilha do Guardião, ao norte. À noite, com luz estelar."
+        },
+        {
+          "id": "voltar",
+          "text": "Volte a Lyra no Círculo de Pedras (à noite)",
+          "complete_when": [
+            {
+              "flag": "lyra_confia"
+            }
+          ],
+          "target": [
+            19,
+            -21.5
+          ],
+          "hint": "Lyra fica no Círculo de Pedras, no alto da colina a nordeste — só à noite."
+        }
       ],
-      "rewards": {"ep": 140, "school": {"astral": 8}},
+      "rewards": {
+        "ep": 140,
+        "school": {
+          "astral": 8
+        }
+      },
       "outcomes": {}
     },
     {
-      "id": "sq_bento", "title": "Encomenda do Bento", "giver": "bento", "category": "side", "act": 1,
+      "id": "sq_bento",
+      "title": "Encomenda do Bento",
+      "giver": "bento",
+      "category": "side",
+      "act": 1,
       "summary": "Bento precisa de tônicos para os viajantes da estrada.",
-      "sequential": true, "auto_complete": false, "can_fail": false, "multiple_solutions": false,
+      "sequential": true,
+      "auto_complete": false,
+      "can_fail": false,
+      "multiple_solutions": false,
       "objectives": [
-        {"id": "tonicos", "text": "Tenha 2 Tônicos Revigorantes", "complete_when": [{"has_item": ["tonico_revigorante", 2]}]},
-        {"id": "entregar", "text": "Entregue os tônicos ao Bento", "complete_when": [{"flag": "bento_entregue"}]}
+        {
+          "id": "tonicos",
+          "text": "Tenha 2 Tônicos Revigorantes",
+          "complete_when": [
+            {
+              "has_item": [
+                "tonico_revigorante",
+                2
+              ]
+            }
+          ],
+          "target": [
+            6.2,
+            -1.2
+          ],
+          "hint": "Dois Tônicos Revigorantes: Folha-de-Orvalho + Água de Manancial no caldeirão."
+        },
+        {
+          "id": "entregar",
+          "text": "Entregue os tônicos ao Bento",
+          "complete_when": [
+            {
+              "flag": "bento_entregue"
+            }
+          ],
+          "target": [
+            9,
+            15.5
+          ],
+          "hint": "A carroça listrada do Bento fica na estrada ao sul."
+        }
       ],
-      "rewards": {"ep": 120, "items": {"semente_aurora": 2}, "rep": {"aldeia_vime": 5}},
+      "rewards": {
+        "ep": 120,
+        "items": {
+          "semente_aurora": 2
+        },
+        "rep": {
+          "aldeia_vime": 5
+        }
+      },
       "outcomes": {}
     }
   ]
