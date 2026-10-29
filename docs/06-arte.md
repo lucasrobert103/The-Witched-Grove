@@ -24,11 +24,15 @@ Parâmetros: pele, cabelo (curto, longo, trança, coque, cacheado, careca), barb
 casaco, túnica), cores, chapéu, altura, porte, idade, olhos e acessórios (cachecol, cajado, estrelas,
 sardas, xale, bengala, avental, bolsa, óculos, livro).
 
-**Asterion:** pele `#a8704e`, cabelo lavanda `#cbb8f2` em trança com laço turquesa, olhos âmbar,
-manto `#4b2a8a` com estrelas douradas, chapéu `#3a2068` de ponta torta com estrela, cajado com ametista.
+**Asterion (estilo anime, `"style": "anime"`):** pele clara `#f2cdb0`, cabelo loiro-mel `#d9b46e`
+em **duas marias-chiquinhas longas** que balançam com o passo, olhos âmbar grandes com brilho duplo
+(estilo anime, cílios e sobrancelhas suaves), **chapéu de bruxa de aba larga** marrom `#4a3626` com faixa
+laranja e berloque pendurado, **casaco-vestido** marrom `#6e5340` com forro vinho, **capinha** sobre os
+ombros, cinto, alça cruzada, bolsa, luvas, **botas altas**, lanterna na cintura com luz quente e
+**varinha de salgueiro** com ponta luminosa (de onde saem os feitiços).
 
-Animação procedural: respiração, piscar, passos, balanço do manto, braços, mola na ponta do chapéu e
-na trança, aceno, fala (aceno de cabeça), lançamento (braço erguido + flash do cristal), modo fantasma (Véu).
+Animação procedural: respiração, piscar, passos, balanço do manto, braços, mola na ponta do chapéu,
+nas marias-chiquinhas, no berloque e na lanterna, aceno, fala (aceno de cabeça), lançamento (braço erguido + flash do cristal), modo fantasma (Véu), e a Metamorfose troca o modelo por um gato (`CatModel`).
 
 **Orçamento (Fase 4):** substituir por `.glb` de ~2000 tris/NPC mantendo as mesmas cores e silhuetas.
 

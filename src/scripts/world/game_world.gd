@@ -33,6 +33,9 @@ var _last_hour_int := -1
 var _autosave_timer := 0.0
 var _t := 0.0
 var _debug_hour := -1.0
+var current_room: InteriorRoom = null
+var _aim_ring: Node3D
+var _aim_timer := 0.0
 
 
 func _ready() -> void:
@@ -46,16 +49,21 @@ func _ready() -> void:
 	builder.build(self, Settings.quality)
 	_build_weather()
 	_build_marker()
+	_build_aim_ring()
+	EventBus.brew_finished.connect(_on_brew_finished)
 
 	player = Player.new()
 	player.name = "Asterion"
 	add_child(player)
 	var ps: Dictionary = Game.player_state
+	var start_inside := ""
 	if ps.has("pos"):
 		var p: Array = ps.pos
 		player.place_at(Vector3(p[0], p[1] + 0.2, p[2]), float(ps.get("yaw", 0.0)))
+		start_inside = str(ps.get("room", ""))
 	else:
 		player.place_at(builder.at(HOME_SPAWN.x, HOME_SPAWN.z, 0.1), 0.0)
+		start_inside = "cabana"
 
 	nimbus = NimbusModel.new()
 	nimbus.name = "Nimbus"
@@ -80,6 +88,10 @@ func _ready() -> void:
 	_refresh_world()
 	_apply_weather()
 	_update_sky(0.0)
+	if start_inside != "" and builder.rooms.has(start_inside):
+		enter_interior(start_inside, false)
+		if not ps.has("pos"):
+			player.place_at(current_room.global_position + Vector3(2.6, 0.1, -1.0), PI * 0.75)
 	Game.begin()
 	if get_tree().root.has_meta("debug_cam"):
 		_debug_camera(str(get_tree().root.get_meta("debug_cam")))
@@ -98,6 +110,8 @@ func _debug_camera(preset: String) -> void:
 		"salvia": [Vector3(-15.0, 0, 26.0), 0.9, -0.25, 9.0],
 		"jardim": [Vector3(-6.6, 0, 9.5), 0.15, -0.55, 7.0],
 		"circulo": [Vector3(19.0, 0, -15.0), 0.0, -0.3, 10.0],
+		"aldeia": [Vector3(-6.0, 0, 72.0), 0.5, -0.32, 13.0],
+		"props": [Vector3(1.5, 0, 6.5), 0.2, -0.4, 9.0],
 	}
 	if get_tree().root.has_meta("debug_panel"):
 		_debug_seed_state()
@@ -107,6 +121,13 @@ func _debug_camera(preset: String) -> void:
 		if parts.size() > 1:
 			payload = {"tab": parts[1], "npc": parts[1], "page": parts[1], "plot": 0}
 		EventBus.panel_requested.emit.call_deferred(parts[0], payload)
+	if preset in ["cabana", "cha", "padaria"]:
+		_do_enter(builder.rooms[preset])
+		return
+	if current_room:
+		current_room = null
+		_apply_weather()
+		EventBus.panel_requested.emit("room_changed", {})
 	if spots.has(preset):
 		var sp: Array = spots[preset]
 		var pos: Vector3 = sp[0]
@@ -198,6 +219,37 @@ func _weather_particles(c: Color, size: Vector3, gravity: Vector3, amount: int, 
 	return p
 
 
+func _build_aim_ring() -> void:
+	_aim_ring = Node3D.new()
+	MeshKit.part(_aim_ring, MeshKit.torus(0.7, 0.78, 32, 4), Toon.translucent(Color("#ffd1f0"), 0.55, 1.5), Vector3.ZERO, Vector3.ZERO, Vector3.ONE, false)
+	for k in 4:
+		var a := k * TAU / 4.0
+		MeshKit.part(_aim_ring, MeshKit.prism(Vector3(0.18, 0.22, 0.04)), Toon.glow(Color("#ffd1f0"), 1.5), Vector3(sin(a) * 0.95, 0.02, cos(a) * 0.95), Vector3(-90, rad_to_deg(a), 0), Vector3.ONE, false)
+	_aim_ring.visible = false
+	add_child(_aim_ring)
+
+
+func _update_aim_ring(delta: float) -> void:
+	_aim_timer -= delta
+	_aim_ring.rotation.y += delta * 1.5
+	if _aim_timer > 0.0:
+		return
+	_aim_timer = 0.12
+	var aim := player.aim_target()
+	var node: Variant = aim.get("node")
+	_aim_ring.visible = node != null and hud.modal == null
+	if node != null:
+		_aim_ring.global_position = (node as Node3D).global_position + Vector3(0, 0.08, 0)
+
+
+func _on_brew_finished(r: Dictionary) -> void:
+	for n in get_tree().get_nodes_in_group("interactable"):
+		if n is Station and n.kind == "cauldron":
+			var col := DataRegistry.item_color(r.get("output", "mistura_turva")) if r.get("success", false) else Color("#8a8494")
+			SpellFX.burst(self, n.global_position + Vector3(0, 1.4, 0), col, 50, 1.2, 4.0, 0.14, 1.4)
+			SpellFX.flash(self, n.global_position + Vector3(0, 1.0, 0), col, 5.0, 8.0, 1.0)
+
+
 func _build_marker() -> void:
 	_marker = Node3D.new()
 	MeshKit.part(_marker, MeshKit.crystal(0.12), Toon.glow(Color("#f3c74f"), 2.5), Vector3.ZERO, Vector3(180, 0, 0), Vector3.ONE, false)
@@ -223,9 +275,76 @@ func _refresh_world() -> void:
 
 func _apply_weather() -> void:
 	var w := Game.clock.weather()
-	_rain.emitting = w == "chuva"
-	_snow.emitting = w == "neve"
-	AudioManager.set_rain(w == "chuva")
+	var outside := current_room == null
+	_rain.emitting = w == "chuva" and outside
+	_snow.emitting = w == "neve" and outside
+	AudioManager.set_rain(w == "chuva" and outside)
+
+
+func ground_height(x: float, z: float) -> float:
+	return builder.terrain.height(x, z)
+
+
+# ------------------------------------------------------------------ casas por dentro
+
+func enter_interior(room_id: String, fade: bool = true) -> void:
+	var room: InteriorRoom = builder.rooms.get(room_id)
+	if room == null:
+		return
+	if fade and hud:
+		hud.fade_transition(_do_enter.bind(room))
+	else:
+		_do_enter(room)
+
+
+func _do_enter(room: InteriorRoom) -> void:
+	current_room = room
+	player.place_at(room.spawn, 0.0)
+	player.cam_pitch = -0.78
+	player.cam_dist = 7.5
+	nimbus.global_position = room.spawn + Vector3(-1.0, 1.5, 0.6)
+	AudioManager.play_sfx("door")
+	AudioManager.play_ambient("")
+	_apply_weather()
+	EventBus.notify.emit(room.title, "info")
+	EventBus.panel_requested.emit("room_changed", {})
+
+
+func exit_interior() -> void:
+	if current_room == null:
+		return
+	if hud:
+		hud.fade_transition(_do_exit)
+	else:
+		_do_exit()
+
+
+func _do_exit() -> void:
+	var room := current_room
+	current_room = null
+	var yaw := 0.0
+	for n in get_tree().get_nodes_in_group("interactable"):
+		if n is Station and n.kind == "door" and n.data.get("room", "") == room.room_id:
+			var dir: Vector3 = room.exit_outside - n.global_position
+			yaw = atan2(-dir.x, -dir.z)
+	player.place_at(room.exit_outside, yaw)
+	player.cam_pitch = -0.42
+	player.cam_dist = 6.5
+	nimbus.global_position = room.exit_outside + Vector3(-1.0, 1.5, 1.0)
+	AudioManager.play_sfx("door")
+	_update_music()
+	_apply_weather()
+	EventBus.panel_requested.emit("room_changed", {})
+
+
+func _apply_interior_env() -> void:
+	env.background_mode = Environment.BG_COLOR
+	env.background_color = Color("#140e0c")
+	env.ambient_light_color = Color("#c8a080")
+	env.ambient_light_energy = 0.55
+	env.fog_enabled = false
+	sun.light_energy = 0.0
+	_fireflies.emitting = false
 
 
 func _process(delta: float) -> void:
@@ -240,6 +359,11 @@ func _process(delta: float) -> void:
 		_fireflies.global_position = player.global_position + Vector3(0, 1.5, 0)
 		_update_nimbus(delta)
 		_update_marker(delta)
+		_update_aim_ring(delta)
+		if current_room:
+			current_room.update_cutaway(player.camera.global_position)
+	for b in get_tree().get_nodes_in_group("windmill_blades"):
+		b.rotation.z += delta * 0.6
 	var hi := int(Game.clock.hour())
 	if hi != _last_hour_int:
 		_last_hour_int = hi
@@ -290,6 +414,11 @@ func _sample_sky(hour: float) -> Array:
 
 
 func _update_sky(_delta: float) -> void:
+	if current_room:
+		_apply_interior_env()
+		return
+	env.background_mode = Environment.BG_SKY
+	env.fog_enabled = true
 	var hour := Game.clock.hour()
 	var s := _sample_sky(hour)
 	var nf := Game.clock.night_factor()
@@ -348,33 +477,62 @@ func _on_spell_cast(spell_id: String, result: Dictionary) -> void:
 		AudioManager.play_sfx("spell_fail")
 		return
 	var tags: Array = result.get("tags", [])
-	var radius := float(result.get("radius", 4.0))
+	AudioManager.play_sfx(_spell_sound(tags))
+	if result.get("target", "aura") == "projectile":
+		var aim := player.aim_target()
+		var to: Vector3 = aim.pos
+		player.face_point(to)
+		var from := player.model.wand_tip_position()
+		var school: String = result.get("school", "elemental")
+		var col: Color = SpellFX.SCHOOL_COLORS.get(school, Color.WHITE)
+		SpellFX.flash(self, from, col, 2.0, 3.0, 0.25)
+		SpellFX.projectile(self, from, to + Vector3(0, 0.5, 0), col, _on_projectile_hit.bind(spell_id, result, aim.get("node")))
+		return
 	var origin := player.global_position
 	SpellFX.for_spell(self, origin, spell_id, result)
-	AudioManager.play_sfx(_spell_sound(tags))
+	_apply_spell_at(origin, spell_id, result, null)
+
+
+func _on_projectile_hit(point: Vector3, spell_id: String, result: Dictionary, target: Variant) -> void:
+	var school: String = result.get("school", "elemental")
+	SpellFX.impact(self, point, SpellFX.SCHOOL_COLORS.get(school, Color.WHITE), result.get("tags", []))
+	_apply_spell_at(point, spell_id, result, target)
+
+
+## Aplica os efeitos de um feitiço no ponto atingido (ou ao redor da protagonista).
+func _apply_spell_at(origin: Vector3, spell_id: String, result: Dictionary, target: Variant) -> void:
+	var tags: Array = result.get("tags", [])
+	var radius := float(result.get("radius", 4.0))
 	var reacted := false
+	var hit: Array = []
+	if target is Interactable and is_instance_valid(target):
+		hit.append(target)
 	for n in get_tree().get_nodes_in_group("interactable"):
 		var it := n as Interactable
-		if it == null or not it.is_visible_in_tree():
+		if it == null or not it.is_visible_in_tree() or it in hit:
 			continue
 		var d := Vector2(it.global_position.x - origin.x, it.global_position.z - origin.z).length()
-		if d <= radius + it.radius * 0.5:
-			if it.on_spell(tags, result):
-				reacted = true
+		if d <= radius + it.radius * 0.5 and absf(it.global_position.y - origin.y) < 6.0:
+			hit.append(it)
+	for it in hit:
+		if it.on_spell(tags, result):
+			reacted = true
 	if "ice" in tags:
 		for w in get_tree().get_nodes_in_group("water"):
-			if w.distance_to(origin) < radius + 6.0:
-				w.freeze(float(DataRegistry.spells.get(spell_id, {}).get("effects", [{}])[0].get("duration", 40.0)) * float(result.get("power", 1.0)))
+			if w.distance_to(origin) < radius + 5.0:
+				w.freeze(40.0 * float(result.get("power", 1.0)))
 				if not Game.has_flag("descobriu_gelo"):
 					Game.discover("mundo", "gelo", "A água prende a respiração e vira um espelho de gelo. Dá para caminhar!")
 					Game.set_flag("descobriu_gelo")
 				reacted = true
+	if "grow" in tags or "bloom" in tags:
+		SpellFX.bloom(self, origin, radius)
 	if "identify" in tags and not reacted:
 		var ing := Game.last_obtained_ingredient
 		if ing != "":
 			Game.identify_ingredient(ing)
 		else:
-			EventBus.notify.emit("Nada por perto para identificar. Fique perto de uma planta ou colha algo antes.", "info")
+			EventBus.notify.emit("Nada por perto para identificar. Aponte para uma planta ou colha algo antes.", "info")
 	if "wind" in tags and Game.clock.weather() == "bruma":
 		env.fog_density = 0.004
 		EventBus.notify.emit("A brisa afasta a bruma por um instante.", "info")
@@ -391,6 +549,9 @@ func _spell_sound(tags: Array) -> String:
 
 func _on_teleport(target: String) -> void:
 	if target == "home" and player:
+		if current_room:
+			current_room = null
+			_apply_weather()
 		SpellFX.burst(self, player.global_position + Vector3(0, 1, 0), Color("#d6b8ff"), 40)
 		player.place_at(builder.at(HOME_SPAWN.x, HOME_SPAWN.z, 0.1), 0.0)
 		SpellFX.burst(self, player.global_position + Vector3(0, 1, 0), Color("#d6b8ff"), 40)
@@ -416,6 +577,9 @@ func save_now() -> void:
 		return
 	var p := player.last_safe_position
 	Game.player_state = {"pos": [p.x, p.y, p.z], "yaw": player.rotation.y}
+	if current_room:
+		var o := current_room.exit_outside
+		Game.player_state = {"pos": [o.x, o.y, o.z], "yaw": 0.0, "room": current_room.room_id}
 	SaveManager.save_game()
 
 

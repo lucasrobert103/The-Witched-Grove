@@ -4,7 +4,7 @@ extends RefCounted
 ## Uma lista de condições é um E lógico. Cada condição é um dicionário de uma chave:
 ##   flag, not_flag, quest_active, quest_done, quest_not_started, objective_current,
 ##   objective_done, has_item, item_quality, knows_spell, school, rep, time, moon,
-##   page_read, ep, bestiary_notes, any (lista de listas, OU), not (condição).
+##   page_read, ep, flag_count, bestiary_notes, any (lista de listas, OU), not (condição).
 
 
 static func check_all(conds: Array, game: Object) -> bool:
@@ -52,6 +52,12 @@ static func check(c: Dictionary, game: Object) -> bool:
 				if game.grimoire.times_read(v) < 1: return false
 			"ep":
 				if game.inventory.currency < int(v): return false
+			"flag_count":
+				var n := 0
+				for f in game.flags:
+					if String(f).begins_with(v[0]):
+						n += 1
+				if n < int(v[1]): return false
 			"bestiary_notes":
 				if game.grimoire.bestiary_notes(v[0]) < int(v[1]): return false
 			"any":

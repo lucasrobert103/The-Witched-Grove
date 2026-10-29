@@ -125,6 +125,10 @@ func has_news() -> bool:
 	return false
 
 
+func accepts_spells() -> bool:
+	return npc_id == "musgo"
+
+
 func on_spell(tags: Array, _result: Dictionary) -> bool:
 	if npc_id != "musgo":
 		return false

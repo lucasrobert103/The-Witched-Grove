@@ -32,6 +32,11 @@ var _braid: Array[Node3D] = []
 var _crystal_light: OmniLight3D
 var _crystal: MeshInstance3D
 var _ghost_mat: StandardMaterial3D
+var _wand_tip: Node3D
+var _lantern: Node3D
+var _charm: Node3D
+var _tail_roots: Array[Node3D] = []
+var anime: bool = false
 
 
 func build(p_appearance: Dictionary) -> void:
@@ -40,6 +45,8 @@ func build(p_appearance: Dictionary) -> void:
 		c.queue_free()
 	_eyes.clear()
 	_braid.clear()
+	_tail_roots.clear()
+	anime = appearance.get("style", "") == "anime"
 	_height = float(appearance.get("height", 1.0))
 	var age: String = appearance.get("age", "adult")
 	var head_scale := 1.18 if age == "child" else 1.0
@@ -55,7 +62,7 @@ func build(p_appearance: Dictionary) -> void:
 
 	var m_skin := Toon.mat(skin, {"rim": 0.25, "outline": OUTLINE})
 	var m_skin_plain := Toon.mat(skin)
-	var m_hair := Toon.mat(hair, {"rim": 0.4, "outline": OUTLINE})
+	var m_hair := Toon.mat(hair, {"rim": 0.15 if appearance.get("style", "") == "anime" else 0.4, "outline": OUTLINE})
 	var m_outfit := Toon.mat(outfit, {"rim": 0.3, "outline": OUTLINE})
 	var m_accent := Toon.mat(accent, {"rim": 0.5, "outline": OUTLINE * 0.7})
 	var m_dark := Toon.mat(Color("#2a1d2e"))
@@ -68,8 +75,13 @@ func build(p_appearance: Dictionary) -> void:
 	# --- pés
 	_foot_l = MeshKit.pivot(_body, Vector3(-0.09, 0.06, 0.0))
 	_foot_r = MeshKit.pivot(_body, Vector3(0.09, 0.06, 0.0))
+	if anime:
+		m_boot = Toon.mat(Color("#3a2a20"), {"rim": 0.3, "outline": OUTLINE})
 	for f in [_foot_l, _foot_r]:
 		MeshKit.part(f, MeshKit.capsule(0.06, 0.2), m_boot, Vector3(0, 0, -0.03), Vector3(90, 0, 0))
+		if "tall_boots" in acc:
+			MeshKit.part(f, MeshKit.capsule(0.058, 0.34), m_boot, Vector3(0, 0.13, 0.01))
+			MeshKit.part(f, MeshKit.torus(0.05, 0.072, 14, 6), Toon.mat(Color("#5a4030")), Vector3(0, 0.27, 0.01))
 
 	# --- roupa inferior
 	var outfit_kind: String = appearance.get("outfit", "robe")
@@ -81,6 +93,16 @@ func build(p_appearance: Dictionary) -> void:
 		"dress":
 			MeshKit.part(_skirt, MeshKit.cylinder(0.17 * wide, 0.33 * wide, 0.62, 18), m_outfit, Vector3(0, 0.03, 0))
 			MeshKit.part(_skirt, MeshKit.torus(0.3 * wide, 0.34 * wide, 24), m_accent, Vector3(0, -0.27, 0))
+		"coat_dress":
+			_skirt.position.y = 0.5
+			MeshKit.part(_skirt, MeshKit.cylinder(0.165, 0.31, 0.66, 24), m_outfit)
+			MeshKit.part(_skirt, MeshKit.torus(0.285, 0.315, 28, 6), Toon.mat(outfit.darkened(0.3)), Vector3(0, -0.315, 0))
+			MeshKit.part(_skirt, MeshKit.box(Vector3(0.025, 0.62, 0.02)), Toon.mat(outfit.darkened(0.35)), Vector3(0, 0.0, -0.24), Vector3(-13, 0, 0))
+			var m_btn := Toon.mat(Color(appearance.get("metal_color", "#c9a25a")), {"metal": 0.5, "rim": 0.5})
+			for k in 3:
+				var yy := 0.22 - k * 0.12
+				var rr := lerpf(0.31, 0.165, (yy + 0.33) / 0.66) + 0.008
+				MeshKit.part(_skirt, MeshKit.sphere(0.014, 8, 6), m_btn, Vector3(0.035, yy, -rr))
 		"coat":
 			MeshKit.part(_skirt, MeshKit.cylinder(0.18 * wide, 0.27 * wide, 0.42, 16), m_outfit, Vector3(0, 0.1, 0))
 			MeshKit.part(_skirt, MeshKit.capsule(0.07, 0.38), m_boot, Vector3(-0.09, -0.18, 0))
@@ -108,6 +130,28 @@ func build(p_appearance: Dictionary) -> void:
 	_torso = MeshKit.pivot(_body, Vector3(0, 0.84, 0), "Torso")
 	MeshKit.part(_torso, MeshKit.capsule(0.16 * wide, 0.42), m_outfit, Vector3(0, 0.0, 0), Vector3.ZERO, Vector3(1.0, 1.0, 0.85))
 	MeshKit.part(_torso, MeshKit.torus(0.13 * wide, 0.17 * wide, 20), m_accent, Vector3(0, -0.14, 0))
+	var metal := Toon.mat(Color(appearance.get("metal_color", "#c9a25a")), {"metal": 0.6, "rim": 0.6})
+	if "belt" in acc:
+		var m_belt := Toon.mat(Color(appearance.get("belt_color", "#7a4a2a")), {"rim": 0.3, "outline": OUTLINE * 0.7})
+		MeshKit.part(_torso, MeshKit.torus(0.14, 0.175, 24, 6), m_belt, Vector3(0, -0.15, 0), Vector3.ZERO, Vector3(1.0, 1.3, 0.88))
+		MeshKit.part(_torso, MeshKit.cylinder(0.035, 0.035, 0.02, 14), metal, Vector3(0, -0.15, -0.155), Vector3(90, 0, 0))
+		MeshKit.part(_torso, MeshKit.star(0.022, 0.01, 0.01), Toon.mat(Color("#7a5a2a")), Vector3(0, -0.15, -0.167))
+	if "strap" in acc:
+		var m_strap := Toon.mat(Color(appearance.get("belt_color", "#7a4a2a")).darkened(0.1), {"outline": OUTLINE * 0.6})
+		MeshKit.part(_torso, MeshKit.torus(0.215, 0.235, 28, 4), m_strap, Vector3(0.0, -0.02, 0), Vector3(0, 0, -48), Vector3(1.0, 1.0, 0.62))
+		MeshKit.part(_torso, MeshKit.box(Vector3(0.05, 0.04, 0.015)), metal, Vector3(-0.05, 0.06, -0.15), Vector3(0, 0, -48))
+	if "capelet" in acc:
+		var cape_c := Color(appearance.get("cape_color", "#4a392c"))
+		var m_cape := Toon.mat(cape_c, {"rim": 0.35, "outline": OUTLINE})
+		var m_lining := Toon.mat(Color(appearance.get("lining_color", "#8a2f2a")), {"double_sided": true})
+		var cape := MeshKit.pivot(_torso, Vector3(0, 0.03, 0.01), "Capelet")
+		MeshKit.part(cape, MeshKit.open_cone(0.1, 0.3, 0.32, 28), m_cape, Vector3(0, 0.0, 0), Vector3.ZERO, Vector3(1.0, 1.0, 0.86))
+		MeshKit.part(cape, MeshKit.open_cone(0.095, 0.292, 0.318, 28), m_lining, Vector3(0, -0.002, 0), Vector3.ZERO, Vector3(1.0, 1.0, 0.86))
+		for k in 8:
+			var a := k * TAU / 8.0 + 0.2
+			MeshKit.part(cape, MeshKit.capsule(0.011, 0.3), m_cape, Vector3(sin(a) * 0.198, -0.01, cos(a) * 0.198 * 0.86), Vector3(-cos(a) * 33, 0, sin(a) * 33))
+		MeshKit.part(cape, MeshKit.torus(0.075, 0.105, 18, 6), m_cape, Vector3(0, 0.15, 0))
+		MeshKit.part(cape, MeshKit.sphere(0.024, 10, 8), metal, Vector3(0, 0.12, -0.1))
 	if "shawl" in acc:
 		MeshKit.part(_torso, MeshKit.sphere(0.24 * wide, 16, 8, true), Toon.mat(accent.darkened(0.1), {"outline": OUTLINE}), Vector3(0, 0.06, 0), Vector3(180, 0, 0), Vector3(1.0, 0.7, 0.9))
 	if "scarf" in acc:
@@ -132,7 +176,12 @@ func build(p_appearance: Dictionary) -> void:
 			MeshKit.part(arm, MeshKit.torus(0.1, 0.12, 14, 6), m_accent, Vector3(0, -0.335, 0))
 		else:
 			MeshKit.part(arm, MeshKit.capsule(0.06, 0.34), m_outfit, Vector3(0, -0.15, 0))
-		MeshKit.part(arm, MeshKit.sphere(0.055, 10, 6), m_skin, Vector3(0, -0.36, 0))
+		if "gloves" in acc:
+			var m_glove := Toon.mat(Color("#2e221c"), {"rim": 0.3, "outline": OUTLINE})
+			MeshKit.part(arm, MeshKit.sphere(0.056, 12, 8), m_glove, Vector3(0, -0.36, 0), Vector3.ZERO, Vector3(0.95, 1.1, 0.9))
+			MeshKit.part(arm, MeshKit.cylinder(0.062, 0.05, 0.1, 12), m_glove, Vector3(0, -0.29, 0))
+		else:
+			MeshKit.part(arm, MeshKit.sphere(0.055, 10, 6), m_skin, Vector3(0, -0.36, 0))
 
 	if "staff" in acc:
 		var staff := MeshKit.pivot(_arm_r, Vector3(0, -0.36, -0.02), "Staff")
@@ -142,6 +191,25 @@ func build(p_appearance: Dictionary) -> void:
 		MeshKit.part(staff, MeshKit.torus(0.035, 0.06, 12, 6), m_wood, Vector3(0, 0.76, 0), Vector3(90, 0, 0))
 		_crystal = MeshKit.part(staff, MeshKit.crystal(0.055), Toon.glow(Color("#c58cff"), 2.2), Vector3(0, 0.78, 0))
 		_crystal_light = MeshKit.light(staff, Color("#c58cff"), 0.5, 2.5, Vector3(0, 0.8, 0))
+	if "wand" in acc:
+		var wand := MeshKit.pivot(_arm_r, Vector3(0.0, -0.37, -0.03), "Wand")
+		wand.rotation_degrees = Vector3(-75, 0, 0)
+		var m_wand := Toon.mat(Color("#5a3a26"), {"rim": 0.4, "outline": OUTLINE * 0.6})
+		MeshKit.part(wand, MeshKit.cylinder(0.006, 0.014, 0.34, 8), m_wand, Vector3(0, 0.15, 0))
+		MeshKit.part(wand, MeshKit.torus(0.008, 0.018, 10, 4), metal, Vector3(0, 0.03, 0))
+		_wand_tip = MeshKit.pivot(wand, Vector3(0, 0.33, 0), "WandTip")
+		MeshKit.part(_wand_tip, MeshKit.sphere(0.014, 8, 6), Toon.glow(Color("#fff3c4"), 3.0), Vector3.ZERO, Vector3.ZERO, Vector3.ONE, false)
+	if "lantern" in acc:
+		_lantern = MeshKit.pivot(_arm_l, Vector3(0.0, -0.4, -0.02), "Lantern")
+		var m_iron := Toon.mat(Color("#3a3028"), {"metal": 0.4, "outline": OUTLINE * 0.6})
+		MeshKit.part(_lantern, MeshKit.torus(0.02, 0.03, 12, 4), m_iron, Vector3(0, -0.01, 0), Vector3(90, 0, 0))
+		MeshKit.part(_lantern, MeshKit.cylinder(0.02, 0.06, 0.04, 10), m_iron, Vector3(0, -0.06, 0))
+		MeshKit.part(_lantern, MeshKit.sphere(0.055, 14, 10), Toon.glow(Color("#9dff6a"), 2.6), Vector3(0, -0.13, 0), Vector3.ZERO, Vector3(1.0, 1.15, 1.0), false)
+		for k in 4:
+			var a := k * TAU / 4.0
+			MeshKit.part(_lantern, MeshKit.cylinder(0.005, 0.005, 0.13, 4), m_iron, Vector3(sin(a) * 0.058, -0.13, cos(a) * 0.058))
+		MeshKit.part(_lantern, MeshKit.cylinder(0.065, 0.045, 0.03, 10), m_iron, Vector3(0, -0.2, 0))
+		MeshKit.light(_lantern, Color("#9dff6a"), 0.22, 0.9, Vector3(0, -0.13, 0))
 	if "cane" in acc:
 		MeshKit.part(_arm_l, MeshKit.cylinder(0.018, 0.018, 0.85, 8), Toon.mat(Color("#6b4a2a"), {"outline": OUTLINE}), Vector3(0, -0.72, -0.06))
 	if "book" in acc:
@@ -157,7 +225,9 @@ func build(p_appearance: Dictionary) -> void:
 	MeshKit.part(face, MeshKit.sphere(0.05, 8, 6), m_skin, Vector3(0.245, -0.01, 0.0), Vector3.ZERO, Vector3(0.5, 1.0, 0.8))
 	# olhos grandes e expressivos
 	var eye_y := -0.01 if age != "child" else -0.02
-	for sx in [-1.0, 1.0]:
+	if anime:
+		_build_anime_eyes(face, eye_c, hair)
+	for sx in ([] if anime else [-1.0, 1.0]):
 		var eye := MeshKit.pivot(face, Vector3(sx * 0.088, eye_y, -0.2))
 		MeshKit.part(eye, MeshKit.sphere(0.072, 14, 10), m_white, Vector3.ZERO, Vector3.ZERO, Vector3(0.9, 1.15, 0.55))
 		MeshKit.part(eye, MeshKit.sphere(0.052, 14, 10), Toon.mat(eye_c, {"unshaded": true}), Vector3(0, -0.006, -0.024), Vector3.ZERO, Vector3(0.9, 1.1, 0.5))
@@ -176,8 +246,12 @@ func build(p_appearance: Dictionary) -> void:
 	var m_blush := Toon.mat(skin.lerp(Color("#ff7a9a"), 0.45), {"unshaded": true})
 	for sx in [-1.0, 1.0]:
 		MeshKit.part(face, MeshKit.sphere(0.04, 10, 6), m_blush, Vector3(sx * 0.15, -0.085, -0.19), Vector3.ZERO, Vector3(1.2, 0.6, 0.3))
-	MeshKit.part(face, MeshKit.sphere(0.022, 8, 6), Toon.mat(skin.darkened(0.08)), Vector3(0, -0.06, -0.245))
-	MeshKit.part(face, MeshKit.sphere(0.034, 10, 6, true), Toon.mat(Color("#7a2a3a")), Vector3(0, -0.12, -0.226), Vector3(180, 0, 0), Vector3(1.2, 0.7, 0.45))
+	if anime:
+		MeshKit.part(face, MeshKit.sphere(0.008, 8, 6), Toon.mat(skin.darkened(0.1)), Vector3(0, -0.072, -0.247))
+		MeshKit.part(face, MeshKit.sphere(0.022, 10, 6, true), Toon.mat(Color("#a8505a")), Vector3(0, -0.125, -0.232), Vector3(180, 0, 0), Vector3(1.3, 0.5, 0.4))
+	else:
+		MeshKit.part(face, MeshKit.sphere(0.022, 8, 6), Toon.mat(skin.darkened(0.08)), Vector3(0, -0.06, -0.245))
+		MeshKit.part(face, MeshKit.sphere(0.034, 10, 6, true), Toon.mat(Color("#7a2a3a")), Vector3(0, -0.12, -0.226), Vector3(180, 0, 0), Vector3(1.2, 0.7, 0.45))
 	if "freckles" in acc:
 		var m_fr := Toon.mat(skin.darkened(0.3), {"unshaded": true})
 		for p in [Vector3(-0.13, -0.06, -0.205), Vector3(-0.165, -0.075, -0.19), Vector3(-0.14, -0.095, -0.2), Vector3(0.13, -0.06, -0.205), Vector3(0.165, -0.075, -0.19), Vector3(0.14, -0.095, -0.2)]:
@@ -195,6 +269,27 @@ func build(p_appearance: Dictionary) -> void:
 	if age == "elder":
 		_torso.rotation.x = deg_to_rad(8)
 	_ghost_mat = Toon.translucent(Color("#b9a8ff"), 0.35, 0.6)
+
+
+## Olhos de anime: íris grande em dois tons, pupila oval, dois brilhos e cílios marcados.
+func _build_anime_eyes(face: Node3D, eye_c: Color, hair: Color) -> void:
+	var m_white := Toon.mat(Color("#fffaf4"), {"unshaded": true})
+	var m_lash := Toon.mat(Color("#3a2418"), {"unshaded": true})
+	for sx in [-1.0, 1.0]:
+		var eye := MeshKit.pivot(face, Vector3(sx * 0.094, -0.022, -0.198))
+		eye.rotation_degrees.y = sx * -12
+		MeshKit.part(eye, MeshKit.sphere(0.078, 18, 12), m_white, Vector3.ZERO, Vector3.ZERO, Vector3(0.88, 1.2, 0.5))
+		MeshKit.part(eye, MeshKit.sphere(0.062, 18, 12), Toon.mat(eye_c.darkened(0.45), {"unshaded": true}), Vector3(0, -0.006, -0.02), Vector3.ZERO, Vector3(0.9, 1.15, 0.5))
+		MeshKit.part(eye, MeshKit.sphere(0.05, 16, 10), Toon.mat(eye_c, {"unshaded": true}), Vector3(0, -0.016, -0.026), Vector3.ZERO, Vector3(0.9, 1.05, 0.5))
+		MeshKit.part(eye, MeshKit.sphere(0.03, 12, 8), Toon.mat(eye_c.lightened(0.35), {"unshaded": true}), Vector3(0, -0.036, -0.03), Vector3.ZERO, Vector3(1.0, 0.7, 0.5))
+		MeshKit.part(eye, MeshKit.sphere(0.024, 10, 8), Toon.mat(Color("#1a0f0a"), {"unshaded": true}), Vector3(0, 0.0, -0.042), Vector3.ZERO, Vector3(0.75, 1.25, 0.4))
+		MeshKit.part(eye, MeshKit.sphere(0.017, 8, 6), m_white, Vector3(sx * -0.018, 0.03, -0.05))
+		MeshKit.part(eye, MeshKit.sphere(0.008, 6, 4), m_white, Vector3(sx * 0.016, -0.03, -0.049))
+		MeshKit.part(eye, MeshKit.capsule(0.012, 0.15), m_lash, Vector3(sx * 0.004, 0.086, -0.016), Vector3(0, 0, 90 - sx * 8))
+		MeshKit.part(eye, MeshKit.capsule(0.008, 0.045), m_lash, Vector3(sx * 0.07, 0.07, -0.01), Vector3(0, 0, sx * -48))
+		MeshKit.part(eye, MeshKit.capsule(0.004, 0.08), m_lash, Vector3(0, -0.088, -0.014), Vector3(0, 0, 90))
+		MeshKit.part(face, MeshKit.capsule(0.006, 0.07), Toon.mat(hair.darkened(0.3)), Vector3(sx * 0.098, 0.112, -0.22), Vector3(0, 0, 90 - sx * 7))
+		_eyes.append(eye)
 
 
 func _build_beard(face: Node3D, kind: String, hair: Color) -> void:
@@ -216,9 +311,17 @@ func _build_hair(head: Node3D, style: String, m_hair: Material, _hair: Color) ->
 	# calota: hemisfério inclinado para trás (deixa o rosto livre)
 	MeshKit.part(hair_root, MeshKit.sphere(0.268, 22, 10, true), m_hair, Vector3(0, 0.01, 0.02), Vector3(30, 0, 0), Vector3(1.05, 1.07, 1.05))
 	# franja
-	for i in 5:
-		var x := -0.16 + i * 0.08
-		MeshKit.part(hair_root, MeshKit.sphere(0.075, 10, 6), m_hair, Vector3(x, 0.15 - absf(x) * 0.35, -0.17 + absf(x) * 0.12), Vector3(0, 0, -x * 80), Vector3(1.0, 0.75, 0.75))
+	if anime:
+		for i in 7:
+			var x := -0.18 + i * 0.06
+			var ln := 0.12 + (0.05 if i % 2 == 0 else 0.0)
+			MeshKit.part(hair_root, MeshKit.cylinder(0.042, 0.004, ln, 8), m_hair, Vector3(x * 1.05, 0.13 - absf(x) * 0.25, -0.2 + absf(x) * 0.18), Vector3(-28 + absf(x) * 60, 0, x * 70))
+		for sx in [-1.0, 1.0]:
+			MeshKit.part(hair_root, MeshKit.cylinder(0.05, 0.01, 0.36, 8), m_hair, Vector3(sx * 0.2, -0.08, -0.12), Vector3(-6, 0, sx * -8))
+	else:
+		for i in 5:
+			var x := -0.16 + i * 0.08
+			MeshKit.part(hair_root, MeshKit.sphere(0.075, 10, 6), m_hair, Vector3(x, 0.15 - absf(x) * 0.35, -0.17 + absf(x) * 0.12), Vector3(0, 0, -x * 80), Vector3(1.0, 0.75, 0.75))
 	match style:
 		"long", "long_braid":
 			MeshKit.part(hair_root, MeshKit.sphere(0.26, 16, 10), m_hair, Vector3(0, -0.08, 0.08), Vector3.ZERO, Vector3(1.08, 1.0, 0.9))
@@ -237,6 +340,24 @@ func _build_hair(head: Node3D, style: String, m_hair: Material, _hair: Color) ->
 				var tie := MeshKit.part(parent, MeshKit.torus(0.02, 0.045, 12, 6), Toon.mat(Color(appearance.get("scarf_color", "#2fb9a8"))), Vector3(0, -0.1, 0))
 				tie.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 				MeshKit.part(parent, MeshKit.capsule(0.03, 0.1), m_hair, Vector3(0, -0.16, 0))
+		"twin_tails_long":
+			MeshKit.part(hair_root, MeshKit.sphere(0.27, 18, 12), m_hair, Vector3(0, -0.04, 0.07), Vector3.ZERO, Vector3(1.08, 1.0, 0.95))
+			var m_tie := Toon.mat(Color(appearance.get("accent_color", "#d98a2b")), {"rim": 0.4, "outline": OUTLINE * 0.6})
+			for sx in [-1.0, 1.0]:
+				var root := MeshKit.pivot(hair_root, Vector3(sx * 0.2, -0.16, 0.12))
+				root.rotation_degrees.z = sx * 8
+				_tail_roots.append(root)
+				var parent: Node3D = root
+				for i in 8:
+					var seg := MeshKit.pivot(parent, Vector3(0, -0.12 if i > 0 else 0.0, 0))
+					seg.set_meta("i", i)
+					var r := 0.07 + sin(float(i) / 7.0 * PI) * 0.03
+					MeshKit.part(seg, MeshKit.sphere(r, 12, 8), m_hair, Vector3(0, -0.06, 0), Vector3.ZERO, Vector3(1.0, 1.3, 0.9))
+					if i == 0 or i == 6:
+						MeshKit.part(seg, MeshKit.torus(0.045, 0.075, 14, 6), m_tie, Vector3(0, -0.02, 0))
+					_braid.append(seg)
+					parent = seg
+				MeshKit.part(parent, MeshKit.cylinder(0.075, 0.02, 0.16, 10), m_hair, Vector3(0, -0.17, 0))
 		"bun":
 			MeshKit.part(hair_root, MeshKit.sphere(0.12, 14, 8), m_hair, Vector3(0, 0.2, 0.14))
 			MeshKit.part(hair_root, MeshKit.sphere(0.25, 16, 10), m_hair, Vector3(0, -0.02, 0.06), Vector3.ZERO, Vector3(1.04, 0.95, 0.9))
@@ -273,6 +394,33 @@ func _build_hat(head: Node3D, kind: String, ap: Dictionary, m_accent: Material, 
 			MeshKit.part(seg3, MeshKit.cylinder(0.01, 0.09, 0.24, 12), m_hat, Vector3(0, 0.11, 0))
 			MeshKit.part(seg3, MeshKit.star(0.04, 0.017, 0.015), Toon.glow(Color("#f3c74f"), 1.8), Vector3(0, 0.25, 0))
 			_hat_tip = seg3
+		"witch_wide":
+			var under := Toon.mat(Color(ap.get("hat_under", "#d9822b")), {"double_sided": true})
+			var band := Toon.mat(Color(ap.get("accent_color", "#d98a2b")), {"rim": 0.5, "outline": OUTLINE * 0.6})
+			var metal := Toon.mat(Color(ap.get("metal_color", "#c9a25a")), {"metal": 0.6, "rim": 0.5})
+			_hat = MeshKit.pivot(head, Vector3(0, 0.17, 0.02), "Hat")
+			_hat.rotation_degrees = Vector3(-8, 0, 6)
+			MeshKit.part(_hat, MeshKit.cylinder(0.64, 0.64, 0.018, 36), m_hat, Vector3(0, 0.012, 0), Vector3.ZERO, Vector3(1.0, 1.0, 0.92))
+			MeshKit.part(_hat, MeshKit.cylinder(0.62, 0.62, 0.012, 36), under, Vector3(0, -0.004, 0), Vector3.ZERO, Vector3(1.0, 1.0, 0.92))
+			MeshKit.part(_hat, MeshKit.torus(0.61, 0.66, 36, 6), m_hat, Vector3(0, 0.01, 0), Vector3(4, 0, 0), Vector3(1.0, 1.0, 0.92))
+			var s1 := MeshKit.pivot(_hat, Vector3(0, 0.02, 0))
+			MeshKit.part(s1, MeshKit.cylinder(0.2, 0.28, 0.3, 24), m_hat, Vector3(0, 0.15, 0))
+			MeshKit.part(s1, MeshKit.cylinder(0.27, 0.285, 0.08, 24), band, Vector3(0, 0.045, 0))
+			MeshKit.part(s1, MeshKit.box(Vector3(0.1, 0.085, 0.02)), metal, Vector3(0.06, 0.045, -0.283), Vector3(0, -12, 0))
+			MeshKit.part(s1, MeshKit.box(Vector3(0.065, 0.05, 0.022)), band, Vector3(0.06, 0.045, -0.287), Vector3(0, -12, 0))
+			var s2 := MeshKit.pivot(s1, Vector3(0, 0.29, 0))
+			s2.rotation_degrees = Vector3(18, 0, -8)
+			MeshKit.part(s2, MeshKit.cylinder(0.12, 0.2, 0.24, 20), m_hat, Vector3(0, 0.11, 0))
+			var s3 := MeshKit.pivot(s2, Vector3(0, 0.22, 0))
+			s3.rotation_degrees = Vector3(30, 0, 14)
+			MeshKit.part(s3, MeshKit.cylinder(0.06, 0.12, 0.2, 16), m_hat, Vector3(0, 0.09, 0))
+			var s4 := MeshKit.pivot(s3, Vector3(0, 0.18, 0))
+			s4.rotation_degrees = Vector3(55, 0, 25)
+			MeshKit.part(s4, MeshKit.cylinder(0.008, 0.06, 0.2, 12), m_hat, Vector3(0, 0.09, 0))
+			_hat_tip = s3
+			_charm = MeshKit.pivot(s4, Vector3(0, 0.19, 0), "Charm")
+			MeshKit.part(_charm, MeshKit.cylinder(0.003, 0.003, 0.12, 4), Toon.mat(Color("#3a2a1a")), Vector3(0, -0.06, 0))
+			MeshKit.part(_charm, MeshKit.star(0.05, 0.022, 0.015), Toon.glow(Color("#f3c74f"), 1.6), Vector3(0, -0.14, 0))
 		"hood":
 			_hat = MeshKit.pivot(head, Vector3(0, 0.0, 0.0), "Hood")
 			MeshKit.part(_hat, MeshKit.sphere(0.31, 20, 10, true), m_hat, Vector3(0, 0.0, 0.04), Vector3(38, 0, 0), Vector3(1.0, 1.05, 1.05))
@@ -306,6 +454,13 @@ func _build_hat(head: Node3D, kind: String, ap: Dictionary, m_accent: Material, 
 
 
 # ---------------------------------------------------------------- animação
+
+## Posição global da ponta da varinha (origem dos feitiços).
+func wand_tip_position() -> Vector3:
+	if _wand_tip and _wand_tip.is_inside_tree():
+		return _wand_tip.global_position
+	return global_position + Vector3(0, 1.2, 0)
+
 
 func play_cast() -> void:
 	cast_timer = 0.7
@@ -399,5 +554,13 @@ func _process(delta: float) -> void:
 		_hat_tip.rotation.z = sin(_t * 1.1) * 0.05
 	for i in _braid.size():
 		var b := _braid[i]
-		b.rotation.x = lerpf(b.rotation.x, mv * 0.35 + sin(_t * 2.0 - i * 0.6) * 0.06, _w(delta, 8.0 - i))
-		b.rotation.z = sin(_phase * 0.5 - i * 0.5) * 0.08 * mv
+		var k := int(b.get_meta("i", i))
+		b.rotation.x = lerpf(b.rotation.x, mv * (0.12 if anime else 0.35) + sin(_t * 2.0 - k * 0.6) * 0.04, _w(delta, maxf(2.0, 8.0 - k)))
+		b.rotation.z = sin(_phase * 0.5 - k * 0.5) * 0.05 * mv
+	for r in _tail_roots:
+		r.rotation.x = lerpf(r.rotation.x, 0.25 + mv * 0.35, _w(delta, 6.0))
+	if _charm:
+		_charm.rotation.z = sin(_t * 2.3) * 0.3 + mv * sin(_phase) * 0.3
+		_charm.rotation.x = sin(_t * 1.7) * 0.2
+	if _lantern:
+		_lantern.rotation.x = -_arm_l.rotation.x * 0.8 + sin(_t * 1.9) * 0.08

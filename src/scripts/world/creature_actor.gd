@@ -134,6 +134,24 @@ func _interact_mushroom() -> void:
 	say("\"HMMMF! Tô cochilando! Ninguém passa!\" — Ele cheira a terra molhada e parece... cansado. E guloso por coisas doces.", "warning")
 
 
+func accepts_spells() -> bool:
+	return visible and kind == "mushroom"
+
+
+func on_spell(tags: Array, _result: Dictionary) -> bool:
+	if kind != "mushroom" or Game.has_flag("cogumelo_calmo"):
+		return false
+	if "transfigure" in tags or "levitate" in tags:
+		say("O Cogumelo Resmungão bufa: \"Criatura viva não se transforma, mocinha! Nem flutua!\" — Talvez algo mais gentil funcione.", "warning")
+		AudioManager.play_sfx("grumble")
+		return true
+	if "fire" in tags or "ice" in tags:
+		say("\"AI! Que falta de educação!\" Ele fica ainda mais emburrado. Magia de ataque não resolve nada aqui.", "warning")
+		AudioManager.play_sfx("grumble")
+		return true
+	return false
+
+
 func _process(delta: float) -> void:
 	_t += delta
 	if _player == null:

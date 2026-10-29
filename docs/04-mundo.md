@@ -33,7 +33,7 @@
 
 ## 4. Vale dos Sussurros (mapa do protótipo)
 
-Mundo de ~110 m de diâmetro cercado por montanhas. Norte = −Z.
+Mundo de ~185 m de diâmetro (terreno de 220 m, limite em 92 m) cercado por montanhas. Norte = −Z.
 
 ```
                     N
@@ -68,6 +68,39 @@ Mundo de ~110 m de diâmetro cercado por montanhas. Norte = −Z.
 | Bosque das Corujas | Atrás das sarças: trevos, pena de coruja, Folha IV, corujas |
 | Círculo de Pedras | Runas do Círculo (resposta do enigma), Lyra à noite |
 | Recanto do Gelo | Além do riacho: Folha do Cristal de Gelo, flocos, aurora, raiz |
+
+| Aldeia Vime (sul) | Padaria Pão-de-Mel (Dorinha, pode entrar), casas, poço, barracas, placa da aldeia |
+| Campos de Lavanda (leste) | Fileiras roxas, colmeias e o moinho de Tobias (pás giram) |
+| Observatório em ruínas (norte) | Cúpula quebrada e telescópio — mirante das estrelas |
+| Anel de Cogumelos (oeste) | Círculo de cogumelos luminosos das fadas |
+| Pomar Abandonado | Árvores secas que podem florescer com magia |
+
+### Interiores (casas onde se pode entrar)
+Ficam fora do mapa (x > 300) e são vistos "em corte", como casa de bonecas: as paredes entre a câmera
+e o cômodo somem sozinhas. Toque na porta → tela escurece → você está dentro; a porta de dentro leva de volta.
+
+| Casa | O que tem dentro |
+|------|------------------|
+| Cabana da Clareira | Cama com colcha (carta de Ondina sob o travesseiro), atril com o grimório, caldeirão, baú/armazém, lareira, estantes de poções, tapete estrelado, mesa |
+| Casa de chá de Sálvia | Fogão, ervas secando, mesa de chá, prateleiras |
+| Padaria Pão-de-Mel | Forno, balcão com pães, sacos de farinha, a massa que não cresce, Dorinha |
+
+### Objetos mágicos (transformações)
+Espalhados perto da cabana e da aldeia (`MagicProp`). Cada feitiço tem efeito visível; as transformações
+voltam ao normal a cada novo dia e cada combinação nova conta para "Aprendiz de Transfiguração".
+
+| Objeto | Transfiguração (ciclo) | Outros feitiços |
+|--------|------------------------|-----------------|
+| Pedra | sapo → flor de cristal → pedra | Gelo congela · Levitação flutua · Chama no sapo: ele fica vermelho de vergonha |
+| Caixa | bule gigante → presente → caixa | Chama queima (Crescimento brota flores das cinzas) · Gelo · Levitação |
+| Barril | árvore jovem → barril | Chama · Levitação |
+| Abóbora | carruagem de abóbora | Chama acende (lanterna) · Levitação · Crescimento a deixa enorme |
+| Arbusto seco | roseira | Crescimento também vira roseira · Chama queima |
+| Lampião | lampião-flor | Chama acende |
+| Poça | laguinho de lírios | Gelo congela · Chama vira vapor · Crescimento dá lírios |
+| Botão de flor | flor gigante | Crescimento desabrocha · Brisa balança |
+| Toco | casinha de cogumelo | Crescimento também vira casinha |
+| Massa (padaria) | — | Crescimento faz crescer (missão da Dorinha) |
 
 ### Criaturas (bestiário)
 Lumécula · Cogumelo Resmungão · Sapo-Cristal · Borboleta-do-Éter · Guardião Musgo.

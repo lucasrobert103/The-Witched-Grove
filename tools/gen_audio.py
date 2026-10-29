@@ -394,6 +394,28 @@ def sfx():
     tp = sweep(300, 2400, 0.7, sr) * env_adsr(int(0.7 * sr), sr, 0.05, 0.1, 0.7, 0.3) * 0.2
     S["teleport"] = reverb(tp + np.pad(arpeggio(["C6", "G6", "C7"], 0.06, sr, tail=0.4, gain=0.2), (0, int(0.7 * sr)))[:len(tp)], sr, 1.5, 0.4)
     S["rest"] = reverb(arpeggio(["E5", "C5", "A4", "E4"], 0.25, sr, tail=1.2, gain=0.25), sr, 2.0, 0.4)
+    # porta de madeira: rangido + batida
+    creak = sweep(180, 260, 0.45, sr, "saw") * (1 + 0.6 * np.sin(2 * np.pi * 23 * t_axis(0.45, sr)))
+    creak = fft_filter(creak, sr, low=150, high=1400) * env_adsr(int(0.45 * sr), sr, 0.03, 0.1, 0.5, 0.2) * 0.35
+    thud = fft_filter(noise(0.2, sr), sr, low=40, high=300) * env_exp(int(0.2 * sr), sr, 0.05)
+    door = np.zeros(int(0.75 * sr))
+    place(door, creak, 0.0, sr)
+    place(door, thud, 0.45, sr, 0.9)
+    S["door"] = door
+    # "bip" de voz dos diálogos
+    S["blip"] = bell(note_freq("A5"), 0.06, sr, ratio=1.0, index=0.3, decay=0.03) * 0.6
+    # livro abrindo: farfalhar + acorde suave
+    swish = fft_filter(noise(0.6, sr), sr, low=800, high=5000) * np.sin(np.pi * t_axis(0.6, sr)) ** 2
+    book = np.zeros(int(1.4 * sr))
+    place(book, swish * 0.6, 0.0, sr)
+    place(book, arpeggio(["D5", "F#5", "A5", "D6"], 0.06, sr, tail=0.9, gain=0.22), 0.3, sr)
+    S["book_open"] = reverb(book, sr, 1.5, 0.3)
+    # borbulhar do caldeirão
+    bub = np.zeros(int(1.6 * sr))
+    for i in range(22):
+        b = sweep(rng.uniform(150, 300), rng.uniform(400, 900), 0.07, sr) * env_exp(int(0.07 * sr), sr, 0.02)
+        place(bub, b, rng.uniform(0, 1.5), sr, rng.uniform(0.15, 0.35))
+    S["brew_bubble"] = fft_filter(bub, sr, high=2500)
     for name, sig in S.items():
         write_wav(os.path.join(SFX_DIR, name + ".wav"), normalize(sig, 0.85), sr)
     return list(S.keys())

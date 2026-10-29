@@ -99,6 +99,10 @@ func interact(_player: Node) -> void:
 		say(r.reason, "warning")
 
 
+func accepts_spells() -> bool:
+	return visible
+
+
 func on_spell(tags: Array, _result: Dictionary) -> bool:
 	if "identify" in tags:
 		Game.identify_ingredient(ingredient_id)

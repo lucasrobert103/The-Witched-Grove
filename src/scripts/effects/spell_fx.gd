@@ -92,6 +92,105 @@ static func for_spell(parent: Node, caster_pos: Vector3, spell_id: String, resul
 		ring(parent, caster_pos, Color("#5cff9a"), r)
 
 
+## Projétil mágico em arco, com rastro de partículas. on_hit recebe o ponto atingido.
+static func projectile(parent: Node, from: Vector3, to: Vector3, color: Color, on_hit: Callable) -> void:
+	var orb := Node3D.new()
+	parent.add_child(orb)
+	orb.global_position = from
+	MeshKit.part(orb, MeshKit.sphere(0.13, 12, 8), Toon.glow(color.lightened(0.4), 4.0), Vector3.ZERO, Vector3.ZERO, Vector3.ONE, false)
+	MeshKit.part(orb, MeshKit.star(0.2, 0.08, 0.02), Toon.glow(color, 2.5), Vector3.ZERO, Vector3.ZERO, Vector3.ONE, false)
+	var l := OmniLight3D.new()
+	l.light_color = color
+	l.light_energy = 2.0
+	l.omni_range = 4.0
+	orb.add_child(l)
+	var trail := CPUParticles3D.new()
+	trail.amount = 40
+	trail.lifetime = 0.5
+	trail.local_coords = false
+	trail.direction = Vector3.UP
+	trail.spread = 180.0
+	trail.initial_velocity_min = 0.1
+	trail.initial_velocity_max = 0.5
+	trail.gravity = Vector3.ZERO
+	trail.scale_amount_min = 0.05
+	trail.scale_amount_max = 0.12
+	var curve := Curve.new()
+	curve.add_point(Vector2(0, 1))
+	curve.add_point(Vector2(1, 0))
+	trail.scale_amount_curve = curve
+	var m := SphereMesh.new()
+	m.radius = 0.5
+	m.height = 1.0
+	m.radial_segments = 6
+	m.rings = 3
+	m.material = Toon.glow(color, 3.0)
+	trail.mesh = m
+	orb.add_child(trail)
+	var dist := from.distance_to(to)
+	var dur := clampf(dist / 26.0, 0.12, 0.65)
+	var arc := clampf(dist * 0.08, 0.1, 1.2)
+	var tw := orb.create_tween()
+	tw.tween_method(func(t: float): _move_orb(t, orb, from, to, arc), 0.0, 1.0, dur)
+	tw.tween_callback(func(): _orb_hit(orb, trail, l, on_hit, to))
+	tw.tween_interval(0.6)
+	tw.tween_callback(orb.queue_free)
+
+
+static func _move_orb(t: float, orb: Node3D, from: Vector3, to: Vector3, arc: float) -> void:
+	orb.global_position = from.lerp(to, t) + Vector3(0, sin(t * PI) * arc, 0)
+	orb.rotation.z = t * 12.0
+
+
+static func _orb_hit(orb: Node3D, trail: CPUParticles3D, l: OmniLight3D, on_hit: Callable, to: Vector3) -> void:
+	on_hit.call(to)
+	trail.emitting = false
+	orb.get_child(0).visible = false
+	orb.get_child(1).visible = false
+	l.visible = false
+
+
+## Explosão de impacto: anel, faíscas e luz.
+static func impact(parent: Node, pos: Vector3, color: Color, tags: Array) -> void:
+	burst(parent, pos, color, 36, 0.8, 3.0, 0.1, 0.8)
+	flash(parent, pos - Vector3(0, 0.5, 0), color, 4.0, 6.0, 0.4)
+	ring(parent, pos - Vector3(0, 0.45, 0), color, 2.0, 0.45)
+	if "fire" in tags:
+		burst(parent, pos, Color("#7fd6ff"), 30, 0.8, 4.0, 0.16, 1.0)
+	if "ice" in tags:
+		burst(parent, pos, Color("#e6f7ff"), 30, 1.0, 1.0, 0.12, 1.4)
+	if "transfigure" in tags:
+		burst(parent, pos, Color("#ffd1f0"), 40, 1.2, 2.0, 0.08, 1.2)
+	if "levitate" in tags:
+		burst(parent, pos, Color("#fff3c4"), 20, 0.6, 1.0, 0.06, 1.5)
+
+
+## Florescer: flores brotam do chão ao redor do ponto e somem depois de um tempo.
+static func bloom(parent: Node, pos: Vector3, radius: float) -> void:
+	var holder := Node3D.new()
+	parent.add_child(holder)
+	holder.global_position = pos - Vector3(0, 0.5, 0)
+	var cols := [Color("#ff9fb2"), Color("#fff3a0"), Color("#c8a2ff"), Color("#ffffff"), Color("#8fd6ff")]
+	var world := parent as Node
+	for i in 14:
+		var a := randf() * TAU
+		var r := sqrt(randf()) * radius
+		var p := Vector3(sin(a) * r, 0, cos(a) * r)
+		if world.has_method("ground_height"):
+			p.y = world.ground_height(holder.global_position.x + p.x, holder.global_position.z + p.z) - holder.global_position.y
+		var f := MeshKit.pivot(holder, p)
+		MeshKit.part(f, MeshKit.cylinder(0.012, 0.016, 0.3, 4), Toon.mat(Color("#4f9f55")), Vector3(0, 0.15, 0), Vector3.ZERO, Vector3.ONE, false)
+		MeshKit.part(f, MeshKit.sphere(0.07, 8, 4), Toon.mat(cols[i % cols.size()], {"emission": 0.4}), Vector3(0, 0.32, 0), Vector3.ZERO, Vector3(1.0, 0.6, 1.0), false)
+		f.scale = Vector3.ONE * 0.01
+		var tw := f.create_tween()
+		tw.tween_interval(randf() * 0.4)
+		tw.tween_property(f, "scale", Vector3.ONE * randf_range(0.9, 1.5), 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	var tw2 := holder.create_tween()
+	tw2.tween_interval(25.0)
+	tw2.tween_property(holder, "scale", Vector3(1, 0.01, 1), 1.0)
+	tw2.tween_callback(holder.queue_free)
+
+
 static func _auto_free(n: Node, t: float) -> void:
 	var timer := n.get_tree().create_timer(t)
 	timer.timeout.connect(n.queue_free)

@@ -10,6 +10,7 @@ const CAM_MIN_DIST := 3.2
 const CAM_MAX_DIST := 11.0
 
 var model: HumanoidModel
+var cat: CatModel
 var cam_yaw: float = 0.0
 var cam_pitch: float = -0.42
 var cam_dist: float = 6.5
@@ -32,6 +33,7 @@ var _orb_t := 0.0
 
 func _ready() -> void:
 	add_to_group("player")
+	collision_mask = 1 | InteriorRoom.WALL_LAYER
 	var col := CollisionShape3D.new()
 	var cap := CapsuleShape3D.new()
 	cap.radius = 0.35
@@ -45,6 +47,9 @@ func _ready() -> void:
 	model = HumanoidModel.new()
 	add_child(model)
 	model.build(DataRegistry.player_def.appearance)
+	cat = CatModel.new()
+	cat.visible = false
+	add_child(cat)
 
 	_cam_pivot = Node3D.new()
 	_cam_pivot.position = Vector3(0, 1.4, 0)
@@ -57,6 +62,7 @@ func _ready() -> void:
 	sph.radius = 0.25
 	_spring.shape = sph
 	_spring.add_excluded_object(get_rid())
+	_spring.collision_mask = 1
 	_cam_pivot.add_child(_spring)
 	camera = Camera3D.new()
 	camera.fov = 62.0
@@ -119,6 +125,63 @@ func _unhandled_input(event: InputEvent) -> void:
 			EventBus.spell_slots_changed.emit()
 
 
+## Mira assistida: escolhe o alvo mais centralizado à frente da câmera.
+## Retorna {"pos": Vector3, "node": Interactable ou null}.
+func aim_target(max_range: float = 16.0) -> Dictionary:
+	var origin := global_position
+	var fwd := Vector3(-sin(cam_yaw), 0, -cos(cam_yaw))
+	var best: Interactable = null
+	var best_score := INF
+	var nearest: Interactable = null
+	var nearest_d := 3.5
+	for n in get_tree().get_nodes_in_group("interactable"):
+		var it := n as Interactable
+		if it == null or not it.is_visible_in_tree() or not it.accepts_spells():
+			continue
+		var to := it.global_position - origin
+		if absf(to.y) > 5.0:
+			continue
+		to.y = 0.0
+		var d := to.length()
+		if d > max_range:
+			continue
+		if d < nearest_d:
+			nearest_d = d
+			nearest = it
+		if d < 0.3:
+			continue
+		var ang := rad_to_deg(fwd.angle_to(to / d))
+		if ang > 55.0:
+			continue
+		var score := ang * 0.12 + d * 0.25
+		if score < best_score:
+			best_score = score
+			best = it
+	if best == null:
+		best = nearest
+	if best:
+		return {"pos": best.global_position, "node": best}
+	# Água à frente (para Cristal de Gelo)
+	for w in get_tree().get_nodes_in_group("water"):
+		for q in w._area_points:
+			var tq: Vector3 = q - origin
+			tq.y = 0.0
+			if tq.length() < max_range and tq.length() > 0.5 and rad_to_deg(fwd.angle_to(tq.normalized())) < 45.0:
+				return {"pos": q, "node": null}
+	var p := origin + fwd * 8.0
+	var world := get_tree().get_first_node_in_group("game_world")
+	if world and world.has_method("ground_height"):
+		p.y = world.ground_height(p.x, p.z)
+	return {"pos": p, "node": null}
+
+
+func face_point(p: Vector3) -> void:
+	var to := p - global_position
+	to.y = 0.0
+	if to.length() > 0.1:
+		rotation.y = atan2(-to.x, -to.z)
+
+
 func try_interact() -> void:
 	if focused and focused.can_interact():
 		focused.interact(self)
@@ -152,6 +215,8 @@ func _physics_process(delta: float) -> void:
 	if dir.length() > 1.0:
 		dir = dir.normalized()
 	var speed := RUN_SPEED if running else WALK_SPEED
+	if Game.has_buff("cat"):
+		speed *= 1.6
 	var target_v := dir * speed
 	velocity.x = lerpf(velocity.x, target_v.x, 1.0 - exp(-12.0 * delta))
 	velocity.z = lerpf(velocity.z, target_v.z, 1.0 - exp(-12.0 * delta))
@@ -168,6 +233,7 @@ func _physics_process(delta: float) -> void:
 	if flat.length() > 0.4:
 		rotation.y = lerp_angle(rotation.y, atan2(-velocity.x, -velocity.z), 1.0 - exp(-10.0 * delta))
 	model.move_amount = clampf(flat.length() / RUN_SPEED, 0.0, 1.0)
+	cat.move_amount = model.move_amount
 	# passos
 	if is_on_floor() and flat.length() > 1.0:
 		_step_timer -= delta * flat.length() / WALK_SPEED
@@ -176,7 +242,7 @@ func _physics_process(delta: float) -> void:
 			AudioManager.play_sfx("step", -14.0, 0.15)
 	# limites do mundo e água
 	var hz := Vector2(global_position.x, global_position.z)
-	if hz.length() > ValleyTerrain.BOUNDARY:
+	if hz.length() > ValleyTerrain.BOUNDARY and global_position.x < ValleyTerrain.INTERIOR_X:
 		hz = hz.normalized() * ValleyTerrain.BOUNDARY
 		global_position.x = hz.x
 		global_position.z = hz.y
@@ -248,3 +314,9 @@ func _on_buff_changed(buff: String, active: bool) -> void:
 			_shield.visible = active
 		"stealth":
 			model.ghost = active
+		"cat":
+			model.visible = not active
+			cat.visible = active
+			SpellFX.burst(get_parent(), global_position + Vector3(0, 0.8, 0), Color("#ff9fd6"), 40, 1.0, 2.5)
+			if active:
+				EventBus.notify.emit("Miau! Você virou um gatinho. Corre mais rápido — e ninguém desconfia.", "discovery")

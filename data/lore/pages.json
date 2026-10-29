@@ -215,6 +215,41 @@
       "symbols": {
         "gota_tripla": "dissolver"
       }
+    },
+    {
+      "id": "carta_travesseiro",
+      "title": "Carta de Ondina (sob o travesseiro)",
+      "school": "astral",
+      "teaches": {},
+      "text": "Asterion, minha estrela teimosa: se você achou esta carta, é porque finalmente arrumou a cama. Preciso contar o que nunca contei. Eu não te encontrei por acaso. Naquela noite de chuva de estrelas, o Círculo de Pedras brilhou como nunca, e no meio dele havia um cesto de vime — e você, rindo para o céu. As plantas te respondem porque você tem um pouco do Éter dos Primeiros. Kael sabe disso. Não deixe que ele transforme seu dom em ferramenta. Com amor, O.",
+      "symbols": {
+        "cesto_estrela": "origem"
+      },
+      "research": {
+        "misterio_ondina": 20
+      }
+    },
+    {
+      "id": "placa_aldeia",
+      "title": "Placa da Aldeia Vime",
+      "school": "runes",
+      "teaches": {},
+      "text": "ALDEIA VIME — fundada sobre as pedras de uma cidade dos Primeiros. Proibido: pressa, cara feia e pisar no canteiro da Dona Dorinha. Permitido: tudo o mais.",
+      "symbols": {}
+    },
+    {
+      "id": "diario_tobias",
+      "title": "Caderno do Moleiro",
+      "school": "astral",
+      "teaches": {},
+      "text": "Eu tinha sete anos. Os Primeiros não eram gigantes nem deuses: eram gente de manto claro, que cantava para as pedras. Na última noite, apagaram todas as estrelas do Círculo e foram embora por um arco de luz — o mesmo que hoje chamam de Portal das Ruínas. Uma delas olhou para trás. Tinha os olhos da cor do mel.",
+      "symbols": {
+        "arco_luz": "passagem"
+      },
+      "research": {
+        "misterio_ondina": 10,
+        "silencio_cinzento": 10
+      }
     }
   ]
 }

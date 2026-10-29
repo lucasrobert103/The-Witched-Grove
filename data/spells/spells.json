@@ -1,220 +1,656 @@
 {
   "spells": [
     {
-      "id": "botany:crescimento_rapido", "name": "Crescimento Rápido", "school": "botany",
-      "level_required": 0, "mana_cost": 12, "casting_time": 0.8, "cooldown": 4.0, "ingredient_cost": {},
-      "target": "area", "radius": 4.0, "tags": ["grow"],
-      "effects": [{"type": "grow", "amount": 0.25}],
+      "id": "botany:crescimento_rapido",
+      "name": "Crescimento Rápido",
+      "school": "botany",
+      "level_required": 0,
+      "mana_cost": 12,
+      "casting_time": 0.8,
+      "cooldown": 4.0,
+      "ingredient_cost": {},
+      "target": "projectile",
+      "radius": 3.0,
+      "tags": [
+        "grow",
+        "bloom"
+      ],
+      "effects": [
+        {
+          "type": "grow",
+          "amount": 0.25
+        }
+      ],
       "description": "Acelera o crescimento de plantas próximas em 25%. Também desperta vinhas adormecidas.",
       "flavor_text": "\"O verde escuta quem fala devagar.\" — Ondina Vael",
-      "unlock_method": "grimoire", "implemented": true
+      "unlock_method": "grimoire",
+      "implemented": true
     },
     {
-      "id": "botany:identificar_propriedades", "name": "Identificação de Propriedades", "school": "botany",
-      "level_required": 0, "mana_cost": 8, "casting_time": 0.6, "cooldown": 2.0, "ingredient_cost": {},
-      "target": "area", "radius": 3.5, "tags": ["identify"],
-      "effects": [{"type": "reveal_property"}],
+      "id": "botany:identificar_propriedades",
+      "name": "Identificação de Propriedades",
+      "school": "botany",
+      "level_required": 0,
+      "mana_cost": 8,
+      "casting_time": 0.6,
+      "cooldown": 2.0,
+      "ingredient_cost": {},
+      "target": "projectile",
+      "radius": 3.5,
+      "tags": [
+        "identify"
+      ],
+      "effects": [
+        {
+          "type": "reveal_property"
+        }
+      ],
       "description": "Revela uma propriedade oculta de uma planta próxima (ou do último ingrediente colhido).",
       "flavor_text": "Cheire, toque, escute. Depois, pergunte.",
-      "unlock_method": "npc", "implemented": true
+      "unlock_method": "npc",
+      "implemented": true
     },
     {
-      "id": "botany:sincronia_natureza", "name": "Sincronização com a Natureza", "school": "botany",
-      "level_required": 20, "mana_cost": 30, "casting_time": 1.6, "cooldown": 20.0, "ingredient_cost": {},
-      "target": "area", "radius": 6.0, "tags": ["nature_sync", "heal_nature"],
-      "effects": [{"type": "nature_sync"}],
+      "id": "botany:sincronia_natureza",
+      "name": "Sincronização com a Natureza",
+      "school": "botany",
+      "level_required": 20,
+      "mana_cost": 30,
+      "casting_time": 1.6,
+      "cooldown": 20.0,
+      "ingredient_cost": {},
+      "target": "aura",
+      "radius": 6.0,
+      "tags": [
+        "nature_sync",
+        "heal_nature"
+      ],
+      "effects": [
+        {
+          "type": "nature_sync"
+        }
+      ],
       "description": "Harmoniza seu coração com o bosque: rega todos os canteiros próximos e cura seres vegetais feridos.",
       "flavor_text": "Por um instante, você ouve a seiva correr.",
-      "unlock_method": "grimoire", "implemented": true
+      "unlock_method": "grimoire",
+      "implemented": true
     },
     {
-      "id": "alchemy:dissolucao_precisa", "name": "Dissolução Precisa", "school": "alchemy",
-      "level_required": 0, "mana_cost": 10, "casting_time": 0.6, "cooldown": 6.0, "ingredient_cost": {},
-      "target": "self", "tags": ["brew_bonus"],
-      "effects": [{"type": "brew_bonus", "amount": 0.15}],
+      "id": "alchemy:dissolucao_precisa",
+      "name": "Dissolução Precisa",
+      "school": "alchemy",
+      "level_required": 0,
+      "mana_cost": 10,
+      "casting_time": 0.6,
+      "cooldown": 6.0,
+      "ingredient_cost": {},
+      "target": "self",
+      "tags": [
+        "brew_bonus"
+      ],
+      "effects": [
+        {
+          "type": "brew_bonus",
+          "amount": 0.15
+        }
+      ],
       "description": "A próxima preparação no caldeirão ganha +0,15 de qualidade.",
       "flavor_text": "Nada se perde quando cada grão sabe onde deve estar.",
-      "unlock_method": "grimoire", "implemented": true
+      "unlock_method": "grimoire",
+      "implemented": true
     },
     {
-      "id": "alchemy:estabilizacao", "name": "Estabilização", "school": "alchemy",
-      "level_required": 20, "mana_cost": 18, "casting_time": 1.0, "cooldown": 10.0, "ingredient_cost": {},
-      "target": "self", "tags": ["brew_stabilize"],
-      "effects": [{"type": "brew_stabilize"}],
+      "id": "alchemy:estabilizacao",
+      "name": "Estabilização",
+      "school": "alchemy",
+      "level_required": 20,
+      "mana_cost": 18,
+      "casting_time": 1.0,
+      "cooldown": 10.0,
+      "ingredient_cost": {},
+      "target": "self",
+      "tags": [
+        "brew_stabilize"
+      ],
+      "effects": [
+        {
+          "type": "brew_stabilize"
+        }
+      ],
       "description": "Na próxima preparação, a primeira incompatibilidade entre propriedades é ignorada.",
       "flavor_text": "Fogo e gelo podem dividir a mesa, se alguém servir o chá.",
-      "unlock_method": "npc", "implemented": true
+      "unlock_method": "npc",
+      "implemented": true
     },
     {
-      "id": "alchemy:transmutar_essencia", "name": "Transmutação de Essência", "school": "alchemy",
-      "level_required": 40, "mana_cost": 35, "casting_time": 2.0, "cooldown": 30.0, "ingredient_cost": {"pedra_comum": 3},
-      "target": "self", "tags": ["transmute"],
-      "effects": [{"type": "give_item", "item": "cristal_lunar", "amount": 1}],
+      "id": "alchemy:transmutar_essencia",
+      "name": "Transmutação de Essência",
+      "school": "alchemy",
+      "level_required": 40,
+      "mana_cost": 35,
+      "casting_time": 2.0,
+      "cooldown": 30.0,
+      "ingredient_cost": {
+        "pedra_comum": 3
+      },
+      "target": "self",
+      "tags": [
+        "transmute"
+      ],
+      "effects": [
+        {
+          "type": "give_item",
+          "item": "cristal_lunar",
+          "amount": 1
+        }
+      ],
       "description": "Condensa três Pedras de Rio em um Cristal Lunar.",
       "flavor_text": "Toda pedra sonha em brilhar.",
-      "unlock_method": "experimentation", "implemented": true
+      "unlock_method": "experimentation",
+      "implemented": true
     },
     {
-      "id": "astral:lume", "name": "Lume Estelar", "school": "astral",
-      "level_required": 0, "mana_cost": 10, "casting_time": 0.5, "cooldown": 3.0, "ingredient_cost": {},
-      "target": "self", "tags": ["light"],
-      "effects": [{"type": "light_orb", "duration": 90.0}],
+      "id": "astral:lume",
+      "name": "Lume Estelar",
+      "school": "astral",
+      "level_required": 0,
+      "mana_cost": 10,
+      "casting_time": 0.5,
+      "cooldown": 3.0,
+      "ingredient_cost": {},
+      "target": "self",
+      "tags": [
+        "light"
+      ],
+      "effects": [
+        {
+          "type": "light_orb",
+          "duration": 90.0
+        }
+      ],
       "description": "Conjura um pequeno astro que segue você. À noite, revela marcas estelares e acalma luméculas.",
       "flavor_text": "Uma estrela de bolso, emprestada do céu.",
-      "unlock_method": "grimoire", "implemented": true
+      "unlock_method": "grimoire",
+      "implemented": true,
+      "starter": true,
+      "starter_slot": 4
     },
     {
-      "id": "astral:visao_noturna", "name": "Visão Noturna", "school": "astral",
-      "level_required": 10, "mana_cost": 16, "casting_time": 0.8, "cooldown": 15.0, "ingredient_cost": {},
-      "target": "self", "tags": ["reveal"],
-      "effects": [{"type": "reveal_hidden", "duration": 60.0}],
+      "id": "astral:visao_noturna",
+      "name": "Visão Noturna",
+      "school": "astral",
+      "level_required": 10,
+      "mana_cost": 16,
+      "casting_time": 0.8,
+      "cooldown": 15.0,
+      "ingredient_cost": {},
+      "target": "self",
+      "tags": [
+        "reveal"
+      ],
+      "effects": [
+        {
+          "type": "reveal_hidden",
+          "duration": 60.0
+        }
+      ],
       "description": "Por 60 segundos, coisas ocultas tornam-se visíveis e a noite fica mais clara.",
       "flavor_text": "Os olhos do gato, o silêncio da coruja.",
-      "unlock_method": "npc", "implemented": true
+      "unlock_method": "npc",
+      "implemented": true
     },
     {
-      "id": "astral:projecao_astral", "name": "Projeção Astral", "school": "astral",
-      "level_required": 40, "mana_cost": 40, "casting_time": 2.5, "cooldown": 60.0, "ingredient_cost": {},
-      "target": "self", "tags": ["project"],
-      "effects": [{"type": "reveal_map"}],
+      "id": "astral:projecao_astral",
+      "name": "Projeção Astral",
+      "school": "astral",
+      "level_required": 40,
+      "mana_cost": 40,
+      "casting_time": 2.5,
+      "cooldown": 60.0,
+      "ingredient_cost": {},
+      "target": "self",
+      "tags": [
+        "project"
+      ],
+      "effects": [
+        {
+          "type": "reveal_map"
+        }
+      ],
       "description": "Seu espírito sobe acima do bosque e marca no mapa todos os pontos de interesse da região.",
       "flavor_text": "Do alto, até a floresta parece um mapa desenhado à mão.",
-      "unlock_method": "grimoire", "implemented": false
+      "unlock_method": "grimoire",
+      "implemented": false
     },
     {
-      "id": "runes:circulo_protecao", "name": "Círculo de Proteção", "school": "runes",
-      "level_required": 0, "mana_cost": 20, "casting_time": 1.5, "cooldown": 30.0, "ingredient_cost": {},
-      "target": "area", "radius": 5.0, "tags": ["rune_protect"],
-      "effects": [{"type": "rune_protect", "days": 3}],
+      "id": "runes:circulo_protecao",
+      "name": "Círculo de Proteção",
+      "school": "runes",
+      "level_required": 0,
+      "mana_cost": 20,
+      "casting_time": 1.5,
+      "cooldown": 30.0,
+      "ingredient_cost": {},
+      "target": "aura",
+      "radius": 5.0,
+      "tags": [
+        "rune_protect"
+      ],
+      "effects": [
+        {
+          "type": "rune_protect",
+          "days": 3
+        }
+      ],
       "description": "Grava runas ao redor dos canteiros próximos: por 3 dias, a água não evapora.",
       "flavor_text": "Um traço, um nome, uma promessa.",
-      "unlock_method": "grimoire", "implemented": true
+      "unlock_method": "grimoire",
+      "implemented": true
     },
     {
-      "id": "runes:marca_retorno", "name": "Marca de Retorno", "school": "runes",
-      "level_required": 10, "mana_cost": 25, "casting_time": 2.0, "cooldown": 20.0, "ingredient_cost": {},
-      "target": "self", "tags": ["teleport"],
-      "effects": [{"type": "teleport_home"}],
+      "id": "runes:marca_retorno",
+      "name": "Marca de Retorno",
+      "school": "runes",
+      "level_required": 10,
+      "mana_cost": 25,
+      "casting_time": 2.0,
+      "cooldown": 20.0,
+      "ingredient_cost": {},
+      "target": "self",
+      "tags": [
+        "teleport"
+      ],
+      "effects": [
+        {
+          "type": "teleport_home"
+        }
+      ],
       "description": "Retorna instantaneamente à porta da sua cabana.",
       "flavor_text": "A porta de casa sempre sabe o seu nome.",
-      "unlock_method": "npc", "implemented": true
+      "unlock_method": "npc",
+      "implemented": true
     },
     {
-      "id": "runes:barreira_persistente", "name": "Barreira Persistente", "school": "runes",
-      "level_required": 40, "mana_cost": 45, "casting_time": 3.0, "cooldown": 120.0, "ingredient_cost": {"tinta_runica": 1},
-      "target": "area", "radius": 6.0, "tags": ["barrier"],
-      "effects": [{"type": "barrier"}],
+      "id": "runes:barreira_persistente",
+      "name": "Barreira Persistente",
+      "school": "runes",
+      "level_required": 40,
+      "mana_cost": 45,
+      "casting_time": 3.0,
+      "cooldown": 120.0,
+      "ingredient_cost": {
+        "tinta_runica": 1
+      },
+      "target": "aura",
+      "radius": 6.0,
+      "tags": [
+        "barrier"
+      ],
+      "effects": [
+        {
+          "type": "barrier"
+        }
+      ],
       "description": "Ergue uma barreira rúnica permanente que impede o avanço do Silêncio Cinzento.",
       "flavor_text": "Algumas linhas não devem ser cruzadas.",
-      "unlock_method": "grimoire", "implemented": false
+      "unlock_method": "grimoire",
+      "implemented": false
     },
     {
-      "id": "protection:escudo_pessoal", "name": "Escudo Pessoal", "school": "protection",
-      "level_required": 0, "mana_cost": 14, "casting_time": 0.5, "cooldown": 8.0, "ingredient_cost": {},
-      "target": "self", "tags": ["shield"],
-      "effects": [{"type": "buff", "buff": "shield", "duration": 25.0}],
+      "id": "protection:escudo_pessoal",
+      "name": "Escudo Pessoal",
+      "school": "protection",
+      "level_required": 0,
+      "mana_cost": 14,
+      "casting_time": 0.5,
+      "cooldown": 8.0,
+      "ingredient_cost": {},
+      "target": "self",
+      "tags": [
+        "shield"
+      ],
+      "effects": [
+        {
+          "type": "buff",
+          "buff": "shield",
+          "duration": 25.0
+        }
+      ],
       "description": "Uma película de luz protege contra espinhos, esporos e frio por 25 segundos.",
       "flavor_text": "Fino como bolha de sabão, firme como promessa.",
-      "unlock_method": "grimoire", "implemented": true
+      "unlock_method": "grimoire",
+      "implemented": true,
+      "starter": true,
+      "starter_slot": -1
     },
     {
-      "id": "protection:limpeza_magica", "name": "Limpeza Mágica", "school": "protection",
-      "level_required": 15, "mana_cost": 28, "casting_time": 1.5, "cooldown": 15.0, "ingredient_cost": {},
-      "target": "area", "radius": 5.0, "tags": ["purify"],
-      "effects": [{"type": "purify"}],
+      "id": "protection:limpeza_magica",
+      "name": "Limpeza Mágica",
+      "school": "protection",
+      "level_required": 15,
+      "mana_cost": 28,
+      "casting_time": 1.5,
+      "cooldown": 15.0,
+      "ingredient_cost": {},
+      "target": "projectile",
+      "radius": 5.0,
+      "tags": [
+        "purify"
+      ],
+      "effects": [
+        {
+          "type": "purify"
+        }
+      ],
       "description": "Dissolve o Silêncio Cinzento em uma pequena área, devolvendo a cor ao que foi drenado.",
       "flavor_text": "O cinza é só uma cor esquecida. Lembre-a.",
-      "unlock_method": "npc", "implemented": true
+      "unlock_method": "npc",
+      "implemented": true
     },
     {
-      "id": "protection:refugio", "name": "Refúgio", "school": "protection",
-      "level_required": 40, "mana_cost": 50, "casting_time": 3.0, "cooldown": 300.0, "ingredient_cost": {},
-      "target": "self", "tags": ["refuge"],
-      "effects": [{"type": "refuge"}],
+      "id": "protection:refugio",
+      "name": "Refúgio",
+      "school": "protection",
+      "level_required": 40,
+      "mana_cost": 50,
+      "casting_time": 3.0,
+      "cooldown": 300.0,
+      "ingredient_cost": {},
+      "target": "self",
+      "tags": [
+        "refuge"
+      ],
+      "effects": [
+        {
+          "type": "refuge"
+        }
+      ],
       "description": "Cria um abrigo temporário onde é possível descansar e salvar fora de casa.",
       "flavor_text": "Casa é onde a magia descansa.",
-      "unlock_method": "grimoire", "implemented": false
+      "unlock_method": "grimoire",
+      "implemented": false
     },
     {
-      "id": "transmutation:transmutar_material", "name": "Transmutação de Material", "school": "transmutation",
-      "level_required": 0, "mana_cost": 15, "casting_time": 1.2, "cooldown": 10.0, "ingredient_cost": {"espinho_sarca": 2},
-      "target": "self", "tags": ["transmute"],
-      "effects": [{"type": "give_item", "item": "resina_ambar", "amount": 1}],
+      "id": "transmutation:transmutar_material",
+      "name": "Transmutação de Material",
+      "school": "transmutation",
+      "level_required": 0,
+      "mana_cost": 15,
+      "casting_time": 1.2,
+      "cooldown": 10.0,
+      "ingredient_cost": {
+        "espinho_sarca": 2
+      },
+      "target": "self",
+      "tags": [
+        "transmute"
+      ],
+      "effects": [
+        {
+          "type": "give_item",
+          "item": "resina_ambar",
+          "amount": 1
+        }
+      ],
       "description": "Transforma dois Espinhos de Sarça em uma gota de Resina Âmbar.",
       "flavor_text": "O espinho guarda mel, se você pedir com jeito.",
-      "unlock_method": "grimoire", "implemented": false
+      "unlock_method": "grimoire",
+      "implemented": false
     },
     {
-      "id": "transmutation:forma_alterada", "name": "Forma Alterada", "school": "transmutation",
-      "level_required": 20, "mana_cost": 30, "casting_time": 2.0, "cooldown": 60.0, "ingredient_cost": {},
-      "target": "self", "tags": ["shapeshift"],
-      "effects": [{"type": "shapeshift", "form": "gato", "duration": 60.0}],
-      "description": "Assume a forma de um gato por 60 segundos, passando por frestas estreitas.",
-      "flavor_text": "Nimbus jura que não é inveja.",
-      "unlock_method": "grimoire", "implemented": false
+      "id": "transmutation:levitar",
+      "name": "Levitação",
+      "school": "transmutation",
+      "level_required": 0,
+      "mana_cost": 9,
+      "casting_time": 0.5,
+      "cooldown": 2.0,
+      "ingredient_cost": {},
+      "target": "projectile",
+      "radius": 2.0,
+      "tags": [
+        "levitate"
+      ],
+      "effects": [
+        {
+          "type": "world"
+        }
+      ],
+      "description": "Aponte para pedras, caixas, barris e abóboras: eles flutuam, giram e voltam ao chão.",
+      "flavor_text": "Penas, pedras e preocupações — tudo fica mais leve.",
+      "unlock_method": "grimoire",
+      "implemented": true,
+      "starter": true,
+      "starter_slot": 2
     },
     {
-      "id": "transmutation:replicacao", "name": "Replicação", "school": "transmutation",
-      "level_required": 40, "mana_cost": 40, "casting_time": 2.5, "cooldown": 120.0, "ingredient_cost": {},
-      "target": "self", "tags": ["replicate"],
-      "effects": [{"type": "replicate_common"}],
+      "id": "transmutation:transfigurar",
+      "name": "Transfiguração",
+      "school": "transmutation",
+      "level_required": 0,
+      "mana_cost": 14,
+      "casting_time": 0.7,
+      "cooldown": 3.0,
+      "ingredient_cost": {},
+      "target": "projectile",
+      "radius": 1.6,
+      "tags": [
+        "transfigure"
+      ],
+      "effects": [
+        {
+          "type": "world"
+        }
+      ],
+      "description": "Transforma o que você apontar: pedra vira sapo, abóbora vira carruagem, caixa vira bule gigante... Descubra todas as transformações!",
+      "flavor_text": "Tudo quer ser outra coisa. Só precisa de um empurrãozinho.",
+      "unlock_method": "grimoire",
+      "implemented": true,
+      "starter": true,
+      "starter_slot": 3
+    },
+    {
+      "id": "transmutation:forma_alterada",
+      "name": "Metamorfose",
+      "school": "transmutation",
+      "level_required": 0,
+      "mana_cost": 16,
+      "casting_time": 1.0,
+      "cooldown": 20.0,
+      "ingredient_cost": {},
+      "target": "self",
+      "tags": [
+        "shapeshift"
+      ],
+      "effects": [
+        {
+          "type": "buff",
+          "buff": "cat",
+          "duration": 45.0
+        }
+      ],
+      "description": "Você vira um gato preto de chapéu por 45 segundos: corre mais rápido e passa despercebida. Lance de novo para voltar.",
+      "flavor_text": "Nimbus jura que não é inveja. É inveja.",
+      "unlock_method": "grimoire",
+      "implemented": true,
+      "starter": true,
+      "starter_slot": 5
+    },
+    {
+      "id": "transmutation:replicacao",
+      "name": "Replicação",
+      "school": "transmutation",
+      "level_required": 40,
+      "mana_cost": 40,
+      "casting_time": 2.5,
+      "cooldown": 120.0,
+      "ingredient_cost": {},
+      "target": "self",
+      "tags": [
+        "replicate"
+      ],
+      "effects": [
+        {
+          "type": "replicate_common"
+        }
+      ],
       "description": "Duplica um ingrediente comum do inventário.",
       "flavor_text": "Um mais um é igual a um... duas vezes.",
-      "unlock_method": "experimentation", "implemented": false
+      "unlock_method": "experimentation",
+      "implemented": false
     },
     {
-      "id": "illusion:veu", "name": "Véu", "school": "illusion",
-      "level_required": 0, "mana_cost": 14, "casting_time": 0.6, "cooldown": 10.0, "ingredient_cost": {},
-      "target": "self", "tags": ["stealth"],
-      "effects": [{"type": "buff", "buff": "stealth", "duration": 15.0}],
+      "id": "illusion:veu",
+      "name": "Véu",
+      "school": "illusion",
+      "level_required": 0,
+      "mana_cost": 14,
+      "casting_time": 0.6,
+      "cooldown": 10.0,
+      "ingredient_cost": {},
+      "target": "self",
+      "tags": [
+        "stealth"
+      ],
+      "effects": [
+        {
+          "type": "buff",
+          "buff": "stealth",
+          "duration": 15.0
+        }
+      ],
       "description": "Você se torna translúcida por 15 segundos: criaturas não percebem sua presença.",
       "flavor_text": "Ser vista é uma escolha.",
-      "unlock_method": "grimoire", "implemented": true
+      "unlock_method": "grimoire",
+      "implemented": true
     },
     {
-      "id": "illusion:susto", "name": "Susto", "school": "illusion",
-      "level_required": 20, "mana_cost": 18, "casting_time": 0.8, "cooldown": 12.0, "ingredient_cost": {},
-      "target": "area", "radius": 6.0, "tags": ["scare"],
-      "effects": [{"type": "scare"}],
+      "id": "illusion:susto",
+      "name": "Susto",
+      "school": "illusion",
+      "level_required": 20,
+      "mana_cost": 18,
+      "casting_time": 0.8,
+      "cooldown": 12.0,
+      "ingredient_cost": {},
+      "target": "aura",
+      "radius": 6.0,
+      "tags": [
+        "scare"
+      ],
+      "effects": [
+        {
+          "type": "scare"
+        }
+      ],
       "description": "Uma sombra enorme e boba assusta criaturas próximas, que se afastam por um tempo.",
       "flavor_text": "BUU! (com todo o respeito.)",
-      "unlock_method": "grimoire", "implemented": false
+      "unlock_method": "grimoire",
+      "implemented": false
     },
     {
-      "id": "illusion:ilusao_ambiente", "name": "Ilusão de Ambiente", "school": "illusion",
-      "level_required": 40, "mana_cost": 40, "casting_time": 2.5, "cooldown": 90.0, "ingredient_cost": {},
-      "target": "area", "radius": 8.0, "tags": ["illusion_env"],
-      "effects": [{"type": "illusion_env"}],
+      "id": "illusion:ilusao_ambiente",
+      "name": "Ilusão de Ambiente",
+      "school": "illusion",
+      "level_required": 40,
+      "mana_cost": 40,
+      "casting_time": 2.5,
+      "cooldown": 90.0,
+      "ingredient_cost": {},
+      "target": "aura",
+      "radius": 8.0,
+      "tags": [
+        "illusion_env"
+      ],
+      "effects": [
+        {
+          "type": "illusion_env"
+        }
+      ],
       "description": "Faz um lugar parecer outro: muros viram trilhas, trilhas viram muros.",
       "flavor_text": "O mapa é apenas uma opinião.",
-      "unlock_method": "grimoire", "implemented": false
+      "unlock_method": "grimoire",
+      "implemented": false
     },
     {
-      "id": "elemental:chama_controlada", "name": "Chama Controlada", "school": "elemental",
-      "level_required": 0, "mana_cost": 12, "casting_time": 0.6, "cooldown": 3.0, "ingredient_cost": {},
-      "target": "area", "radius": 4.0, "tags": ["fire"],
-      "effects": [{"type": "fire"}],
+      "id": "elemental:chama_controlada",
+      "name": "Chama Controlada",
+      "school": "elemental",
+      "level_required": 0,
+      "mana_cost": 12,
+      "casting_time": 0.6,
+      "cooldown": 3.0,
+      "ingredient_cost": {},
+      "target": "projectile",
+      "radius": 2.5,
+      "tags": [
+        "fire"
+      ],
+      "effects": [
+        {
+          "type": "fire"
+        }
+      ],
       "description": "Uma chama paciente que queima apenas o que você deseja: sarças, pavios, gelo.",
       "flavor_text": "\"O fogo obedece quem não tem pressa.\" — Ondina Vael",
-      "unlock_method": "grimoire", "implemented": true
+      "unlock_method": "grimoire",
+      "implemented": true,
+      "starter": true,
+      "starter_slot": 0
     },
     {
-      "id": "elemental:cristal_gelo", "name": "Cristal de Gelo", "school": "elemental",
-      "level_required": 10, "mana_cost": 16, "casting_time": 0.8, "cooldown": 6.0, "ingredient_cost": {},
-      "target": "area", "radius": 5.0, "tags": ["ice"],
-      "effects": [{"type": "ice", "duration": 40.0}],
+      "id": "elemental:cristal_gelo",
+      "name": "Cristal de Gelo",
+      "school": "elemental",
+      "level_required": 0,
+      "mana_cost": 16,
+      "casting_time": 0.8,
+      "cooldown": 6.0,
+      "ingredient_cost": {},
+      "target": "projectile",
+      "radius": 3.0,
+      "tags": [
+        "ice"
+      ],
+      "effects": [
+        {
+          "type": "ice",
+          "duration": 40.0
+        }
+      ],
       "description": "Congela a superfície de águas próximas por 40 segundos, criando caminhos.",
       "flavor_text": "O lago prende a respiração.",
-      "unlock_method": "grimoire", "implemented": true
+      "unlock_method": "grimoire",
+      "implemented": true,
+      "starter": true,
+      "starter_slot": 1
     },
     {
-      "id": "elemental:brisa_suave", "name": "Brisa Suave", "school": "elemental",
-      "level_required": 0, "mana_cost": 8, "casting_time": 0.5, "cooldown": 3.0, "ingredient_cost": {},
-      "target": "area", "radius": 5.0, "tags": ["wind", "pollinate"],
-      "effects": [{"type": "wind"}],
+      "id": "elemental:brisa_suave",
+      "name": "Brisa Suave",
+      "school": "elemental",
+      "level_required": 0,
+      "mana_cost": 8,
+      "casting_time": 0.5,
+      "cooldown": 3.0,
+      "ingredient_cost": {},
+      "target": "projectile",
+      "radius": 3.5,
+      "tags": [
+        "wind",
+        "pollinate"
+      ],
+      "effects": [
+        {
+          "type": "wind"
+        }
+      ],
       "description": "Dispersa brumas e poliniza plantas maduras, revelando propriedades ocultas.",
       "flavor_text": "O vento é o carteiro das flores.",
-      "unlock_method": "grimoire", "implemented": true
+      "unlock_method": "grimoire",
+      "implemented": true,
+      "starter": true,
+      "starter_slot": -1
     }
   ]
 }

@@ -44,6 +44,20 @@ static func cylinder(top: float, bottom: float, h: float, segs: int = 14) -> Mes
 		return m)
 
 
+## Tronco de cone aberto (sem tampas) — capas, saias e abajures.
+static func open_cone(top: float, bottom: float, h: float, segs: int = 24) -> Mesh:
+	return _cached("ocone|%f|%f|%f|%d" % [top, bottom, h, segs], func():
+		var m := CylinderMesh.new()
+		m.top_radius = top
+		m.bottom_radius = bottom
+		m.height = h
+		m.radial_segments = segs
+		m.rings = 2
+		m.cap_top = false
+		m.cap_bottom = false
+		return m)
+
+
 static func box(size: Vector3) -> Mesh:
 	return _cached("box|%s" % str(size), func():
 		var m := BoxMesh.new()

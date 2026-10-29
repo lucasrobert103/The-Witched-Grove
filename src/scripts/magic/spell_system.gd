@@ -12,12 +12,12 @@ extends RefCounted
 
 const CASTABLE_MIN := 10.0
 const KNOWLEDGE_PER_CAST := 5.0
-const SLOT_COUNT := 4
+const SLOT_COUNT := 6
 
 var knowledge: Dictionary = {}   # spell_id -> 0..100
 var casts: Dictionary = {}       # spell_id -> int
 var cooldowns: Dictionary = {}   # spell_id -> segundos restantes
-var slots: Array = ["", "", "", ""]
+var slots: Array = ["", "", "", "", "", ""]
 var selected_slot: int = 0
 
 
@@ -66,6 +66,23 @@ func _auto_slot(spell_id: String) -> void:
 			slots[i] = spell_id
 			EventBus.spell_slots_changed.emit()
 			return
+	# Barra cheia: o feitiço novo entra no último espaço (o antigo continua no grimório).
+	var old: String = slots[SLOT_COUNT - 1]
+	slots[SLOT_COUNT - 1] = spell_id
+	EventBus.spell_slots_changed.emit()
+	EventBus.notify.emit("%s entrou no espaço %d da barra (%s continua no Grimório → Feitiços)." % [def(spell_id).get("name", spell_id), SLOT_COUNT, def(old).get("name", old)], "info")
+
+
+## Feitiços iniciais (marcados com "starter" nos dados): já compreendidos e equipados.
+func grant_starters() -> void:
+	for id in DataRegistry.spell_order:
+		var d: Dictionary = DataRegistry.spells[id]
+		if not d.get("starter", false):
+			continue
+		knowledge[id] = 30.0
+		var slot := int(d.get("starter_slot", -1))
+		if slot >= 0 and slot < SLOT_COUNT:
+			slots[slot] = id
 
 
 func set_slot(index: int, spell_id: String) -> void:
@@ -191,8 +208,8 @@ func from_dict(d: Dictionary) -> void:
 	casts = {}
 	for k in d.get("casts", {}):
 		casts[k] = int(d.casts[k])
-	var s: Array = d.get("slots", ["", "", "", ""])
-	slots = ["", "", "", ""]
+	var s: Array = d.get("slots", [])
+	slots = ["", "", "", "", "", ""]
 	for i in mini(s.size(), SLOT_COUNT):
 		slots[i] = str(s[i]) if DataRegistry.spells.has(str(s[i])) else ""
 	selected_slot = clampi(int(d.get("selected", 0)), 0, SLOT_COUNT - 1)

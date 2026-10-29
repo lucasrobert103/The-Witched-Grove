@@ -59,7 +59,7 @@ func _find(dir: String, sound_name: String) -> AudioStream:
 	return null
 
 
-func play_sfx(sound_name: String, volume_db: float = 0.0, pitch_variation: float = 0.06) -> void:
+func play_sfx(sound_name: String, volume_db: float = 0.0, pitch_variation: float = 0.06, base_pitch: float = 1.0) -> void:
 	var s := _find(SFX_DIR, sound_name)
 	if s == null:
 		return
@@ -67,7 +67,7 @@ func play_sfx(sound_name: String, volume_db: float = 0.0, pitch_variation: float
 	_pool_index = (_pool_index + 1) % POOL_SIZE
 	p.stream = s
 	p.volume_db = volume_db
-	p.pitch_scale = 1.0 + randf_range(-pitch_variation, pitch_variation)
+	p.pitch_scale = base_pitch * (1.0 + randf_range(-pitch_variation, pitch_variation))
 	p.play()
 
 
@@ -100,6 +100,10 @@ func stop_music(fade: float = 1.5) -> void:
 
 func play_ambient(track: String) -> void:
 	if track == _ambient_name:
+		return
+	if track == "":
+		_ambient_name = ""
+		_ambient.stop()
 		return
 	_ambient_name = track
 	var s := _find(MUSIC_DIR, track)

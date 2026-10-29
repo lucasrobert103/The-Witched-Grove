@@ -2,7 +2,7 @@ extends TestCase
 ## Garante que todos os dados se referenciam corretamente (rule-engine: R-0).
 
 const KNOWN_EFFECTS := ["set_flag", "clear_flag", "start_quest", "complete_quest", "give_item", "take_item", "give_ep", "take_ep", "rep", "read_page", "school_xp", "open_shop", "bestiary", "research", "upgrade_room", "notify"]
-const KNOWN_CONDS := ["flag", "not_flag", "quest_active", "quest_done", "quest_not_started", "objective_current", "objective_done", "has_item", "item_quality", "knows_spell", "school", "rep", "time", "moon", "page_read", "ep", "bestiary_notes", "any", "not"]
+const KNOWN_CONDS := ["flag", "not_flag", "quest_active", "quest_done", "quest_not_started", "objective_current", "objective_done", "has_item", "item_quality", "knows_spell", "school", "rep", "time", "moon", "page_read", "ep", "flag_count", "bestiary_notes", "any", "not"]
 
 
 func test_sem_erros_de_carga() -> void:

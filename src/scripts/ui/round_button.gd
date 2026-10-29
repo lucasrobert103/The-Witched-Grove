@@ -87,6 +87,42 @@ func _draw_icon(c: Vector2, r: float) -> void:
 			draw_colored_polygon(PackedVector2Array([c + Vector2(r * 0.6, -r * 0.2), c + Vector2(r * 0.45, -r * 0.95), c + Vector2(r * 0.1, -r * 0.5)]), col)
 			draw_circle(c + Vector2(-r * 0.22, 0), r * 0.1, UITheme.INK)
 			draw_circle(c + Vector2(r * 0.22, 0), r * 0.1, UITheme.INK)
+		"flame":
+			draw_colored_polygon(PackedVector2Array([c + Vector2(0, -r), c + Vector2(r * 0.6, r * 0.2), c + Vector2(r * 0.35, r * 0.7), c + Vector2(-r * 0.35, r * 0.7), c + Vector2(-r * 0.6, r * 0.2)]), Color("#ffb070"))
+			draw_circle(c + Vector2(0, r * 0.3), r * 0.35, Color("#fff3a0"))
+		"snow":
+			for k in 3:
+				var a := k * PI / 3.0
+				draw_line(c - Vector2(cos(a), sin(a)) * r, c + Vector2(cos(a), sin(a)) * r, Color("#e6f7ff"), 3.0)
+			draw_circle(c, r * 0.18, Color.WHITE)
+		"feather":
+			draw_line(c + Vector2(-r * 0.7, r * 0.8), c + Vector2(r * 0.6, -r * 0.8), col, 2.0)
+			draw_colored_polygon(PackedVector2Array([c + Vector2(r * 0.6, -r * 0.9), c + Vector2(r * 0.1, -r * 0.1), c + Vector2(-r * 0.5, r * 0.4), c + Vector2(-r * 0.1, -r * 0.3)]), col)
+		"swirl":
+			for k in 3:
+				draw_arc(c, r * (0.3 + k * 0.28), k * 1.2, k * 1.2 + 4.0, 16, Color("#ffd1f0"), 3.0, true)
+			draw_colored_polygon(_star_pts(c, r * 0.3, r * 0.12), UITheme.GOLD)
+		"sun":
+			draw_circle(c, r * 0.45, Color("#fff3a0"))
+			for k in 8:
+				var a2 := k * TAU / 8.0
+				draw_line(c + Vector2(cos(a2), sin(a2)) * r * 0.62, c + Vector2(cos(a2), sin(a2)) * r * 0.95, Color("#fff3a0"), 3.0)
+		"leaf":
+			draw_circle(c + Vector2(-r * 0.15, -r * 0.1), r * 0.55, Color("#9dff9a"))
+			draw_line(c + Vector2(-r * 0.6, r * 0.7), c + Vector2(r * 0.3, -r * 0.4), Color("#2f6a3a"), 3.0)
+		"shield":
+			draw_colored_polygon(PackedVector2Array([c + Vector2(-r * 0.7, -r * 0.7), c + Vector2(r * 0.7, -r * 0.7), c + Vector2(r * 0.6, r * 0.2), c + Vector2(0, r * 0.9), c + Vector2(-r * 0.6, r * 0.2)]), Color("#9ff0ff"))
+		"eye":
+			draw_circle(c, r * 0.65, Color("#f2f5ff"))
+			draw_circle(c, r * 0.32, Color("#5a3a8a"))
+			draw_circle(c + Vector2(-r * 0.1, -r * 0.1), r * 0.1, Color.WHITE)
+		"wind":
+			for k in 3:
+				draw_arc(c + Vector2(0, (k - 1) * r * 0.45), r * 0.6, -PI * 0.9, 0.2, 12, Color("#f2f5ff"), 3.0, true)
+		"rune":
+			draw_arc(c, r * 0.75, 0, TAU, 24, Color("#d6b8ff"), 3.0, true)
+			draw_line(c + Vector2(0, -r * 0.5), c + Vector2(0, r * 0.5), Color("#d6b8ff"), 3.0)
+			draw_line(c + Vector2(-r * 0.35, -r * 0.1), c + Vector2(r * 0.35, r * 0.25), Color("#d6b8ff"), 3.0)
 		"pause":
 			draw_rect(Rect2(c - Vector2(r * 0.45, r * 0.6), Vector2(r * 0.3, r * 1.2)), col)
 			draw_rect(Rect2(c + Vector2(r * 0.15, -r * 0.6), Vector2(r * 0.3, r * 1.2)), col)

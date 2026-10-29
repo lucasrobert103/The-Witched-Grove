@@ -18,6 +18,8 @@ const BASE_FONT := 22
 
 static var _theme: Theme
 static var _theme_key := ""
+static var _book_theme: Theme
+static var _book_key := ""
 
 
 static func font_size(mult: float = 1.0) -> int:
@@ -31,6 +33,40 @@ static func get_theme() -> Theme:
 	_theme_key = key
 	_theme = _build()
 	return _theme
+
+
+## Tema "tinta sobre pergaminho" usado dentro do grimório.
+static func get_book_theme() -> Theme:
+	var key := "%f|%s" % [Settings.text_scale(), str(Settings.high_contrast)]
+	if _book_theme and key == _book_key:
+		return _book_theme
+	_book_key = key
+	var t := _build().duplicate(true) as Theme
+	var ink_c := INK
+	t.set_color("font_color", "Label", ink_c)
+	t.set_constant("outline_size", "Label", 0)
+	t.set_color("default_color", "RichTextLabel", ink_c)
+	var bn := box(Color(0.55, 0.38, 0.2, 0.12), Color("#8a6a4a"), 10, 2, 14)
+	var bh := box(Color(0.55, 0.38, 0.2, 0.25), Color("#7a2a14"), 10, 2, 14)
+	var bp := box(Color("#7a2a14"), Color("#4a1a0a"), 10, 2, 14)
+	var bd := box(Color(0.5, 0.45, 0.4, 0.15), Color(0.6, 0.55, 0.5, 0.6), 10, 2, 14)
+	for sb in [bn, bh, bp, bd]:
+		sb.content_margin_top = 8
+		sb.content_margin_bottom = 8
+	t.set_stylebox("normal", "Button", bn)
+	t.set_stylebox("hover", "Button", bh)
+	t.set_stylebox("pressed", "Button", bp)
+	t.set_stylebox("disabled", "Button", bd)
+	t.set_color("font_color", "Button", ink_c)
+	t.set_color("font_hover_color", "Button", Color("#7a2a14"))
+	t.set_color("font_pressed_color", "Button", Color("#fff6e0"))
+	t.set_color("font_disabled_color", "Button", Color(0.45, 0.4, 0.35))
+	t.set_color("font_color", "CheckButton", ink_c)
+	t.set_color("font_color", "CheckBox", ink_c)
+	t.set_stylebox("background", "ProgressBar", box(Color(0.4, 0.3, 0.2, 0.25), Color("#8a6a4a"), 8, 1, 0))
+	t.set_stylebox("panel", "PanelContainer", box(Color(0.55, 0.38, 0.2, 0.08), Color("#b89a72"), 12, 2, 12))
+	_book_theme = t
+	return t
 
 
 static func box(bg: Color, border: Color = Color.TRANSPARENT, radius: int = 18, border_w: int = 0, pad: int = 12) -> StyleBoxFlat:

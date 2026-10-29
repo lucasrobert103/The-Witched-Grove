@@ -56,6 +56,9 @@ protótipo. Qualquer uma pode ser revertida — os impactos estão listados.
 - **R-B5** Maestria (100%): custo de mana −20%.
 - **R-B6** Lua cheia: Magia Astral +20%; lua nova: Ilusão +20% (+10% com Amuleto da Lua). Sala Ritual: +10% por nível.
 - **R-B7** Feitiços com `unlock_method = experimentation` se revelam ao descobrir **8 receitas**.
+- **R-B8** **Feitiços iniciais** (`"starter": true`): Chama, Cristal de Gelo, Levitação, Transfiguração, Lume Estelar e Metamorfose começam com **30% de compreensão** e já nos 6 atalhos (`starter_slot`). Aprender um feitiço com os atalhos cheios substitui o último.
+- **R-B9** Lançamento "apontar e tocar": o feitiço sai como projétil da ponta da varinha e mira no alvo mágico mais próximo num cone de **±55° e até 16 m** à frente da câmera (ou no chão a 8 m). O efeito é aplicado **no ponto de impacto**.
+- **R-B10** Transformações (`MagicProp`) voltam ao normal no dia seguinte; cada combinação nova objeto × feitiço grava a flag `transf.<objeto>.<efeito>` (condição `flag_count`).
 
 ### Grimório (Sistema C)
 - **R-C1** Tudo que não foi descoberto aparece como **???**.
@@ -137,3 +140,4 @@ protótipo. Qualquer uma pode ser revertida — os impactos estão listados.
 | Data | Alteração | Aprovado por |
 |------|-----------|--------------|
 | 2026-10-29 | Criação do documento e do protótipo do Ato I com as propostas P1–P10. | Pendente |
+| 2026-10-29 | Feitiços iniciais e lançamento instantâneo (R-B8–R-B10), interiores, aldeia, mundo maior, diálogo em ritmo de RPG, Asterion em estilo anime. | Pendente |

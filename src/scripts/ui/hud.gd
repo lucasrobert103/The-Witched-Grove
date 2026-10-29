@@ -5,7 +5,7 @@ extends CanvasLayer
 var PANEL_CLASSES := {
 	"book": BookPanel, "lab": LabPanel, "garden": GardenPanel, "shop": ShopPanel,
 	"reader": ReaderPanel, "lectern": LecternPanel, "message": MessagePanel,
-	"rest": RestPanel, "intro": IntroPanel,
+	"rest": RestPanel, "intro": IntroPanel, "storage": StoragePanel,
 }
 const SCHOOL_ICON_COLORS := SpellFX.SCHOOL_COLORS
 
@@ -30,6 +30,9 @@ var _toasts: VBoxContainer
 var _pointers: Dictionary = {}        # idx -> {"role": String, "pos": Vector2}
 var _pinch_dist := 0.0
 var _toast_queue: Array = []
+var _fade: ColorRect
+var _room_label: PanelContainer
+var _room_text: Label
 
 
 func _ready() -> void:
@@ -141,15 +144,16 @@ func _build() -> void:
 	_btn_interact = _round("hand", "", Color("#3f8f55"), 132)
 	_place_br(_btn_interact, Vector2(-170, -178))
 	_btn_interact.triggered.connect(_do_interact)
-	_btn_cast = _round("star", "", UITheme.PURPLE, 116)
-	_place_br(_btn_cast, Vector2(-322, -142))
-	_btn_cast.triggered.connect(_do_cast)
-	var slot_pos := [Vector2(-404, -246), Vector2(-338, -328), Vector2(-246, -366), Vector2(-150, -366)]
-	for i in 4:
-		var b := _round("", str(i + 1), Color("#3a2a5a"), 74)
-		_place_br(b, slot_pos[i])
-		var idx := i
-		b.triggered.connect(func(): _select_slot(idx))
+	_btn_cast = _round("star", "", UITheme.PURPLE, 10)
+	_btn_cast.visible = false
+	# 6 feitiços em arco ao redor do botão de interagir: toque = lança na hora
+	var center := Vector2(-170 + 66, -178 + 66)
+	for i in SpellSystem.SLOT_COUNT:
+		var ang := deg_to_rad(165.0 + i * 24.0)
+		var pos := center + Vector2(cos(ang), sin(ang)) * 212.0 - Vector2(44, 44)
+		var b := _round("", str(i + 1), Color("#3a2a5a"), 88)
+		_place_br(b, pos)
+		b.triggered.connect(_cast_slot.bind(i))
 		_slots.append(b)
 	_prompt = UITheme.label("", 0.85, Color.WHITE)
 	_prompt.anchor_left = 1.0
@@ -164,6 +168,16 @@ func _build() -> void:
 	_prompt.add_theme_constant_override("outline_size", 8)
 	_prompt.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.85))
 	root.add_child(_prompt)
+	_room_label = PanelContainer.new()
+	_room_label.add_theme_stylebox_override("panel", UITheme.box(Color(0.11, 0.08, 0.2, 0.85), UITheme.GOLD_DIM, 16, 2, 14))
+	_room_label.offset_left = 16
+	_room_label.offset_right = 360
+	_room_label.offset_top = 230
+	_room_label.visible = false
+	_room_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root.add_child(_room_label)
+	_room_text = UITheme.label("", 0.9, UITheme.GOLD, true)
+	_room_label.add_child(_room_text)
 	# --- notificações
 	_toasts = VBoxContainer.new()
 	_toasts.anchor_left = 0.5
@@ -175,6 +189,32 @@ func _build() -> void:
 	_toasts.add_theme_constant_override("separation", 6)
 	_toasts.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	root.add_child(_toasts)
+
+
+func _update_room_ui() -> void:
+	var w := get_parent()
+	var inside: bool = w.current_room != null
+	_minimap.visible = not inside
+	_room_label.visible = inside
+	if inside:
+		_room_text.text = "%s\nToque na porta para sair." % w.current_room.title
+
+
+## Escurece a tela, executa a troca de cena (entrar/sair de casa) e clareia.
+func fade_transition(cb: Callable) -> void:
+	if _fade == null:
+		_fade = ColorRect.new()
+		_fade.color = Color(0.02, 0.01, 0.04, 0.0)
+		_fade.set_anchors_preset(Control.PRESET_FULL_RECT)
+		_fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		root.add_child(_fade)
+	root.move_child(_fade, -1)
+	_release_all()
+	var tw := create_tween()
+	tw.tween_property(_fade, "color:a", 1.0, 0.28)
+	tw.tween_callback(cb)
+	tw.tween_interval(0.12)
+	tw.tween_property(_fade, "color:a", 0.0, 0.35)
 
 
 func _do_interact() -> void:
@@ -239,7 +279,8 @@ func _process(delta: float) -> void:
 	_btn_cast.queue_redraw()
 	for i in _slots.size():
 		var ssid: String = Game.spells.slots[i]
-		_slots[i].selected = Game.spells.selected_slot == i
+		_slots[i].selected = false
+		_slots[i].dim = ssid != "" and not Game.spells.can_cast(ssid, Game.stats, Game.inventory).ok
 		_slots[i].cooldown = clampf(Game.spells.cooldown_left(ssid) / maxf(float(Game.spells.def(ssid).get("cooldown", 1.0)), 0.01), 0.0, 1.0) if ssid != "" else 0.0
 		_slots[i].queue_redraw()
 	var f: Interactable = player.focused if player else null
@@ -258,11 +299,33 @@ func _refresh_slots() -> void:
 		var sid: String = Game.spells.slots[i]
 		if sid == "":
 			_slots[i].label = str(i + 1)
+			_slots[i].icon = ""
 			_slots[i].color = Color("#3a2a5a")
 		else:
 			var d := Game.spells.def(sid)
-			_slots[i].label = d.name.split(" ")[0].substr(0, 7)
-			_slots[i].color = SCHOOL_ICON_COLORS.get(d.school, UITheme.PURPLE).darkened(0.35)
+			var nm: String = d.name.split(" ")[0]
+			_slots[i].label = nm if nm.length() <= 9 else nm.substr(0, 8) + "."
+			_slots[i].icon = spell_icon(sid)
+			_slots[i].color = SCHOOL_ICON_COLORS.get(d.school, UITheme.PURPLE).darkened(0.4)
+
+
+func _cast_slot(i: int) -> void:
+	if Game.spells.slots[i] == "":
+		EventBus.notify.emit("Espaço vazio. Equipe feitiços no Grimório → Feitiços.", "info")
+		return
+	Game.spells.selected_slot = i
+	EventBus.spell_slots_changed.emit()
+	if player:
+		player.cast_selected()
+
+
+static func spell_icon(spell_id: String) -> String:
+	var d: Dictionary = DataRegistry.spells.get(spell_id, {})
+	var tags: Array = d.get("tags", [])
+	for pair in [["fire", "flame"], ["ice", "snow"], ["levitate", "feather"], ["transfigure", "swirl"], ["light", "sun"], ["shapeshift", "cat"], ["grow", "leaf"], ["nature_sync", "leaf"], ["shield", "shield"], ["stealth", "eye"], ["reveal", "eye"], ["wind", "wind"], ["purify", "sun"], ["teleport", "rune"], ["rune_protect", "rune"], ["identify", "leaf"]]:
+		if pair[0] in tags:
+			return pair[1]
+	return "star"
 
 
 func _select_slot(i: int) -> void:
@@ -379,6 +442,9 @@ func _spawn_toast(text: String, kind: String) -> void:
 func open_panel(panel: String, payload: Dictionary) -> void:
 	if panel == "theme_changed":
 		root.theme = UITheme.get_theme()
+		return
+	if panel == "room_changed":
+		_update_room_ui()
 		return
 	if panel == "dialogue_node":
 		panel = "dialogue"

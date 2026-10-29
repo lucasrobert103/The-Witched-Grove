@@ -86,8 +86,11 @@ func new_game() -> void:
 	inventory.add("semente_lucidalia", 1)
 	inventory.add("agua_manancial", 1)
 	grimoire.learn_recipe("tonico_revigorante")
+	spells.grant_starters()
 	grimoire.log_entry(1, clock.time_string(), "Ondina não voltou. O grimório dela está no atril da varanda.")
 	quests.start("mq01_grimorio", 1)
+	quests.start("sq_transfiguracao", 1)
+	quests.tracked = "mq01_grimorio"
 	started = false
 
 
@@ -395,6 +398,7 @@ func cast_spell(spell_id: String) -> Dictionary:
 	var d := spells.def(spell_id)
 	r["tags"] = d.get("tags", [])
 	r["radius"] = float(d.get("radius", 4.0))
+	r["target"] = str(d.get("target", "self"))
 	for e in d.get("effects", []):
 		match e.get("type", ""):
 			"brew_bonus":
@@ -407,7 +411,11 @@ func cast_spell(spell_id: String) -> Dictionary:
 				var dur := float(e.duration) * float(r.power)
 				if e.buff == "shield" and stats.has_specialization("guardia_saber"):
 					dur *= 1.5
-				add_buff(e.buff, dur)
+				if e.buff == "cat" and has_buff("cat"):
+					buffs.erase("cat")
+					EventBus.buff_changed.emit("cat", false)
+				else:
+					add_buff(e.buff, dur)
 			"light_orb":
 				var dur2 := float(e.duration) * float(r.power)
 				if stats.has_specialization("investigadora"):

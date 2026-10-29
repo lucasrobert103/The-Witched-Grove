@@ -26,6 +26,11 @@ func interact(_player: Node) -> void:
 	pass
 
 
+## Pode ser alvo da mira de feitiços (aponte e lance)?
+func accepts_spells() -> bool:
+	return false
+
+
 ## Reage a um feitiço lançado por perto. Retorna true se houve efeito.
 func on_spell(_tags: Array, _result: Dictionary) -> bool:
 	return false

@@ -69,6 +69,10 @@ func interact(_player: Node) -> void:
 	EventBus.panel_requested.emit("garden", {"plot": index})
 
 
+func accepts_spells() -> bool:
+	return index < Game.house.garden_plots()
+
+
 func on_spell(tags: Array, result: Dictionary) -> bool:
 	if not _unlocked():
 		return false

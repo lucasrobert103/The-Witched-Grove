@@ -97,6 +97,10 @@ func interact(_player: Node) -> void:
 		say("Uma vinha antiga dorme enrolada à margem. Dizem que ela já foi ponte. Talvez só precise de um empurrãozinho para crescer.", "info")
 
 
+func accepts_spells() -> bool:
+	return not is_solved()
+
+
 func on_spell(tags: Array, _result: Dictionary) -> bool:
 	if is_solved():
 		return false

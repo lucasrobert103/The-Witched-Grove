@@ -19,6 +19,8 @@ func setup(p_kind: String, p_data: Dictionary = {}) -> void:
 		"ritual": prompt = "Círculo ritual"; radius = 3.0; marker_height = 1.5
 		"sign": prompt = "Ler placa"; radius = 2.0; marker_height = 2.2
 		"portal": prompt = "Examinar o portal"; radius = 3.5; marker_height = 4.5
+		"door": prompt = "Entrar"; radius = 2.2; marker_height = 2.6
+		"door_exit": prompt = "Sair"; radius = 1.8; marker_height = 2.4
 
 
 func interact(_player: Node) -> void:
@@ -30,7 +32,16 @@ func interact(_player: Node) -> void:
 		"bed":
 			EventBus.panel_requested.emit("rest", {})
 		"chest":
-			EventBus.panel_requested.emit("book", {"tab": "inventario"})
+			EventBus.panel_requested.emit("storage", {})
+			AudioManager.play_sfx("ui_open")
+		"door":
+			var w := world()
+			if w:
+				w.enter_interior(data.get("room", ""))
+		"door_exit":
+			var w2 := world()
+			if w2:
+				w2.exit_interior()
 		"ritual":
 			if Game.house.is_unlocked("sala_ritual"):
 				say("O círculo pulsa: seus feitiços têm +%d%% de potência." % int(Game.house.spell_power_bonus() * 100.0), "discovery")
@@ -39,6 +50,19 @@ func interact(_player: Node) -> void:
 		"sign", "portal":
 			EventBus.panel_requested.emit("message", {"title": data.get("title", ""), "text": _sign_text()})
 			AudioManager.play_sfx("page_turn")
+
+
+func get_prompt() -> String:
+	match kind:
+		"door":
+			return "Entrar: %s" % data.get("title", "")
+		"door_exit":
+			return "Sair para o vale"
+		"chest":
+			return "Abrir o armazém"
+		"lectern":
+			return "Ler o grimório de Ondina"
+	return prompt
 
 
 func _sign_text() -> String:

@@ -7,8 +7,8 @@ func _ready() -> void:
 	e.background_mode = Environment.BG_COLOR
 	e.background_color = Color("#2b2140")
 	e.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	e.ambient_light_color = Color("#9a8fc0")
-	e.ambient_light_energy = 0.6
+	e.ambient_light_color = Color("#d8d0e8")
+	e.ambient_light_energy = 0.45
 	e.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	env.environment = e
 	add_child(env)

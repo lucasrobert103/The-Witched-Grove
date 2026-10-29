@@ -1,31 +1,121 @@
 {
   "salvia": {
     "entries": [
-      {"if": [{"flag": "musgo_purificado"}, {"not_flag": "contou_salvia_musgo"}, {"flag": "musgo_corrompido"}], "node": "resultado_atalho"},
-      {"if": [{"flag": "musgo_purificado"}, {"not_flag": "contou_salvia_musgo"}], "node": "resultado_bom"},
-      {"if": [{"quest_active": "mq01_grimorio"}, {"not_flag": "falou_salvia_1"}], "node": "primeira"},
-      {"if": [{"quest_active": "mq02_raizes"}], "node": "andamento"},
-      {"if": [{"quest_done": "mq02_raizes"}], "node": "pos_musgo"},
-      {"if": [], "node": "padrao"}
+      {
+        "if": [
+          {
+            "flag": "musgo_purificado"
+          },
+          {
+            "not_flag": "contou_salvia_musgo"
+          },
+          {
+            "flag": "musgo_corrompido"
+          }
+        ],
+        "node": "resultado_atalho"
+      },
+      {
+        "if": [
+          {
+            "flag": "musgo_purificado"
+          },
+          {
+            "not_flag": "contou_salvia_musgo"
+          }
+        ],
+        "node": "resultado_bom"
+      },
+      {
+        "if": [
+          {
+            "quest_active": "mq01_grimorio"
+          },
+          {
+            "not_flag": "falou_salvia_1"
+          }
+        ],
+        "node": "primeira"
+      },
+      {
+        "if": [
+          {
+            "quest_active": "mq02_raizes"
+          }
+        ],
+        "node": "andamento"
+      },
+      {
+        "if": [
+          {
+            "quest_done": "mq02_raizes"
+          }
+        ],
+        "node": "pos_musgo"
+      },
+      {
+        "if": [],
+        "node": "padrao"
+      }
     ],
     "nodes": {
       "primeira": {
         "text": "Ah, a menina de Ondina! Entre, entre — a chaleira já sabia que você vinha. Você leu a Folha I, não leu? Dá para ver: tem terra debaixo das suas unhas e brilho nos olhos. Tome, este caderno era para você desde sempre.",
-        "effects": [{"set_flag": "falou_salvia_1"}, {"read_page": "caderno_salvia"}, {"rep": ["druidas", 5]}],
+        "effects": [
+          {
+            "set_flag": "falou_salvia_1"
+          },
+          {
+            "read_page": "caderno_salvia"
+          },
+          {
+            "rep": [
+              "druidas",
+              5
+            ]
+          }
+        ],
         "options": [
-          {"text": "O que aconteceu com Ondina?", "goto": "ondina"},
-          {"text": "O bosque está perdendo a cor...", "goto": "silencio"}
+          {
+            "text": "O que aconteceu com Ondina?",
+            "goto": "ondina"
+          },
+          {
+            "text": "O bosque está perdendo a cor...",
+            "goto": "silencio"
+          }
         ]
       },
       "ondina": {
         "text": "Na noite do eclipse ela saiu sem chá e sem casaco — duas coisas que Ondina nunca esquecia. Disse que ia 'buscar a fonte'. Não disse de quê. Mas o Guardião Musgo sabe mais do que conta; sempre soube.",
-        "options": [{"text": "E o bosque?", "goto": "silencio"}]
+        "options": [
+          {
+            "text": "E o bosque?",
+            "goto": "silencio"
+          }
+        ]
       },
       "silencio": {
         "text": "Chamamos de Silêncio Cinzento. Onde ele passa, as plantas esquecem a própria cor, e depois a própria voz. O Guardião Musgo, ao norte da sua cabana, está dormindo um sono cinza. Ele conhecia Ondina melhor do que ninguém.",
         "options": [
-          {"text": "Eu vou ajudar o Guardião.", "if": [{"quest_not_started": "mq02_raizes"}], "goto": "aceitou", "effects": [{"start_quest": "mq02_raizes"}]},
-          {"text": "Preciso pensar um pouco.", "goto": "end"}
+          {
+            "text": "Eu vou ajudar o Guardião.",
+            "if": [
+              {
+                "quest_not_started": "mq02_raizes"
+              }
+            ],
+            "goto": "aceitou",
+            "effects": [
+              {
+                "start_quest": "mq02_raizes"
+              }
+            ]
+          },
+          {
+            "text": "Preciso pensar um pouco.",
+            "goto": "end"
+          }
         ]
       },
       "aceitou": {
@@ -34,288 +124,1405 @@
       "andamento": {
         "text": "Como vai o nosso Guardião? Sente-se, conte.",
         "options": [
-          {"text": "Onde encontro Folhas-de-Orvalho?", "if": [{"objective_current": ["mq02_raizes", "folhas"]}], "goto": "dica_folhas"},
-          {"text": "Como preparo o Tônico?", "if": [{"objective_current": ["mq02_raizes", "tonico"]}], "goto": "dica_tonico"},
-          {"text": "O Guardião acordou, mas continua cinza.", "if": [{"objective_current": ["mq02_raizes", "purificar"]}], "goto": "dica_purificar"},
-          {"text": "Me conte sobre os Druidas.", "goto": "druidas"},
-          {"text": "Até logo, vovó.", "goto": "end"}
+          {
+            "text": "Onde encontro Folhas-de-Orvalho?",
+            "if": [
+              {
+                "objective_current": [
+                  "mq02_raizes",
+                  "folhas"
+                ]
+              }
+            ],
+            "goto": "dica_folhas"
+          },
+          {
+            "text": "Como preparo o Tônico?",
+            "if": [
+              {
+                "objective_current": [
+                  "mq02_raizes",
+                  "tonico"
+                ]
+              }
+            ],
+            "goto": "dica_tonico"
+          },
+          {
+            "text": "O Guardião acordou, mas continua cinza.",
+            "if": [
+              {
+                "objective_current": [
+                  "mq02_raizes",
+                  "purificar"
+                ]
+              }
+            ],
+            "goto": "dica_purificar"
+          },
+          {
+            "text": "Me conte sobre os Druidas.",
+            "goto": "druidas"
+          },
+          {
+            "text": "Até logo, vovó.",
+            "goto": "end"
+          }
         ]
       },
-      "dica_folhas": {"text": "Folhas largas, com gotinhas brilhando — mesmo ao meio-dia. Procure perto da sua cabana e na trilha até aqui. Toque nelas com carinho: planta colhida com pressa rende menos."},
-      "dica_tonico": {"text": "No caldeirão, junte coisas que compartilhem a mesma propriedade. Folha-de-Orvalho e Água de Manancial — da minha fonte, ali atrás — dividem a Vitalidade. Moer, depois aquecer. E se errar, anote o porquê: erro anotado é meio acerto."},
-      "dica_purificar": {"text": "O cinza é ausência. Precisa de luz, clareza e proteção — numa poção, ou num feitiço. Os Escribas guardam uma contra-magia; o velho Tomé vigia o Portal das Ruínas, a noroeste. E a alquimia... pergunte à menina ruiva do acampamento a leste. Só não aceite presentes de quem sorri demais."},
-      "druidas": {"text": "Nós, Druidas, não mandamos na floresta; nós a escutamos. Plante na estação certa, colha sem pressa, devolva o que tirou. Simples assim — e difícil assim."},
+      "dica_folhas": {
+        "text": "Folhas largas, com gotinhas brilhando — mesmo ao meio-dia. Procure perto da sua cabana e na trilha até aqui. Toque nelas com carinho: planta colhida com pressa rende menos."
+      },
+      "dica_tonico": {
+        "text": "No caldeirão, junte coisas que compartilhem a mesma propriedade. Folha-de-Orvalho e Água de Manancial — da minha fonte, ali atrás — dividem a Vitalidade. Moer, depois aquecer. E se errar, anote o porquê: erro anotado é meio acerto."
+      },
+      "dica_purificar": {
+        "text": "O cinza é ausência. Precisa de luz, clareza e proteção — numa poção, ou num feitiço. Os Escribas guardam uma contra-magia; o velho Tomé vigia o Portal das Ruínas, a noroeste. E a alquimia... pergunte à menina ruiva do acampamento a leste. Só não aceite presentes de quem sorri demais."
+      },
+      "druidas": {
+        "text": "Nós, Druidas, não mandamos na floresta; nós a escutamos. Plante na estação certa, colha sem pressa, devolva o que tirou. Simples assim — e difícil assim."
+      },
       "resultado_bom": {
         "text": "Eu senti daqui! O vale respirou fundo, como quem sai de um pesadelo. Você conseguiu, menina. Ondina ficaria orgulhosa — e com ciúmes, ela nunca acertava de primeira.",
-        "effects": [{"set_flag": "contou_salvia_musgo"}, {"complete_quest": ["mq02_raizes", ""]}]
+        "effects": [
+          {
+            "set_flag": "contou_salvia_musgo"
+          },
+          {
+            "complete_quest": [
+              "mq02_raizes",
+              ""
+            ]
+          }
+        ]
       },
       "resultado_atalho": {
         "text": "Eu senti daqui. O Guardião acordou... mas o vento parou de cantar. Que pó era aquele, Asterion? Não precisa responder. Algumas escolhas a gente carrega no bolso por muito tempo.",
-        "effects": [{"set_flag": "contou_salvia_musgo"}, {"complete_quest": ["mq02_raizes", ""]}]
+        "effects": [
+          {
+            "set_flag": "contou_salvia_musgo"
+          },
+          {
+            "complete_quest": [
+              "mq02_raizes",
+              ""
+            ]
+          }
+        ]
       },
       "pos_musgo": {
         "text": "O Guardião disse algo sobre o diário de Ondina? Então vá. E leve um casaco — ela nunca levava.",
         "options": [
-          {"text": "Me conte sobre os Druidas.", "goto": "druidas"},
-          {"text": "Até logo, vovó.", "goto": "end"}
+          {
+            "text": "Me conte sobre os Druidas.",
+            "goto": "druidas"
+          },
+          {
+            "text": "Até logo, vovó.",
+            "goto": "end"
+          }
         ]
       },
       "padrao": {
         "text": "Chá? Sempre há chá. Hoje é dia de {season} e a lua está {moon}. Bom dia para plantar o que gosta de {season}.",
         "options": [
-          {"text": "Sobre o Guardião Musgo...", "if": [{"quest_not_started": "mq02_raizes"}, {"flag": "falou_salvia_1"}], "goto": "silencio"},
-          {"text": "Me conte sobre os Druidas.", "goto": "druidas"},
-          {"text": "Até logo, vovó.", "goto": "end"}
+          {
+            "text": "Sobre o Guardião Musgo...",
+            "if": [
+              {
+                "quest_not_started": "mq02_raizes"
+              },
+              {
+                "flag": "falou_salvia_1"
+              }
+            ],
+            "goto": "silencio"
+          },
+          {
+            "text": "Me conte sobre os Druidas.",
+            "goto": "druidas"
+          },
+          {
+            "text": "Até logo, vovó.",
+            "goto": "end"
+          }
         ]
       }
     }
   },
-
   "bento": {
     "entries": [
-      {"if": [], "node": "ola"}
+      {
+        "if": [],
+        "node": "ola"
+      }
     ],
     "nodes": {
       "ola": {
         "text": "Asterion, minha estrelinha! Sementes fresquinhas, mel das abelhas-lanterna, ferramentas que quase não explodem! O que vai ser?",
         "options": [
-          {"text": "Ver mercadorias", "goto": "end", "effects": [{"open_shop": "bento"}]},
-          {"text": "Precisa de alguma coisa?", "if": [{"quest_not_started": "sq_bento"}], "goto": "encomenda", "effects": [{"start_quest": "sq_bento"}]},
-          {"text": "Trouxe os dois tônicos!", "if": [{"quest_active": "sq_bento"}, {"has_item": ["tonico_revigorante", 2]}], "goto": "obrigado", "effects": [{"take_item": ["tonico_revigorante", 2]}, {"set_flag": "bento_entregue"}, {"complete_quest": ["sq_bento", ""]}]},
-          {"text": "Alguma novidade na estrada?", "goto": "fofoca"},
-          {"text": "Até mais, Bento!", "goto": "end"}
+          {
+            "text": "Ver mercadorias",
+            "goto": "end",
+            "effects": [
+              {
+                "open_shop": "bento"
+              }
+            ]
+          },
+          {
+            "text": "Precisa de alguma coisa?",
+            "if": [
+              {
+                "quest_not_started": "sq_bento"
+              }
+            ],
+            "goto": "encomenda",
+            "effects": [
+              {
+                "start_quest": "sq_bento"
+              }
+            ]
+          },
+          {
+            "text": "Trouxe os dois tônicos!",
+            "if": [
+              {
+                "quest_active": "sq_bento"
+              },
+              {
+                "has_item": [
+                  "tonico_revigorante",
+                  2
+                ]
+              }
+            ],
+            "goto": "obrigado",
+            "effects": [
+              {
+                "take_item": [
+                  "tonico_revigorante",
+                  2
+                ]
+              },
+              {
+                "set_flag": "bento_entregue"
+              },
+              {
+                "complete_quest": [
+                  "sq_bento",
+                  ""
+                ]
+              }
+            ]
+          },
+          {
+            "text": "Alguma novidade na estrada?",
+            "goto": "fofoca"
+          },
+          {
+            "text": "Até mais, Bento!",
+            "goto": "end"
+          }
         ]
       },
-      "encomenda": {"text": "Na verdade, sim! Os viajantes chegam moídos da estrada. Se você me trouxer dois Tônicos Revigorantes, pago bem — e ainda dou umas sementes de Flor-Aurora de brinde!"},
-      "obrigado": {"text": "Perfeitos! Cheiro de orvalho e coragem. Tome, combinado é combinado."},
+      "encomenda": {
+        "text": "Na verdade, sim! Os viajantes chegam moídos da estrada. Se você me trouxer dois Tônicos Revigorantes, pago bem — e ainda dou umas sementes de Flor-Aurora de brinde!"
+      },
+      "obrigado": {
+        "text": "Perfeitos! Cheiro de orvalho e coragem. Tome, combinado é combinado."
+      },
       "fofoca": {
         "text": "Novidades? Ah, várias!",
         "options": [
-          {"text": "Sobre o cogumelo gigante...", "goto": "fofoca_cogumelo"},
-          {"text": "Sobre a moça ruiva do acampamento...", "goto": "fofoca_mirela"},
-          {"text": "Sobre luzes à noite...", "goto": "fofoca_lyra"},
-          {"text": "Chega de fofoca!", "goto": "ola"}
+          {
+            "text": "Sobre o cogumelo gigante...",
+            "goto": "fofoca_cogumelo"
+          },
+          {
+            "text": "Sobre a moça ruiva do acampamento...",
+            "goto": "fofoca_mirela"
+          },
+          {
+            "text": "Sobre luzes à noite...",
+            "goto": "fofoca_lyra"
+          },
+          {
+            "text": "Chega de fofoca!",
+            "goto": "ola"
+          }
         ]
       },
-      "fofoca_cogumelo": {"text": "O Resmungão? Bloqueia a trilha leste desde a primavera passada. Dizem que adora coisa doce e odeia gente apressada. Eu ofereci um pão de mel... ele comeu o pão e quase me comeu junto."},
-      "fofoca_mirela": {"text": "Mirela Brasa, dos Alquimistas Ancestrais! Compra raiz de concentração como se fosse pão. Inteligente que só, mas competitiva... aposto que vai te desafiar."},
-      "fofoca_lyra": {"text": "Uma moça de capa estrelada aparece no Círculo de Pedras depois que o sol se põe. Lyra, acho. Fala com as estrelas. E as estrelas, dizem, respondem."}
+      "fofoca_cogumelo": {
+        "text": "O Resmungão? Bloqueia a trilha leste desde a primavera passada. Dizem que adora coisa doce e odeia gente apressada. Eu ofereci um pão de mel... ele comeu o pão e quase me comeu junto."
+      },
+      "fofoca_mirela": {
+        "text": "Mirela Brasa, dos Alquimistas Ancestrais! Compra raiz de concentração como se fosse pão. Inteligente que só, mas competitiva... aposto que vai te desafiar."
+      },
+      "fofoca_lyra": {
+        "text": "Uma moça de capa estrelada aparece no Círculo de Pedras depois que o sol se põe. Lyra, acho. Fala com as estrelas. E as estrelas, dizem, respondem."
+      }
     }
   },
-
   "mirela": {
     "entries": [
-      {"if": [{"quest_not_started": "sq_mirela"}], "node": "intro"},
-      {"if": [{"objective_current": ["sq_mirela", "responder"]}], "node": "reintro"},
-      {"if": [{"objective_current": ["sq_mirela", "entregar"]}], "node": "entrega"},
-      {"if": [{"flag": "mirela_parceria"}], "node": "pos_amiga"},
-      {"if": [], "node": "pos_rival"}
+      {
+        "if": [
+          {
+            "quest_not_started": "sq_mirela"
+          }
+        ],
+        "node": "intro"
+      },
+      {
+        "if": [
+          {
+            "objective_current": [
+              "sq_mirela",
+              "responder"
+            ]
+          }
+        ],
+        "node": "reintro"
+      },
+      {
+        "if": [
+          {
+            "objective_current": [
+              "sq_mirela",
+              "entregar"
+            ]
+          }
+        ],
+        "node": "entrega"
+      },
+      {
+        "if": [
+          {
+            "flag": "mirela_parceria"
+          }
+        ],
+        "node": "pos_amiga"
+      },
+      {
+        "if": [],
+        "node": "pos_rival"
+      }
     ],
     "nodes": {
       "intro": {
         "text": "Você é a aprendiz da Ondina? Hm. Imaginei mais alta. Mirela Brasa, Alquimistas Ancestrais. Estou estudando o Silêncio Cinzento com MÉTODO, não com chazinho. Proposta: quem fizer a melhor Poção de Foco Claro prova quem realmente entende de alquimia.",
-        "effects": [{"start_quest": "sq_mirela"}],
+        "effects": [
+          {
+            "start_quest": "sq_mirela"
+          }
+        ],
         "goto_after": "reintro"
       },
       "reintro": {
         "text": "E então? Desafio, ou vai fugir pra cabana?",
         "options": [
-          {"text": "Desafio aceito!", "goto": "desafio", "effects": [{"set_flag": "mirela_desafio"}]},
-          {"text": "Que tal dividirmos o que sabemos?", "if": [{"flag": "crafted.any"}], "goto": "parceria", "effects": [{"set_flag": "mirela_parceria"}, {"set_flag": "mirela_resolvida"}, {"read_page": "notas_mirela"}, {"complete_quest": ["sq_mirela", ""]}]},
-          {"text": "Que tal dividirmos o que sabemos? (prepare algo no caldeirão antes)", "if": [{"not_flag": "crafted.any"}], "goto": "parceria_cedo"},
-          {"text": "Me dá uma dica de alquimia?", "goto": "dica"},
-          {"text": "Agora não.", "goto": "end"}
+          {
+            "text": "Desafio aceito!",
+            "goto": "desafio",
+            "effects": [
+              {
+                "set_flag": "mirela_desafio"
+              }
+            ]
+          },
+          {
+            "text": "Que tal dividirmos o que sabemos?",
+            "if": [
+              {
+                "flag": "crafted.any"
+              }
+            ],
+            "goto": "parceria",
+            "effects": [
+              {
+                "set_flag": "mirela_parceria"
+              },
+              {
+                "set_flag": "mirela_resolvida"
+              },
+              {
+                "read_page": "notas_mirela"
+              },
+              {
+                "complete_quest": [
+                  "sq_mirela",
+                  ""
+                ]
+              }
+            ]
+          },
+          {
+            "text": "Que tal dividirmos o que sabemos? (prepare algo no caldeirão antes)",
+            "if": [
+              {
+                "not_flag": "crafted.any"
+              }
+            ],
+            "goto": "parceria_cedo"
+          },
+          {
+            "text": "Me dá uma dica de alquimia?",
+            "goto": "dica"
+          },
+          {
+            "text": "Agora não.",
+            "goto": "end"
+          }
         ]
       },
-      "desafio": {"text": "Ótimo! Água de Manancial e Raiz de Concentração, se você souber o que está fazendo. A técnica certa faz toda a diferença. Qualidade Refinada ou nem apareça."},
-      "parceria": {"text": "...Dividir? Hm. Você já sujou as mãos no caldeirão, dá pra ver. Tá bom. Tome minhas notas sobre Estabilização — e se contar ao Professor Ornel, eu nego até a morte."},
-      "parceria_cedo": {"text": "Dividir o quê? Você nunca nem acendeu aquele caldeirão. Volte quando tiver feito pelo menos UMA poção."},
-      "dica": {"text": "Regra de ouro: uma propriedade só desperta se pelo menos DOIS ingredientes a tiverem. E algumas se odeiam: Calor e Frio, Luz e Sombra, Estabilidade e Volatilidade, Claridade e Turvo. Se as duas despertam, se anulam. Anote isso. De nada."},
+      "desafio": {
+        "text": "Ótimo! Água de Manancial e Raiz de Concentração, se você souber o que está fazendo. A técnica certa faz toda a diferença. Qualidade Refinada ou nem apareça."
+      },
+      "parceria": {
+        "text": "...Dividir? Hm. Você já sujou as mãos no caldeirão, dá pra ver. Tá bom. Tome minhas notas sobre Estabilização — e se contar ao Professor Ornel, eu nego até a morte."
+      },
+      "parceria_cedo": {
+        "text": "Dividir o quê? Você nunca nem acendeu aquele caldeirão. Volte quando tiver feito pelo menos UMA poção."
+      },
+      "dica": {
+        "text": "Regra de ouro: uma propriedade só desperta se pelo menos DOIS ingredientes a tiverem. E algumas se odeiam: Calor e Frio, Luz e Sombra, Estabilidade e Volatilidade, Claridade e Turvo. Se as duas despertam, se anulam. Anote isso. De nada."
+      },
       "entrega": {
         "text": "Trouxe a poção? Deixa eu ver contra a luz...",
         "options": [
-          {"text": "Aqui está minha Poção de Foco Claro (Refinada).", "if": [{"item_quality": ["pocao_foco_claro", 0.9]}], "goto": "vitoria", "effects": [{"take_item": ["pocao_foco_claro", 1]}, {"set_flag": "mirela_perdeu"}, {"set_flag": "mirela_resolvida"}, {"complete_quest": ["sq_mirela", ""]}]},
-          {"text": "Aqui está minha Poção de Foco Claro.", "if": [{"has_item": ["pocao_foco_claro", 1]}, {"not": {"item_quality": ["pocao_foco_claro", 0.9]}}], "goto": "derrota", "effects": [{"take_item": ["pocao_foco_claro", 1]}, {"set_flag": "mirela_venceu"}, {"set_flag": "mirela_resolvida"}, {"complete_quest": ["sq_mirela", ""]}]},
-          {"text": "Me dá uma dica de alquimia?", "goto": "dica"},
-          {"text": "Ainda estou trabalhando nela.", "goto": "end"}
+          {
+            "text": "Aqui está minha Poção de Foco Claro (Refinada).",
+            "if": [
+              {
+                "item_quality": [
+                  "pocao_foco_claro",
+                  0.9
+                ]
+              }
+            ],
+            "goto": "vitoria",
+            "effects": [
+              {
+                "take_item": [
+                  "pocao_foco_claro",
+                  1
+                ]
+              },
+              {
+                "set_flag": "mirela_perdeu"
+              },
+              {
+                "set_flag": "mirela_resolvida"
+              },
+              {
+                "complete_quest": [
+                  "sq_mirela",
+                  ""
+                ]
+              }
+            ]
+          },
+          {
+            "text": "Aqui está minha Poção de Foco Claro.",
+            "if": [
+              {
+                "has_item": [
+                  "pocao_foco_claro",
+                  1
+                ]
+              },
+              {
+                "not": {
+                  "item_quality": [
+                    "pocao_foco_claro",
+                    0.9
+                  ]
+                }
+              }
+            ],
+            "goto": "derrota",
+            "effects": [
+              {
+                "take_item": [
+                  "pocao_foco_claro",
+                  1
+                ]
+              },
+              {
+                "set_flag": "mirela_venceu"
+              },
+              {
+                "set_flag": "mirela_resolvida"
+              },
+              {
+                "complete_quest": [
+                  "sq_mirela",
+                  ""
+                ]
+              }
+            ]
+          },
+          {
+            "text": "Me dá uma dica de alquimia?",
+            "goto": "dica"
+          },
+          {
+            "text": "Ainda estou trabalhando nela.",
+            "goto": "end"
+          }
         ]
       },
-      "vitoria": {"text": "...Está mais límpida que a minha. Não diga nada. NADA. Tome o alambique, ele ficaria triste com uma perdedora. E Asterion... foi uma boa poção."},
-      "derrota": {"text": "Rá! A minha brilha mais. Mas... sua base está boa. Dica de graça: a ordem da técnica importa. Moer, aquecer, esfriar — não o contrário. Ah, e o Silêncio Cinzento some com Luz, Claridade e Proteção juntas. Esqueça que eu disse isso."},
-      "pos_amiga": {"text": "Parceira! Descobri que o Silêncio Cinzento reage a Luz, Claridade e Proteção juntas. Cristal Lunar e Trevo Quadrifólio, talvez? Testa aí e me conta.",
-        "options": [{"text": "Me dá uma dica de alquimia?", "goto": "dica"}, {"text": "Até mais, Mirela.", "goto": "end"}]},
-      "pos_rival": {"text": "Ainda por aqui? Hmpf. Boa sorte com seus chazinhos.",
-        "options": [{"text": "Me dá uma dica de alquimia?", "goto": "dica"}, {"text": "Até mais, Mirela.", "goto": "end"}]}
+      "vitoria": {
+        "text": "...Está mais límpida que a minha. Não diga nada. NADA. Tome o alambique, ele ficaria triste com uma perdedora. E Asterion... foi uma boa poção."
+      },
+      "derrota": {
+        "text": "Rá! A minha brilha mais. Mas... sua base está boa. Dica de graça: a ordem da técnica importa. Moer, aquecer, esfriar — não o contrário. Ah, e o Silêncio Cinzento some com Luz, Claridade e Proteção juntas. Esqueça que eu disse isso."
+      },
+      "pos_amiga": {
+        "text": "Parceira! Descobri que o Silêncio Cinzento reage a Luz, Claridade e Proteção juntas. Cristal Lunar e Trevo Quadrifólio, talvez? Testa aí e me conta.",
+        "options": [
+          {
+            "text": "Me dá uma dica de alquimia?",
+            "goto": "dica"
+          },
+          {
+            "text": "Até mais, Mirela.",
+            "goto": "end"
+          }
+        ]
+      },
+      "pos_rival": {
+        "text": "Ainda por aqui? Hmpf. Boa sorte com seus chazinhos.",
+        "options": [
+          {
+            "text": "Me dá uma dica de alquimia?",
+            "goto": "dica"
+          },
+          {
+            "text": "Até mais, Mirela.",
+            "goto": "end"
+          }
+        ]
+      }
     }
   },
-
   "juniper": {
     "entries": [
-      {"if": [{"quest_not_started": "sq_juniper"}], "node": "intro"},
-      {"if": [{"quest_active": "sq_juniper"}, {"has_item": ["lanterna_faisca", 1]}], "node": "decisao"},
-      {"if": [{"quest_active": "sq_juniper"}], "node": "esperando"},
-      {"if": [{"flag": "faisca_libertada"}], "node": "pos_libertada"},
-      {"if": [], "node": "pos"}
+      {
+        "if": [
+          {
+            "quest_not_started": "sq_juniper"
+          }
+        ],
+        "node": "intro"
+      },
+      {
+        "if": [
+          {
+            "quest_active": "sq_juniper"
+          },
+          {
+            "has_item": [
+              "lanterna_faisca",
+              1
+            ]
+          }
+        ],
+        "node": "decisao"
+      },
+      {
+        "if": [
+          {
+            "quest_active": "sq_juniper"
+          }
+        ],
+        "node": "esperando"
+      },
+      {
+        "if": [
+          {
+            "flag": "faisca_libertada"
+          }
+        ],
+        "node": "pos_libertada"
+      },
+      {
+        "if": [],
+        "node": "pos"
+      }
     ],
     "nodes": {
       "intro": {
         "text": "Moça bruxa! Moça bruxa! A Faísca fugiu! Ela é uma lumécula, pisca assim ó: pisca-pisca-PAUSA. Ela foi pra Lagoa das Luzes, mas lá tem um MONTE de luméculas e eu não consigo ver qual é ela!",
-        "effects": [{"start_quest": "sq_juniper"}],
-        "options": [{"text": "Eu vou encontrá-la, Juniper.", "goto": "promessa"}]
+        "effects": [
+          {
+            "start_quest": "sq_juniper"
+          }
+        ],
+        "options": [
+          {
+            "text": "Eu vou encontrá-la, Juniper.",
+            "goto": "promessa"
+          }
+        ]
       },
-      "promessa": {"text": "Jura? Jura de bruxa? Ela só aparece de noite! E ela ama luz bonita, tipo luz de estrela!"},
-      "esperando": {"text": "Achou? A Faísca pisca dourado quando vê luz de estrela! A lagoa fica a oeste, depois do salgueiro grandão."},
+      "promessa": {
+        "text": "Jura? Jura de bruxa? Ela só aparece de noite! E ela ama luz bonita, tipo luz de estrela!"
+      },
+      "esperando": {
+        "text": "Achou? A Faísca pisca dourado quando vê luz de estrela! A lagoa fica a oeste, depois do salgueiro grandão."
+      },
       "decisao": {
         "text": "VOCÊ ACHOU! É ela! Pisca-pisca-PAUSA!",
         "options": [
-          {"text": "Aqui está a Faísca.", "goto": "devolvida", "effects": [{"take_item": ["lanterna_faisca", 1]}, {"set_flag": "faisca_devolvida"}, {"set_flag": "faisca_resolvida"}, {"complete_quest": ["sq_juniper", ""]}]},
-          {"text": "Juniper... ela parecia tão feliz com as outras luméculas.", "if": [{"bestiary_notes": ["lumecula", 3]}], "goto": "explica"}
+          {
+            "text": "Aqui está a Faísca.",
+            "goto": "devolvida",
+            "effects": [
+              {
+                "take_item": [
+                  "lanterna_faisca",
+                  1
+                ]
+              },
+              {
+                "set_flag": "faisca_devolvida"
+              },
+              {
+                "set_flag": "faisca_resolvida"
+              },
+              {
+                "complete_quest": [
+                  "sq_juniper",
+                  ""
+                ]
+              }
+            ]
+          },
+          {
+            "text": "Juniper... ela parecia tão feliz com as outras luméculas.",
+            "if": [
+              {
+                "bestiary_notes": [
+                  "lumecula",
+                  3
+                ]
+              }
+            ],
+            "goto": "explica"
+          }
         ]
       },
       "explica": {
         "text": "...Feliz? Mas ela é MINHA amiga. ...Ela brilhava mais lá? Brilhava mesmo?",
         "options": [
-          {"text": "Vamos soltá-la na lagoa juntos. Ela vai te visitar.", "goto": "libertada", "effects": [{"take_item": ["lanterna_faisca", 1]}, {"set_flag": "faisca_libertada"}, {"set_flag": "faisca_resolvida"}, {"complete_quest": ["sq_juniper", ""]}]},
-          {"text": "Pensando bem, ela é sua. Tome.", "goto": "devolvida", "effects": [{"take_item": ["lanterna_faisca", 1]}, {"set_flag": "faisca_devolvida"}, {"set_flag": "faisca_resolvida"}, {"complete_quest": ["sq_juniper", ""]}]}
+          {
+            "text": "Vamos soltá-la na lagoa juntos. Ela vai te visitar.",
+            "goto": "libertada",
+            "effects": [
+              {
+                "take_item": [
+                  "lanterna_faisca",
+                  1
+                ]
+              },
+              {
+                "set_flag": "faisca_libertada"
+              },
+              {
+                "set_flag": "faisca_resolvida"
+              },
+              {
+                "complete_quest": [
+                  "sq_juniper",
+                  ""
+                ]
+              }
+            ]
+          },
+          {
+            "text": "Pensando bem, ela é sua. Tome.",
+            "goto": "devolvida",
+            "effects": [
+              {
+                "take_item": [
+                  "lanterna_faisca",
+                  1
+                ]
+              },
+              {
+                "set_flag": "faisca_devolvida"
+              },
+              {
+                "set_flag": "faisca_resolvida"
+              },
+              {
+                "complete_quest": [
+                  "sq_juniper",
+                  ""
+                ]
+              }
+            ]
+          }
         ]
       },
-      "devolvida": {"text": "Obrigado obrigado obrigado! Toma, achei estas sementes de trevo no quintal da mamãe. São de sorte! Ou de atenção, a vovó Sálvia diz."},
-      "libertada": {"text": "...Tá bom. Mas ela tem que vir me ver toda noite, hein, Faísca? ...Ela piscou! Isso quer dizer sim! Toma, uma semente de trevo. Pra você lembrar."},
-      "pos": {"text": "A Faísca dorme no meu travesseiro agora! Mamãe não sabe. Não conta!"},
-      "pos_libertada": {"text": "Ontem a Faísca veio na minha janela! E trouxe três amigas!"}
+      "devolvida": {
+        "text": "Obrigado obrigado obrigado! Toma, achei estas sementes de trevo no quintal da mamãe. São de sorte! Ou de atenção, a vovó Sálvia diz."
+      },
+      "libertada": {
+        "text": "...Tá bom. Mas ela tem que vir me ver toda noite, hein, Faísca? ...Ela piscou! Isso quer dizer sim! Toma, uma semente de trevo. Pra você lembrar."
+      },
+      "pos": {
+        "text": "A Faísca dorme no meu travesseiro agora! Mamãe não sabe. Não conta!"
+      },
+      "pos_libertada": {
+        "text": "Ontem a Faísca veio na minha janela! E trouxe três amigas!"
+      }
     }
   },
-
   "musgo": {
     "entries": [
-      {"if": [{"flag": "musgo_purificado"}, {"flag": "musgo_corrompido"}], "node": "corrompido"},
-      {"if": [{"flag": "musgo_purificado"}], "node": "purificado"},
-      {"if": [{"objective_current": ["mq02_raizes", "levar"]}, {"has_item": ["tonico_revigorante", 1]}], "node": "dar_tonico"},
-      {"if": [{"objective_current": ["mq02_raizes", "purificar"]}], "node": "purificar"},
-      {"if": [], "node": "dormindo"}
+      {
+        "if": [
+          {
+            "flag": "musgo_purificado"
+          },
+          {
+            "flag": "musgo_corrompido"
+          }
+        ],
+        "node": "corrompido"
+      },
+      {
+        "if": [
+          {
+            "flag": "musgo_purificado"
+          }
+        ],
+        "node": "purificado"
+      },
+      {
+        "if": [
+          {
+            "objective_current": [
+              "mq02_raizes",
+              "levar"
+            ]
+          },
+          {
+            "has_item": [
+              "tonico_revigorante",
+              1
+            ]
+          }
+        ],
+        "node": "dar_tonico"
+      },
+      {
+        "if": [
+          {
+            "objective_current": [
+              "mq02_raizes",
+              "purificar"
+            ]
+          }
+        ],
+        "node": "purificar"
+      },
+      {
+        "if": [],
+        "node": "dormindo"
+      }
     ],
     "nodes": {
-      "dormindo": {"text": "(O tronco cinzento range. Muito longe, você ouve uma respiração lenta... lenta demais. Folhas sem cor caem sem fazer barulho.)"},
+      "dormindo": {
+        "text": "(O tronco cinzento range. Muito longe, você ouve uma respiração lenta... lenta demais. Folhas sem cor caem sem fazer barulho.)"
+      },
       "dar_tonico": {
         "text": "(O Guardião dorme. As raízes parecem pedra. O Tônico Revigorante morna em suas mãos.)",
         "options": [
-          {"text": "Derramar o Tônico Revigorante nas raízes.", "goto": "acordou", "effects": [{"take_item": ["tonico_revigorante", 1]}, {"set_flag": "musgo_acordou"}, {"bestiary": ["guardiao_musgo", 1]}]},
-          {"text": "Ainda não.", "goto": "end"}
+          {
+            "text": "Derramar o Tônico Revigorante nas raízes.",
+            "goto": "acordou",
+            "effects": [
+              {
+                "take_item": [
+                  "tonico_revigorante",
+                  1
+                ]
+              },
+              {
+                "set_flag": "musgo_acordou"
+              },
+              {
+                "bestiary": [
+                  "guardiao_musgo",
+                  1
+                ]
+              }
+            ]
+          },
+          {
+            "text": "Ainda não.",
+            "goto": "end"
+          }
         ]
       },
-      "acordou": {"text": "...Pequena... Asterion... O cinza... está em mim... Um tônico acorda... mas não devolve... a cor. Preciso de luz... clareza... proteção... Tudo junto... como Ondina... me ensinou."},
+      "acordou": {
+        "text": "...Pequena... Asterion... O cinza... está em mim... Um tônico acorda... mas não devolve... a cor. Preciso de luz... clareza... proteção... Tudo junto... como Ondina... me ensinou."
+      },
       "purificar": {
         "text": "...ainda... cinza... (Os olhos do Guardião piscam, fracos.)",
         "options": [
-          {"text": "Oferecer a Tintura Purificadora.", "if": [{"has_item": ["tintura_purificadora", 1]}], "goto": "curado", "effects": [{"take_item": ["tintura_purificadora", 1]}, {"set_flag": "purificado_tintura"}, {"set_flag": "musgo_purificado"}]},
-          {"text": "Usar o Pó Cinzento de Kael.", "if": [{"has_item": ["po_cinzento", 1]}], "goto": "corrompendo", "effects": [{"take_item": ["po_cinzento", 1]}, {"set_flag": "musgo_corrompido"}, {"set_flag": "musgo_purificado"}]},
-          {"text": "(Se eu souber Limpeza Mágica, posso lançá-la aqui perto.)", "goto": "end"},
-          {"text": "Vou encontrar um jeito, Guardião.", "goto": "end"}
+          {
+            "text": "Oferecer a Tintura Purificadora.",
+            "if": [
+              {
+                "has_item": [
+                  "tintura_purificadora",
+                  1
+                ]
+              }
+            ],
+            "goto": "curado",
+            "effects": [
+              {
+                "take_item": [
+                  "tintura_purificadora",
+                  1
+                ]
+              },
+              {
+                "set_flag": "purificado_tintura"
+              },
+              {
+                "set_flag": "musgo_purificado"
+              }
+            ]
+          },
+          {
+            "text": "Usar o Pó Cinzento de Kael.",
+            "if": [
+              {
+                "has_item": [
+                  "po_cinzento",
+                  1
+                ]
+              }
+            ],
+            "goto": "corrompendo",
+            "effects": [
+              {
+                "take_item": [
+                  "po_cinzento",
+                  1
+                ]
+              },
+              {
+                "set_flag": "musgo_corrompido"
+              },
+              {
+                "set_flag": "musgo_purificado"
+              }
+            ]
+          },
+          {
+            "text": "(Se eu souber Limpeza Mágica, posso lançá-la aqui perto.)",
+            "goto": "end"
+          },
+          {
+            "text": "Vou encontrar um jeito, Guardião.",
+            "goto": "end"
+          }
         ]
       },
       "curado": {
         "text": "A cor... voltou. Obrigado, pequena. Faz mil invernos que não me sentia tão... verde. Ondina foi atrás da fonte do Éter... do outro lado do Portal das Ruínas. Ela deixou seu diário entre minhas raízes. Leia. E aceite isto: uma lágrima minha, das boas.",
-        "effects": [{"give_item": ["lagrima_guardiao", 1]}, {"bestiary": ["guardiao_musgo", 2]}, {"start_quest": "mq03_selo"}, {"set_flag": "diario_visivel"}]
+        "effects": [
+          {
+            "give_item": [
+              "lagrima_guardiao",
+              1
+            ]
+          },
+          {
+            "bestiary": [
+              "guardiao_musgo",
+              2
+            ]
+          },
+          {
+            "start_quest": "mq03_selo"
+          },
+          {
+            "set_flag": "diario_visivel"
+          }
+        ]
       },
       "corrompendo": {
         "text": "(Os olhos do Guardião se abrem — violeta. Ele fala sem pausas, rápido demais.) ACORDADO. OBRIGADO. O DIÁRIO DE ONDINA ESTÁ NAS RAÍZES. VÁ. (O vento para. Algo está errado.)",
-        "effects": [{"bestiary": ["guardiao_musgo", 2]}, {"start_quest": "mq03_selo"}, {"set_flag": "diario_visivel"}]
+        "effects": [
+          {
+            "bestiary": [
+              "guardiao_musgo",
+              2
+            ]
+          },
+          {
+            "start_quest": "mq03_selo"
+          },
+          {
+            "set_flag": "diario_visivel"
+          }
+        ]
       },
-      "purificado": {"text": "...O vale respira... e eu respiro com ele. Ondina gostaria de ver você assim, pequena. Cheia de perguntas."},
-      "corrompido": {"text": "TUDO ESTÁ EM ORDEM. TUDO ESTÁ EM ORDEM. (Os olhos violeta não piscam.)"}
+      "purificado": {
+        "text": "...O vale respira... e eu respiro com ele. Ondina gostaria de ver você assim, pequena. Cheia de perguntas."
+      },
+      "corrompido": {
+        "text": "TUDO ESTÁ EM ORDEM. TUDO ESTÁ EM ORDEM. (Os olhos violeta não piscam.)"
+      }
     }
   },
-
   "lyra": {
     "entries": [
-      {"if": [{"quest_not_started": "sq_lyra"}], "node": "intro"},
-      {"if": [{"quest_active": "sq_lyra"}, {"flag": "marca_estelar_1"}, {"flag": "marca_estelar_2"}, {"flag": "marca_estelar_3"}], "node": "completa"},
-      {"if": [{"quest_active": "sq_lyra"}], "node": "andamento"},
-      {"if": [], "node": "padrao"}
+      {
+        "if": [
+          {
+            "quest_not_started": "sq_lyra"
+          }
+        ],
+        "node": "intro"
+      },
+      {
+        "if": [
+          {
+            "quest_active": "sq_lyra"
+          },
+          {
+            "flag": "marca_estelar_1"
+          },
+          {
+            "flag": "marca_estelar_2"
+          },
+          {
+            "flag": "marca_estelar_3"
+          }
+        ],
+        "node": "completa"
+      },
+      {
+        "if": [
+          {
+            "quest_active": "sq_lyra"
+          }
+        ],
+        "node": "andamento"
+      },
+      {
+        "if": [],
+        "node": "padrao"
+      }
     ],
     "nodes": {
       "intro": {
         "text": "Shh. Escute... As estrelas estão fora do lugar desde o eclipse. Sou Lyra, dos Guardiões Astrais. Os Primeiros deixaram três marcas neste vale que só respondem à luz estelar. Encontre-as, e eu lhe ensino a olhar no escuro.",
-        "effects": [{"start_quest": "sq_lyra"}],
+        "effects": [
+          {
+            "start_quest": "sq_lyra"
+          }
+        ],
         "options": [
-          {"text": "Luz estelar? Como eu faço isso?", "if": [{"not": {"knows_spell": "astral:lume"}}], "goto": "como_lume"},
-          {"text": "Onde devo procurar?", "goto": "andamento"},
-          {"text": "Vou procurar.", "goto": "end"}
+          {
+            "text": "Luz estelar? Como eu faço isso?",
+            "if": [
+              {
+                "not": {
+                  "knows_spell": "astral:lume"
+                }
+              }
+            ],
+            "goto": "como_lume"
+          },
+          {
+            "text": "Onde devo procurar?",
+            "goto": "andamento"
+          },
+          {
+            "text": "Vou procurar.",
+            "goto": "end"
+          }
         ]
       },
-      "como_lume": {"text": "Sua mestra escrevia sobre isso. Procure a Folha II no grimório dela. Uma estrela de bolso basta."},
-      "andamento": {"text": "Uma perto do Salgueiro Oco. Uma perto do riacho, a leste. Uma na trilha do Guardião. Acenda seu Lume à noite e caminhe devagar. As marcas brilham para quem tem paciência."},
+      "como_lume": {
+        "text": "Sua mestra escrevia sobre isso. Procure a Folha II no grimório dela. Uma estrela de bolso basta."
+      },
+      "andamento": {
+        "text": "Uma perto do Salgueiro Oco. Uma perto do riacho, a leste. Uma na trilha do Guardião. Acenda seu Lume à noite e caminhe devagar. As marcas brilham para quem tem paciência."
+      },
       "completa": {
         "text": "As três... Você as viu. Então é verdade: os Primeiros mapearam o caminho até a fonte do Éter, e Ondina seguiu o mapa. Aceite minha carta, e um pouco de pó de estrela. Agora você enxerga como nós.",
-        "effects": [{"set_flag": "lyra_confia"}, {"read_page": "carta_lyra"}, {"give_item": ["po_estrela", 2]}, {"rep": ["guardioes_astrais", 15]}, {"complete_quest": ["sq_lyra", ""]}]
+        "effects": [
+          {
+            "set_flag": "lyra_confia"
+          },
+          {
+            "read_page": "carta_lyra"
+          },
+          {
+            "give_item": [
+              "po_estrela",
+              2
+            ]
+          },
+          {
+            "rep": [
+              "guardioes_astrais",
+              15
+            ]
+          },
+          {
+            "complete_quest": [
+              "sq_lyra",
+              ""
+            ]
+          }
+        ]
       },
       "padrao": {
         "text": "A lua hoje está {moon}. Na lua cheia, a magia astral fica mais forte — vinte por cento, dizem os registros. Eu digo: depende de quem pergunta.",
         "options": [
-          {"text": "Quem são os Guardiões Astrais?", "goto": "guardioes"},
-          {"text": "Boa noite, Lyra.", "goto": "end"}
+          {
+            "text": "Quem são os Guardiões Astrais?",
+            "goto": "guardioes"
+          },
+          {
+            "text": "Boa noite, Lyra.",
+            "goto": "end"
+          }
         ]
       },
-      "guardioes": {"text": "Medimos o Éter, a camada por trás do céu de onde vem toda a magia. Quando ela afina, o mundo fica cinza. Ultimamente... tem afinado."}
+      "guardioes": {
+        "text": "Medimos o Éter, a camada por trás do céu de onde vem toda a magia. Quando ela afina, o mundo fica cinza. Ultimamente... tem afinado."
+      }
     }
   },
-
   "tome": {
     "entries": [
-      {"if": [{"objective_current": ["mq03_selo", "tome"]}, {"flag": "tome_enigma_ok"}], "node": "selo"},
-      {"if": [{"not_flag": "tome_enigma_ok"}], "node": "enigma_intro"},
-      {"if": [], "node": "padrao"}
+      {
+        "if": [
+          {
+            "objective_current": [
+              "mq03_selo",
+              "tome"
+            ]
+          },
+          {
+            "flag": "tome_enigma_ok"
+          }
+        ],
+        "node": "selo"
+      },
+      {
+        "if": [
+          {
+            "not_flag": "tome_enigma_ok"
+          }
+        ],
+        "node": "enigma_intro"
+      },
+      {
+        "if": [],
+        "node": "padrao"
+      }
     ],
     "nodes": {
       "enigma_intro": {
         "text": "Alto lá. Ninguém se aproxima do Portal das Ruínas sem provar que sabe LER. Responda: na terceira pedra do Círculo de Pedras, que símbolo segue a folha espiral?",
         "options": [
-          {"text": "Uma estrela de cinco pontas.", "goto": "enigma_ok", "effects": [{"set_flag": "tome_enigma_ok"}, {"read_page": "tabuleta_tome"}, {"rep": ["escribas", 15]}]},
-          {"text": "Uma lua crescente.", "goto": "enigma_erro", "effects": [{"rep": ["escribas", -3]}]},
-          {"text": "Um olho fechado.", "goto": "enigma_erro", "effects": [{"rep": ["escribas", -3]}]},
-          {"text": "Ainda não sei.", "goto": "enigma_humilde"}
+          {
+            "text": "Uma estrela de cinco pontas.",
+            "goto": "enigma_ok",
+            "effects": [
+              {
+                "set_flag": "tome_enigma_ok"
+              },
+              {
+                "read_page": "tabuleta_tome"
+              },
+              {
+                "rep": [
+                  "escribas",
+                  15
+                ]
+              }
+            ]
+          },
+          {
+            "text": "Uma lua crescente.",
+            "goto": "enigma_erro",
+            "effects": [
+              {
+                "rep": [
+                  "escribas",
+                  -3
+                ]
+              }
+            ]
+          },
+          {
+            "text": "Um olho fechado.",
+            "goto": "enigma_erro",
+            "effects": [
+              {
+                "rep": [
+                  "escribas",
+                  -3
+                ]
+              }
+            ]
+          },
+          {
+            "text": "Ainda não sei.",
+            "goto": "enigma_humilde"
+          }
         ]
       },
-      "enigma_ok": {"text": "Correto. Você leu, em vez de adivinhar. Raro. Tome esta tabuleta: a Limpeza Mágica dos Escribas. Use-a contra o cinza — e nunca contra uma pessoa."},
-      "enigma_erro": {"text": "Errado. Conhecimento não se adivinha, aprendiz. As pedras não vão fugir: vá até o Círculo e LEIA."},
-      "enigma_humilde": {"text": "Uma resposta honesta. Melhor que um chute. O Círculo de Pedras fica a nordeste da sua cabana."},
+      "enigma_ok": {
+        "text": "Correto. Você leu, em vez de adivinhar. Raro. Tome esta tabuleta: a Limpeza Mágica dos Escribas. Use-a contra o cinza — e nunca contra uma pessoa."
+      },
+      "enigma_erro": {
+        "text": "Errado. Conhecimento não se adivinha, aprendiz. As pedras não vão fugir: vá até o Círculo e LEIA."
+      },
+      "enigma_humilde": {
+        "text": "Uma resposta honesta. Melhor que um chute. O Círculo de Pedras fica a nordeste da sua cabana."
+      },
       "selo": {
         "text": "Então Ondina atravessou. Teimosa como sempre. O selo deste portal exige três chaves rúnicas, espalhadas pela Floresta Encantada, pelos Picos da Lua e pela Lagoa Espelhada. Quando tiver as três, volte. O Portal — e sua mestra — estarão esperando.",
-        "effects": [{"set_flag": "tome_explicou_selo"}, {"rep": ["escribas", 5]}]
+        "effects": [
+          {
+            "set_flag": "tome_explicou_selo"
+          },
+          {
+            "rep": [
+              "escribas",
+              5
+            ]
+          }
+        ]
       },
       "padrao": {
         "text": "O Portal continua selado. As runas não mudam; quem muda é quem as lê.",
         "options": [
-          {"text": "Quem são os Escribas?", "goto": "escribas"},
-          {"text": "Até logo, Tomé.", "goto": "end"}
+          {
+            "text": "Quem são os Escribas?",
+            "goto": "escribas"
+          },
+          {
+            "text": "Até logo, Tomé.",
+            "goto": "end"
+          }
         ]
       },
-      "escribas": {"text": "Guardamos o que os Primeiros escreveram antes de sumir. Não por avareza: por cuidado. Conhecimento sem preparo é como fogo sem paciência."}
+      "escribas": {
+        "text": "Guardamos o que os Primeiros escreveram antes de sumir. Não por avareza: por cuidado. Conhecimento sem preparo é como fogo sem paciência."
+      }
     }
   },
-
   "kael": {
     "entries": [
-      {"if": [{"objective_current": ["mq02_raizes", "purificar"]}, {"not_flag": "kael_aceito"}, {"not_flag": "kael_recusado"}], "node": "oferta"},
-      {"if": [{"flag": "musgo_corrompido"}], "node": "pos_corrompido"},
-      {"if": [], "node": "padrao"}
+      {
+        "if": [
+          {
+            "objective_current": [
+              "mq02_raizes",
+              "purificar"
+            ]
+          },
+          {
+            "not_flag": "kael_aceito"
+          },
+          {
+            "not_flag": "kael_recusado"
+          }
+        ],
+        "node": "oferta"
+      },
+      {
+        "if": [
+          {
+            "flag": "musgo_corrompido"
+          }
+        ],
+        "node": "pos_corrompido"
+      },
+      {
+        "if": [],
+        "node": "padrao"
+      }
     ],
     "nodes": {
       "oferta": {
         "text": "Asterion, não é? Kael Morvane, do Círculo. Não precisa me olhar assim. O Guardião sofre, e você está perdendo tempo com poções e pergaminhos. Um pouco deste pó e ele acorda agora. Sem esforço. Sem espera.",
         "options": [
-          {"text": "Aceitar o Pó Cinzento.", "goto": "aceitou", "effects": [{"give_item": ["po_cinzento", 1]}, {"set_flag": "kael_aceito"}, {"rep": ["circulo_sombra", 10]}]},
-          {"text": "Ondina me disse para não aceitar atalhos.", "if": [{"page_read": "diario_ondina"}], "goto": "recusa_diario", "effects": [{"set_flag": "kael_recusado"}, {"rep": ["druidas", 5]}, {"rep": ["circulo_sombra", -5]}, {"research": ["misterio_ondina", 10]}]},
-          {"text": "Não, obrigada.", "goto": "recusou", "effects": [{"set_flag": "kael_recusado"}, {"rep": ["circulo_sombra", -5]}]}
+          {
+            "text": "Aceitar o Pó Cinzento.",
+            "goto": "aceitou",
+            "effects": [
+              {
+                "give_item": [
+                  "po_cinzento",
+                  1
+                ]
+              },
+              {
+                "set_flag": "kael_aceito"
+              },
+              {
+                "rep": [
+                  "circulo_sombra",
+                  10
+                ]
+              }
+            ]
+          },
+          {
+            "text": "Ondina me disse para não aceitar atalhos.",
+            "if": [
+              {
+                "page_read": "diario_ondina"
+              }
+            ],
+            "goto": "recusa_diario",
+            "effects": [
+              {
+                "set_flag": "kael_recusado"
+              },
+              {
+                "rep": [
+                  "druidas",
+                  5
+                ]
+              },
+              {
+                "rep": [
+                  "circulo_sombra",
+                  -5
+                ]
+              },
+              {
+                "research": [
+                  "misterio_ondina",
+                  10
+                ]
+              }
+            ]
+          },
+          {
+            "text": "Não, obrigada.",
+            "goto": "recusou",
+            "effects": [
+              {
+                "set_flag": "kael_recusado"
+              },
+              {
+                "rep": [
+                  "circulo_sombra",
+                  -5
+                ]
+              }
+            ]
+          }
         ]
       },
-      "aceitou": {"text": "Sábia escolha. A magia precisa de mãos firmes, Asterion. Mãos como as nossas."},
-      "recusou": {"text": "Como quiser. A oferta não vai durar para sempre. O cinza, por outro lado..."},
-      "recusa_diario": {"text": "...Ondina. Sempre Ondina. Ela também não aceitou. E veja onde ela está agora."},
-      "pos_corrompido": {"text": "O Guardião está... em ordem, não está? Ordem é tudo que o Círculo deseja."},
-      "padrao": {"text": "O crepúsculo é a hora mais honesta: nem dia, nem noite. Como todos nós.",
-        "options": [{"text": "O que o Círculo Sombra quer?", "goto": "circulo"}, {"text": "Adeus, Kael.", "goto": "end"}]},
-      "circulo": {"text": "Proteger o mundo da magia descontrolada. Alguém precisa guardar o Éter — e decidir quem pode usá-lo. Não me olhe assim. Um dia você vai concordar."}
+      "aceitou": {
+        "text": "Sábia escolha. A magia precisa de mãos firmes, Asterion. Mãos como as nossas."
+      },
+      "recusou": {
+        "text": "Como quiser. A oferta não vai durar para sempre. O cinza, por outro lado..."
+      },
+      "recusa_diario": {
+        "text": "...Ondina. Sempre Ondina. Ela também não aceitou. E veja onde ela está agora."
+      },
+      "pos_corrompido": {
+        "text": "O Guardião está... em ordem, não está? Ordem é tudo que o Círculo deseja."
+      },
+      "padrao": {
+        "text": "O crepúsculo é a hora mais honesta: nem dia, nem noite. Como todos nós.",
+        "options": [
+          {
+            "text": "O que o Círculo Sombra quer?",
+            "goto": "circulo"
+          },
+          {
+            "text": "Adeus, Kael.",
+            "goto": "end"
+          }
+        ]
+      },
+      "circulo": {
+        "text": "Proteger o mundo da magia descontrolada. Alguém precisa guardar o Éter — e decidir quem pode usá-lo. Não me olhe assim. Um dia você vai concordar."
+      }
+    }
+  },
+  "dorinha": {
+    "entries": [
+      {
+        "if": [
+          {
+            "quest_not_started": "sq_padaria"
+          }
+        ],
+        "node": "intro"
+      },
+      {
+        "if": [
+          {
+            "objective_current": [
+              "sq_padaria",
+              "voltar"
+            ]
+          }
+        ],
+        "node": "cresceu"
+      },
+      {
+        "if": [
+          {
+            "quest_active": "sq_padaria"
+          }
+        ],
+        "node": "esperando"
+      },
+      {
+        "if": [],
+        "node": "padrao"
+      }
+    ],
+    "nodes": {
+      "intro": {
+        "text": "Ah, meu bem, você é a menina da Ondina! Entra, entra, cuidado com a farinha. Olha que tristeza: desde que o cinza chegou, minha massa esqueceu como crescer. Fica aí, chatinha, que nem tábua. O Juniper diz que é preguiça. Eu digo que é feitiço.",
+        "effects": [
+          {
+            "start_quest": "sq_padaria"
+          }
+        ],
+        "options": [
+          {
+            "text": "Deixa comigo. Um feitiço de crescimento deve resolver.",
+            "goto": "pedido"
+          },
+          {
+            "text": "Como está o Juniper?",
+            "goto": "juniper"
+          }
+        ]
+      },
+      "pedido": {
+        "text": "Ai, que alívio! A massa está ali na bancada. É só apontar sua varinha e fazer aquilo que vocês, bruxas, fazem. Só não exagera, viu? Da última vez que a Ondina ajudou, o pão saiu pela chaminé."
+      },
+      "juniper": {
+        "text": "Aquele menino só fala da tal Faísca. Se você puder ajudar ele também, eu te faço um bolo do tamanho de um chapéu.",
+        "goto_after": "pedido"
+      },
+      "esperando": {
+        "text": "A massa continua dormindo, meu bem. Aponta a varinha pra ela — crescimento, adubo, carinho, o que for!"
+      },
+      "cresceu": {
+        "text": "OLHA ISSO! Ela cresceu, ela cresceu! Tá fofinha que nem nuvem! Toma, os primeiros pães de mel encantado da temporada. E volte sempre — aqui você nunca paga pão.",
+        "effects": [
+          {
+            "set_flag": "dorinha_agradecida"
+          },
+          {
+            "complete_quest": [
+              "sq_padaria",
+              ""
+            ]
+          }
+        ]
+      },
+      "padrao": {
+        "text": "Pão quentinho, chá de lavanda e fofoca fresca. O que vai ser, meu bem?",
+        "options": [
+          {
+            "text": "Alguma fofoca?",
+            "goto": "fofoca"
+          },
+          {
+            "text": "Até mais, Dorinha!",
+            "goto": "end"
+          }
+        ]
+      },
+      "fofoca": {
+        "text": "Dizem que o Seu Tobias viu os Primeiros quando era menino. E que a moça de capa estrelada, a Lyra, procura alguém com olhos cor de mel. Você tem olhos cor de mel, sabia?"
+      }
+    }
+  },
+  "tobias": {
+    "entries": [
+      {
+        "if": [
+          {
+            "not_flag": "tobias_contou"
+          }
+        ],
+        "node": "intro"
+      },
+      {
+        "if": [],
+        "node": "padrao"
+      }
+    ],
+    "nodes": {
+      "intro": {
+        "text": "Hmpf. Mais uma bruxinha. A última que passou por aqui sumiu atravessando aquele arco de pedra. Sabia que eu vi os Primeiros? Ninguém acredita num velho moleiro.",
+        "options": [
+          {
+            "text": "Eu acredito. Me conte.",
+            "goto": "historia",
+            "effects": [
+              {
+                "set_flag": "tobias_contou"
+              },
+              {
+                "read_page": "diario_tobias"
+              },
+              {
+                "rep": [
+                  "aldeia_vime",
+                  3
+                ]
+              }
+            ]
+          },
+          {
+            "text": "Talvez outro dia.",
+            "goto": "end"
+          }
+        ]
+      },
+      "historia": {
+        "text": "...Acredita, é? Pois tome meu caderno. Eu era menino. Eles cantavam para as pedras e foram embora por um arco de luz. Uma delas olhou para trás. Tinha os olhos da cor do mel... iguaizinhos aos seus, agora que reparo."
+      },
+      "padrao": {
+        "text": "O moinho gira sozinho desde que eu me aposentei. Deve ser saudade. Ou o vento. Prefiro achar que é saudade.",
+        "options": [
+          {
+            "text": "O que tem além do riacho?",
+            "goto": "lavanda"
+          },
+          {
+            "text": "Até mais, Seu Tobias.",
+            "goto": "end"
+          }
+        ]
+      },
+      "lavanda": {
+        "text": "Os Campos de Lavanda e as colmeias das abelhas-lanterna. O mel delas é o melhor do mundo. A ponte de vinhas está dormindo há anos — mas uma bruxa com uma varinha boa resolve isso num piscar."
+      }
     }
   }
 }

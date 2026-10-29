@@ -14,17 +14,17 @@
       "objectives": [
         {
           "id": "ler",
-          "text": "Leia a Folha I no atril da varanda",
+          "text": "Leia a Folha I no atril, dentro da cabana",
           "complete_when": [
             {
               "page_read": "ondina_1"
             }
           ],
           "target": [
-            -2.3,
-            -2.4
+            0.0,
+            -2.9
           ],
-          "hint": "O atril fica na varanda da cabana, à esquerda da porta. A estrelinha dourada flutuando em cima é difícil de não ver."
+          "hint": "O atril com o grimório de Ondina fica dentro da cabana. Toque na porta para entrar."
         },
         {
           "id": "lancar",
@@ -724,6 +724,96 @@
         },
         "rep": {
           "aldeia_vime": 5
+        }
+      },
+      "outcomes": {}
+    },
+    {
+      "id": "sq_padaria",
+      "title": "O Pão que Não Cresce",
+      "giver": "dorinha",
+      "category": "side",
+      "act": 1,
+      "summary": "Desde o Silêncio Cinzento, a massa da Dorinha esqueceu como crescer.",
+      "sequential": true,
+      "auto_complete": false,
+      "can_fail": false,
+      "multiple_solutions": false,
+      "objectives": [
+        {
+          "id": "massa",
+          "text": "Aponte um feitiço de crescimento para a massa encantada da padaria",
+          "complete_when": [
+            {
+              "flag": "massa_crescida"
+            }
+          ],
+          "target": [
+            461.0,
+            -3.5
+          ],
+          "hint": "A massa está na bancada da padaria. Crescimento Rápido nela — ou qualquer coisa que faça crescer."
+        },
+        {
+          "id": "voltar",
+          "text": "Conte a novidade à Dorinha",
+          "complete_when": [
+            {
+              "flag": "dorinha_agradecida"
+            }
+          ],
+          "target": [
+            461.0,
+            -1.8
+          ],
+          "hint": "Dorinha está atrás do balcão, coberta de farinha."
+        }
+      ],
+      "rewards": {
+        "ep": 60,
+        "items": {
+          "pao_mel": 3
+        },
+        "rep": {
+          "aldeia_vime": 10
+        }
+      },
+      "outcomes": {}
+    },
+    {
+      "id": "sq_transfiguracao",
+      "title": "Aprendiz de Transfiguração",
+      "giver": "nimbus",
+      "category": "investigation",
+      "act": 1,
+      "summary": "Nimbus duvida que você consiga descobrir cinco transformações diferentes pelo vale.",
+      "sequential": false,
+      "auto_complete": true,
+      "can_fail": false,
+      "multiple_solutions": true,
+      "objectives": [
+        {
+          "id": "cinco",
+          "text": "Descubra 5 transformações diferentes com seus feitiços",
+          "complete_when": [
+            {
+              "flag_count": [
+                "transf.",
+                5
+              ]
+            }
+          ],
+          "target": [
+            3.0,
+            4.0
+          ],
+          "hint": "Aponte Transfiguração, Chama, Gelo, Levitação e Crescimento para pedras, caixas, abóboras, barris e arbustos secos. Cada combinação faz algo diferente!"
+        }
+      ],
+      "rewards": {
+        "ep": 80,
+        "school": {
+          "transmutation": 8
         }
       },
       "outcomes": {}

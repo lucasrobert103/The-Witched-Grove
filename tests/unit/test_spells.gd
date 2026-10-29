@@ -6,7 +6,7 @@ func test_aprender_lendo() -> void:
 	var r := Game.read_page("ondina_1")
 	assert_eq(r.learned, "botany:crescimento_rapido", "1ª leitura ensina o padrão")
 	assert_near(Game.spells.get_knowledge("botany:crescimento_rapido"), 10.0, 0.001, "10% por leitura")
-	assert_eq(Game.spells.slots[0], "botany:crescimento_rapido", "equipa no 1º slot livre")
+	assert_true("botany:crescimento_rapido" in Game.spells.slots, "feitiço novo entra na barra")
 
 
 func test_releitura_limitada() -> void:
@@ -83,3 +83,18 @@ func test_desbloqueio_por_experimentacao() -> void:
 	Game._check_experimentation_unlocks()
 	assert_true(Game.spells.is_known("alchemy:transmutar_essencia"), "8 receitas revelam Transmutação de Essência")
 	assert_false(Game.spells.is_known("transmutation:replicacao"), "feitiços sem efeito na V1 não são revelados")
+
+
+func test_feiticos_iniciais() -> void:
+	for sid in ["elemental:chama_controlada", "elemental:cristal_gelo", "transmutation:levitar", "transmutation:transfigurar", "astral:lume", "transmutation:forma_alterada"]:
+		assert_true(Game.spells.is_known(sid), "%s já vem aprendido" % sid)
+		assert_true(sid in Game.spells.slots, "%s já vem na barra" % sid)
+	assert_true(Game.spells.can_cast("elemental:cristal_gelo", Game.stats, Game.inventory).ok, "gelo lançável no início")
+
+
+func test_metamorfose_alterna() -> void:
+	Game.cast_spell("transmutation:forma_alterada")
+	assert_true(Game.has_buff("cat"), "vira gato")
+	Game.spells.cooldowns.clear()
+	Game.cast_spell("transmutation:forma_alterada")
+	assert_false(Game.has_buff("cat"), "lançar de novo desfaz")

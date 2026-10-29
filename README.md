@@ -13,6 +13,10 @@ Não há espadas: você progride **estudando, experimentando, cultivando e escol
 | ![Laboratório](docs/img/p_lab.jpg) | ![Diálogo com Vovó Sálvia](docs/img/p_dialog.jpg) |
 | ![Jardim: por que cresce devagar?](docs/img/p_garden.jpg) | ![Livro de Asterion](docs/img/p_book.jpg) |
 
+| ![Dentro da cabana: cama, lareira, baú](docs/img/interior_cabana.jpg) | ![Padaria Pão-de-Mel](docs/img/interior_padaria.jpg) |
+| ![Aldeia Vime](docs/img/aldeia.jpg) | ![Feitiços na hora, em arco](docs/img/magias.jpg) |
+| ![Armazém com ícones](docs/img/p_storage.jpg) | ![Asterion](docs/img/asterion.jpg) |
+
 ![Elenco](docs/img/personagens.jpg)
 
 > Todas as imagens são capturas do próprio protótipo. Personagens, cenários, música e sons foram
@@ -22,17 +26,31 @@ Não há espadas: você progride **estudando, experimentando, cultivando e escol
 
 ## O que já dá para jogar (protótipo do Ato I)
 
-- **Vale dos Sussurros** completo: cabana com biblioteca, laboratório, jardim 3×3, círculo ritual e cama;
-  fonte e casa de chá, carroça do mercador, acampamento rival, santuário, árvore do Guardião, portal das
-  ruínas, salgueiro oco, lagoa com ilhota, bosque das corujas, círculo de pedras e recanto do gelo.
-- **8 NPCs** com rotina por horário, diálogos ramificados e memória das suas decisões; Nimbus, o
+- **Vale dos Sussurros** ampliado (~185 m): cabana, fonte e casa de chá, carroça do mercador, acampamento
+  rival, santuário, árvore do Guardião, portal das ruínas, salgueiro oco, lagoa com ilhota, bosque das
+  corujas, círculo de pedras, recanto do gelo, **Aldeia Vime**, campos de lavanda com moinho,
+  observatório em ruínas, anel de cogumelos e pomar abandonado.
+- **Casas onde se entra de verdade**: toque na porta e a cena escurece e abre por dentro, em corte como
+  casa de bonecas — cama (com uma carta sob o travesseiro), atril, caldeirão, baú, lareira, estantes;
+  também a casa de chá de Sálvia e a padaria da Dorinha.
+- **Feitiços na hora, desde o início**: 6 botões de feitiço em arco; tocou, a magia sai da ponta da
+  varinha e voa até o alvo mais próximo à frente (mira assistida + anel de mira). Chama, Cristal de Gelo,
+  Levitação, Transfiguração, Lume Estelar e Metamorfose (vira gato!).
+- **Transformações**: pedras viram sapos, caixas viram bules, abóboras viram carruagens, tocos viram
+  casinhas de cogumelo — cada descoberta nova conta para a missão "Aprendiz de Transfiguração".
+- **Diálogos em ritmo de RPG**: texto letra a letra com pausas na pontuação, "voz" em bipes por
+  personagem, páginas, retrato 3D animado e toque para avançar.
+- **Grimório que parece livro**: capa de couro que se abre, páginas de pergaminho com tinta e
+  virada de página entre as abas; **caldeirão animado** ao preparar poções; **armazém com ícones**
+  de cada item guardado.
+- **10 NPCs no vale** com rotina por horário, diálogos ramificados e memória das suas decisões; Nimbus, o
   gato-mariposa familiar, dá dicas contextuais.
-- **16 feitiços funcionais** em 8 escolas que **mudam o mundo**: queimar sarças, despertar uma ponte de
+- **19 feitiços funcionais** em 8 escolas que **mudam o mundo**: queimar sarças, despertar uma ponte de
   vinhas, congelar a lagoa, revelar marcas estelares, acalmar luméculas, purificar o Silêncio Cinzento…
 - **Alquimia por propriedades**: 24 ingredientes, 15 propriedades, anulações, técnica em sequência,
   qualidade, receitas descobertas por experimentação e intuições que explicam cada falha.
 - **Botânica**: estações, luz, água, adubo, lua, polinização e propagação — tudo explicado na tela.
-- **8 missões** com **múltiplos desfechos** (curar o Guardião com alquimia, com contra-magia ou com o
+- **10 missões** com **múltiplos desfechos** (curar o Guardião com alquimia, com contra-magia ou com o
   atalho sombrio de Kael — que tem consequências permanentes).
 - Ciclo **dia/noite**, **estações**, **fases da lua** e **clima** determinístico.
 - Casa com 6 cômodos que alteram mecânicas; economia sem arbitragem; reputação com 6 facções.

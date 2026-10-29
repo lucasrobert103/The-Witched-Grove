@@ -12,6 +12,8 @@ var static_body: StaticBody3D        # colisões estáticas agrupadas
 var pond: WaterBody
 var creek: WaterBody
 var corruption: MeshInstance3D
+var outside_doors: Dictionary = {}
+var rooms: Dictionary = {}
 
 
 func build(p_root: Node3D, p_quality: int) -> void:
@@ -30,7 +32,11 @@ func build(p_root: Node3D, p_quality: int) -> void:
 	_build_harvest_nodes()
 	_build_npcs()
 	_build_creatures()
+	_build_village()
+	_build_far_areas()
+	_build_magic_props()
 	_build_ambient()
+	rooms = InteriorBuilder.new().build_all(root, outside_doors)
 
 
 func h(x: float, z: float) -> float:
@@ -84,12 +90,12 @@ func _build_terrain() -> void:
 	body.add_child(cs)
 	root.add_child(body)
 	# Bordas invisíveis (além das montanhas)
-	for i in 24:
-		var a := i * TAU / 24.0
+	for i in 48:
+		var a := i * TAU / 48.0
 		var p := Vector3(sin(a), 0, cos(a)) * (ValleyTerrain.BOUNDARY + 6.0)
 		var cs2 := CollisionShape3D.new()
 		var b := BoxShape3D.new()
-		b.size = Vector3(16.0, 40.0, 2.0)
+		b.size = Vector3(14.0, 60.0, 2.0)
 		cs2.shape = b
 		cs2.position = p + Vector3(0, 10, 0)
 		cs2.rotation.y = a
@@ -124,12 +130,12 @@ func _build_walls() -> void:
 	## Muralhas de pedra que definem as sub-regiões (portões: cogumelo, sarças, riacho).
 	var rock_m := Toon.mat(Color("#8b889c"), {"rim": 0.2, "outline": 0.03})
 	var walls := [
-		[Vector2(28.5, -52), Vector2(28.5, -6.6)],
+		[Vector2(28.5, -96), Vector2(28.5, -6.6)],
 		[Vector2(28.5, -1.4), Vector2(28.5, 7.0)],
-		[Vector2(32.5, 7.5), Vector2(60, 7.5)],
-		[Vector2(-58, -21.5), Vector2(-28.3, -21.5)],
+		[Vector2(32.5, 7.5), Vector2(96, 7.5)],
+		[Vector2(-96, -21.5), Vector2(-28.3, -21.5)],
 		[Vector2(-23.7, -21.5), Vector2(-21.5, -21.5)],
-		[Vector2(-21.5, -21.5), Vector2(-21.5, -58)],
+		[Vector2(-21.5, -21.5), Vector2(-21.5, -96)],
 	]
 	for w in walls:
 		var a: Vector2 = w[0]
@@ -138,13 +144,13 @@ func _build_walls() -> void:
 		var n := maxi(1, int(d.length() / 2.0))
 		for i in n + 1:
 			var p := a + d * (float(i) / n)
-			if p.length() > 62.0:
+			if p.length() > ValleyTerrain.BOUNDARY + 6.0:
 				continue
 			var s := rng.randf_range(1.7, 2.6)
 			var mi := MeshKit.part(root, MeshKit.rock(rng.randi_range(0, 9), 1.0), rock_m, at(p.x, p.y, s * 0.4), Vector3(0, rng.randf_range(0, 360), 0), Vector3(s, s * rng.randf_range(1.1, 1.6), s))
 			mi.name = "WallRock"
 		var mid := (a + b) * 0.5
-		_box_collider(Vector3(mid.x, h(mid.x, mid.y) + 2.0, mid.y), Vector3(2.4, 6.0, d.length() + 1.0) if absf(d.x) < absf(d.y) else Vector3(d.length() + 1.0, 6.0, 2.4))
+		_box_collider(Vector3(mid.x, h(mid.x, mid.y) + 2.0, mid.y), Vector3(2.4, 14.0, d.length() + 1.0) if absf(d.x) < absf(d.y) else Vector3(d.length() + 1.0, 14.0, 2.4))
 
 
 # ===================================================================== vegetação
@@ -178,11 +184,11 @@ func _build_vegetation() -> void:
 	var autumn := [Color("#f2a541"), Color("#e8743b"), Color("#d9a441")]
 	var placed := 0
 	var tries := 0
-	var target := 230
-	while placed < target and tries < 6000:
+	var target := 560
+	while placed < target and tries < 14000:
 		tries += 1
 		var a := rng.randf_range(0, TAU)
-		var r := sqrt(rng.randf()) * 56.0
+		var r := sqrt(rng.randf()) * 94.0
 		var x := sin(a) * r
 		var z := cos(a) * r
 		if not terrain.is_free(x, z, 0.5):
@@ -192,7 +198,9 @@ func _build_vegetation() -> void:
 			continue
 		var y := h(x, z)
 		var s := rng.randf_range(0.85, 1.35)
-		var pine := (z < -20.0 and rng.randf() < 0.65) or (r > 46.0 and rng.randf() < 0.5)
+		if Vector2(x, z).distance_to(Vector2(58, 44)) < 15.0 or Vector2(x, z).distance_to(Vector2(0, 74)) < 24.0:
+			continue
+		var pine := (z < -20.0 and rng.randf() < 0.65) or (r > 76.0 and rng.randf() < 0.6)
 		var basis := Basis(Vector3.UP, rng.randf_range(0, TAU))
 		trunks.append(Transform3D(basis.scaled(Vector3(s, s, s)), Vector3(x, y + 1.2 * s, z)))
 		trunk_c.append(Color("#7a5236").lerp(Color("#5a3d2a"), rng.randf()))
@@ -219,7 +227,7 @@ func _build_vegetation() -> void:
 	_multimesh(MeshKit.cylinder(0.0, 1.4, 1.9, 8), Toon.foliage(), cones, cone_c)
 
 	# Grama e flores
-	var grass_count: int = [1400, 3200, 5600][clampi(quality, 0, 2)]
+	var grass_count: int = [2600, 5600, 9000][clampi(quality, 0, 2)]
 	var gt: Array = []
 	var gc: Array = []
 	var ft: Array = []
@@ -228,9 +236,9 @@ func _build_vegetation() -> void:
 	tries = 0
 	while gt.size() < grass_count and tries < grass_count * 4:
 		tries += 1
-		var x := rng.randf_range(-50, 50)
-		var z := rng.randf_range(-50, 50)
-		if Vector2(x, z).length() > 50.0:
+		var x := rng.randf_range(-88, 88)
+		var z := rng.randf_range(-88, 88)
+		if Vector2(x, z).length() > 86.0:
 			continue
 		if terrain.dist_to_path(x, z) < 1.3 or terrain.dist_to_creek(x, z) < 3.2 or terrain.dist_to_pond(x, z) < ValleyTerrain.POND_RADIUS + 1.0:
 			continue
@@ -251,9 +259,9 @@ func _build_vegetation() -> void:
 	var rock_m := Toon.mat(Color("#9894a8"), {"outline": 0.02})
 	var bush_t: Array = []
 	var bush_c: Array = []
-	for i in 70:
-		var x := rng.randf_range(-48, 48)
-		var z := rng.randf_range(-48, 48)
+	for i in 170:
+		var x := rng.randf_range(-86, 86)
+		var z := rng.randf_range(-86, 86)
 		if not terrain.is_free(x, z, -0.8):
 			continue
 		if i % 2 == 0:
@@ -323,32 +331,12 @@ func _build_home() -> void:
 	MeshKit.part(lan, MeshKit.cylinder(0.12, 0.18, 0.08, 8), timber, Vector3(0, 0.18, 0))
 	_box_collider(base + Vector3(0, 2.0, 0), Vector3(7.4, 4.0, 5.4))
 
-	# Atril (biblioteca) na varanda
-	var lectern := Station.new()
-	lectern.setup("lectern")
-	_add(lectern, at(-2.3, -2.4))
-	MeshKit.part(lectern, MeshKit.cylinder(0.1, 0.18, 1.1, 8), timber, Vector3(0, 0.55, 0))
-	MeshKit.part(lectern, MeshKit.box(Vector3(0.7, 0.08, 0.5)), timber, Vector3(0, 1.12, 0), Vector3(-20, 0, 0))
-	MeshKit.part(lectern, MeshKit.box(Vector3(0.62, 0.06, 0.42)), Toon.mat(Color("#f3e6c4"), {"outline": 0.01}), Vector3(0, 1.18, 0), Vector3(-20, 0, 0))
-	MeshKit.part(lectern, MeshKit.box(Vector3(0.3, 0.07, 0.4)), Toon.mat(Color("#5a2f6a")), Vector3(-0.32, 1.16, 0), Vector3(-20, 0, 8))
-	var floaty := MeshKit.pivot(lectern, Vector3(0, 1.55, 0))
-	MeshKit.part(floaty, MeshKit.star(0.08, 0.035, 0.02), Toon.glow(Color("#fff3b0"), 2.0))
-	lectern.set_anim_node(floaty)
-	lectern.map_label = "Grimório"
-
-	# Baú (armazém)
-	var chest := Station.new()
-	chest.setup("chest")
-	_add(chest, at(2.5, -2.6), -10)
-	MeshKit.part(chest, MeshKit.box(Vector3(1.0, 0.6, 0.6)), Toon.mat(Color("#8a5a36"), {"outline": 0.02}), Vector3(0, 0.3, 0))
-	MeshKit.part(chest, MeshKit.cylinder(0.3, 0.3, 1.0, 10), Toon.mat(Color("#7a4a2e"), {"outline": 0.02}), Vector3(0, 0.6, 0), Vector3(0, 0, 90), Vector3(1.0, 1.0, 1.0))
-	for x in [-0.35, 0.35]:
-		MeshKit.part(chest, MeshKit.box(Vector3(0.08, 0.62, 0.64)), Toon.mat(Color("#f3c74f")), Vector3(x, 0.32, 0))
-
-	# Porta = cama/descanso
-	var bed := Station.new()
-	bed.setup("bed")
-	_add(bed, at(0, -2.9))
+	# Porta da cabana: entra no interior (cama, estantes, grimório, baú)
+	var door := Station.new()
+	door.setup("door", {"room": "cabana", "title": "Cabana da Clareira"})
+	_add(door, at(0, -2.9))
+	door.map_label = "Casa"
+	outside_doors["cabana"] = at(0, -1.6, 0.1)
 
 	# Runa da porta (Marca de Retorno) — surge após a missão do Guardião
 	var rune := Readable.new()
@@ -523,6 +511,10 @@ func _build_pois() -> void:
 	MeshKit.part(hut, MeshKit.cylinder(0.45, 0.45, 0.1, 14), Toon.glow(Color("#ffd27a"), 1.3), Vector3(-1.2, 1.7, 1.8), Vector3(90, -30, 0))
 	MeshKit.light(hut, Color("#ffcf8a"), 1.0, 6.0, Vector3(0.5, 2.0, 3.0))
 	_cyl_collider(hut.position, 2.3, 3.0)
+	var hut_door := Station.new()
+	hut_door.setup("door", {"room": "cha", "title": "Casa de Chá da Vovó Sálvia"})
+	_add(hut_door, at(-22.2, 19.8))
+	outside_doors["cha"] = at(-21.8, 21.2, 0.1)
 	var table := MeshKit.pivot(root, at(-18.5, 22.2))
 	MeshKit.part(table, MeshKit.cylinder(0.7, 0.7, 0.08, 14), wood, Vector3(0, 0.75, 0))
 	MeshKit.part(table, MeshKit.cylinder(0.08, 0.1, 0.75, 6), wood, Vector3(0, 0.37, 0))
@@ -668,16 +660,16 @@ func _build_pois() -> void:
 
 	# --- Placas para regiões futuras
 	var signs := [
-		[Vector2(7.5, 47.0), "aldeia_vime", "Aldeia Vime", "Um deslizamento de terra fechou a estrada para a Aldeia Vime. Bento diz que os aldeões estão cavando — e reclamando."],
-		[Vector2(-46.0, -6.0), "floresta_encantada", "", ""],
-		[Vector2(24.0, -40.0), "picos_lua", "", ""],
-		[Vector2(-30.0, 36.0), "lagoa_espelhada", "", ""],
+		[Vector2(-84.0, -8.0), "floresta_encantada", "", ""],
+		[Vector2(44.0, -76.0), "picos_lua", "", ""],
+		[Vector2(-58.0, 60.0), "lagoa_espelhada", "", ""],
+		[Vector2(-6.0, 88.0), "estrada", "Estrada do Reino", "A estrada continua para além das montanhas, até cidades que Asterion só conhece de livros. (Região futura.)"],
 	]
 	for s in signs:
 		var st := Station.new()
 		var title: String = s[2]
 		var text: String = s[3]
-		if title == "":
+		if title == "" and s[1] != "estrada":
 			var reg := DataRegistry.region(s[1])
 			title = reg.get("name", "")
 			text = "%s\n\n%s\nFoco: %s.\n\n(Região planejada para a V1 — ainda não aberta nesta demonstração.)" % [title, reg.get("mood", ""), reg.get("focus", "")]
@@ -687,6 +679,212 @@ func _build_pois() -> void:
 		MeshKit.part(post, MeshKit.cylinder(0.07, 0.09, 2.0, 6), wood, Vector3(0, 1.0, 0))
 		MeshKit.part(post, MeshKit.box(Vector3(1.4, 0.4, 0.08)), wood, Vector3(0.4, 1.7, 0), Vector3(0, 0, 4))
 		MeshKit.part(post, MeshKit.prism(Vector3(0.4, 0.4, 0.08)), wood, Vector3(1.25, 1.7, 0), Vector3(0, 0, -90))
+
+
+# ===================================================================== Aldeia Vime
+
+func _house(c: Vector2, rot: float, w: float, d: float, wall_c: Color, roof_c: Color, room: String = "", title: String = "") -> Node3D:
+	var base := at(c.x, c.y)
+	var hn := Node3D.new()
+	hn.position = base
+	hn.rotation_degrees.y = rot
+	root.add_child(hn)
+	var wall := Toon.mat(wall_c, {"rim": 0.2, "outline": 0.025})
+	var timber := Toon.mat(Color("#6b4630"), {"outline": 0.02})
+	var roof := Toon.mat(roof_c, {"rim": 0.3, "outline": 0.03})
+	MeshKit.part(hn, MeshKit.box(Vector3(w + 0.3, 0.4, d + 0.3)), Toon.mat(Color("#9a96a8"), {"outline": 0.02}), Vector3(0, 0.0, 0))
+	MeshKit.part(hn, MeshKit.box(Vector3(w, 2.8, d)), wall, Vector3(0, 1.6, 0))
+	for x in [-w * 0.5, w * 0.5]:
+		for z in [-d * 0.5, d * 0.5]:
+			MeshKit.part(hn, MeshKit.box(Vector3(0.22, 2.9, 0.22)), timber, Vector3(x, 1.6, z))
+	for side in [-1.0, 1.0]:
+		MeshKit.part(hn, MeshKit.box(Vector3(w + 1.0, 0.25, d * 0.62)), roof, Vector3(0, 3.6, side * d * 0.27), Vector3(side * -38, 0, 0))
+	MeshKit.part(hn, MeshKit.prism(Vector3(w, 1.4, d)), wall, Vector3(0, 3.7, 0))
+	MeshKit.part(hn, MeshKit.box(Vector3(1.1, 1.9, 0.12)), Toon.mat(roof_c.darkened(0.3), {"outline": 0.02}), Vector3(0, 1.15, d * 0.5 + 0.02))
+	for wx in [-w * 0.3, w * 0.3]:
+		MeshKit.part(hn, MeshKit.box(Vector3(0.8, 0.8, 0.08)), Toon.glow(Color("#ffd27a"), 0.9), Vector3(wx, 1.8, d * 0.5 + 0.02))
+		MeshKit.part(hn, MeshKit.box(Vector3(0.95, 0.95, 0.06)), timber, Vector3(wx, 1.8, d * 0.5 + 0.0))
+	var ch := MeshKit.part(hn, MeshKit.cylinder(0.3, 0.35, 1.6, 8), Toon.mat(Color("#9a96a8"), {"outline": 0.02}), Vector3(w * 0.3, 4.2, -d * 0.2))
+	ch.name = "Chimney"
+	var cs := CollisionShape3D.new()
+	var b := BoxShape3D.new()
+	b.size = Vector3(w + 0.3, 4.0, d + 0.3)
+	cs.shape = b
+	cs.position = base + Vector3(0, 2.0, 0)
+	cs.rotation_degrees.y = rot
+	static_body.add_child(cs)
+	if room != "":
+		var door := Station.new()
+		door.setup("door", {"room": room, "title": title})
+		var front := Vector3(0, 0, d * 0.5 + 0.7).rotated(Vector3.UP, deg_to_rad(rot))
+		door.position = base + front
+		door.map_label = title
+		root.add_child(door)
+		var out := Vector3(0, 0, d * 0.5 + 1.8).rotated(Vector3.UP, deg_to_rad(rot))
+		outside_doors[room] = at(base.x + out.x, base.z + out.z, 0.1)
+	return hn
+
+
+func _build_village() -> void:
+	var walls := [Color("#f1e3c6"), Color("#e8d0b0"), Color("#f6e6d0"), Color("#e6dcc8")]
+	var roofs := [Color("#c4673a"), Color("#5a7f4a"), Color("#7a4f9c"), Color("#3a6a8a")]
+	_house(Vector2(-12.0, 64.0), 70.0, 6.0, 5.0, Color("#f6e6d0"), Color("#d9984a"), "padaria", "Padaria Pão-de-Mel")
+	var signboard := MeshKit.pivot(root, at(-8.6, 62.0))
+	MeshKit.part(signboard, MeshKit.cylinder(0.05, 0.06, 2.2, 6), Toon.mat(Color("#6b4630")), Vector3(0, 1.1, 0))
+	MeshKit.part(signboard, MeshKit.sphere(0.45, 12, 8), Toon.mat(Color("#e8a94a"), {"outline": 0.02}), Vector3(0, 2.4, 0), Vector3.ZERO, Vector3(1.2, 0.7, 0.3))
+	var spots := [[Vector2(12, 63), -60.0], [Vector2(14, 78), -110.0], [Vector2(-13, 80), 110.0], [Vector2(2, 89), 180.0], [Vector2(-22, 72), 90.0]]
+	for i in spots.size():
+		_house(spots[i][0], spots[i][1], 5.0 + (i % 2), 4.5, walls[i % walls.size()], roofs[i % roofs.size()])
+	# poço da praça
+	var well := MeshKit.pivot(root, at(0.5, 70.0))
+	MeshKit.part(well, MeshKit.cylinder(1.0, 1.1, 0.9, 16), Toon.mat(Color("#9a96a8"), {"outline": 0.02}), Vector3(0, 0.45, 0))
+	MeshKit.part(well, MeshKit.cylinder(0.85, 0.85, 0.05, 16), Toon.mat(Color("#3a6a8a"), {"emission": 0.2}), Vector3(0, 0.8, 0))
+	for sx in [-1.0, 1.0]:
+		MeshKit.part(well, MeshKit.cylinder(0.07, 0.07, 1.8, 6), Toon.mat(Color("#6b4630"), {"outline": 0.015}), Vector3(sx * 0.9, 1.4, 0))
+	MeshKit.part(well, MeshKit.prism(Vector3(2.4, 0.7, 1.4)), Toon.mat(Color("#c4673a"), {"outline": 0.02}), Vector3(0, 2.6, 0))
+	_cyl_collider(well.position, 1.1, 1.0)
+	var placa := Readable.new()
+	placa.setup("placa_aldeia", "sign")
+	_add(placa, at(5.0, 62.0), 200)
+	# barraca de feira
+	var stall := MeshKit.pivot(root, at(-6.0, 77.0))
+	stall.rotation_degrees.y = 30
+	MeshKit.part(stall, MeshKit.box(Vector3(2.4, 0.9, 1.0)), Toon.mat(Color("#8a5a36"), {"outline": 0.02}), Vector3(0, 0.45, 0))
+	for k in 4:
+		MeshKit.part(stall, MeshKit.box(Vector3(0.62, 0.06, 1.4)), Toon.mat(Color("#e8574a") if k % 2 == 0 else Color("#fff3e0"), {"outline": 0.015}), Vector3(-0.93 + k * 0.62, 2.2, 0.1), Vector3(14, 0, 0))
+	for k in 5:
+		MeshKit.part(stall, MeshKit.sphere(0.16, 8, 6), Toon.mat([Color("#ff7a3c"), Color("#e8322e"), Color("#8fcf5a"), Color("#f5b335"), Color("#b18cff")][k], {"rim": 0.4}), Vector3(-0.8 + k * 0.4, 1.05, 0))
+	_box_collider(stall.position + Vector3(0, 0.5, 0), Vector3(2.4, 1.0, 1.0), deg_to_rad(30))
+	# cercas e lanternas
+	for k in 10:
+		MeshKit.part(root, MeshKit.box(Vector3(0.12, 0.8, 0.12)), Toon.mat(Color("#8a5a36"), {"outline": 0.015}), at(-20.0 + k * 1.1, 55.0, 0.3))
+	for p in [Vector2(-4, 66), Vector2(6, 67), Vector2(-3, 76), Vector2(7, 76)]:
+		_lantern(p)
+
+
+# ===================================================================== áreas distantes
+
+func _build_far_areas() -> void:
+	var stone := Toon.mat(Color("#a8a4b8"), {"outline": 0.025})
+	# Campos de Lavanda: fileiras roxas, colmeias e moinho
+	var lav_t: Array = []
+	var lav_c: Array = []
+	for row in 9:
+		for k in 22:
+			var x := 48.0 + k * 0.9 + rng.randf_range(-0.2, 0.2)
+			var z := 36.0 + row * 1.6
+			if Vector2(x, z).distance_to(Vector2(58, 44)) > 12.5 or terrain.dist_to_path(x, z) < 1.4:
+				continue
+			var sc := rng.randf_range(0.8, 1.2)
+			lav_t.append(Transform3D(Basis().scaled(Vector3(sc, sc * 1.3, sc)), at(x, z, 0.3)))
+			lav_c.append(Color("#9a6ad8").lerp(Color("#c8a2ff"), rng.randf()))
+	_multimesh(MeshKit.sphere(0.38, 8, 6), Toon.foliage(), lav_t, lav_c)
+	for p in [Vector2(52, 50), Vector2(54, 51), Vector2(56, 52.5)]:
+		var hive := MeshKit.pivot(root, at(p.x, p.y))
+		for k in 3:
+			MeshKit.part(hive, MeshKit.cylinder(0.35 - k * 0.07, 0.4 - k * 0.07, 0.3, 10), Toon.mat(Color("#e8c66a"), {"outline": 0.015}), Vector3(0, 0.15 + k * 0.28, 0))
+		MeshKit.part(hive, MeshKit.sphere(0.07, 6, 4), Toon.mat(Color("#2a1d18")), Vector3(0, 0.3, -0.38))
+	var bees := HarvestNode.new()
+	bees.setup("colmeia_1", "mel_silvestre", "crystal", 1)
+	_add(bees, at(54.0, 49.0))
+	var lav_node := HarvestNode.new()
+	lav_node.setup("lavanda_campo", "lavanda_sonolenta", "spikes", 2)
+	_add(lav_node, at(60.0, 39.0))
+	var mill := MeshKit.pivot(root, at(64.0, 50.0))
+	mill.name = "Windmill"
+	MeshKit.part(mill, MeshKit.cylinder(1.4, 2.1, 7.0, 10), Toon.mat(Color("#f1e3c6"), {"rim": 0.2, "outline": 0.03}), Vector3(0, 3.5, 0))
+	MeshKit.part(mill, MeshKit.cylinder(0.2, 1.9, 1.8, 10), Toon.mat(Color("#c4673a"), {"outline": 0.03}), Vector3(0, 7.9, 0))
+	var blades := MeshKit.pivot(mill, Vector3(0, 6.6, -1.7))
+	blades.name = "Blades"
+	blades.add_to_group("windmill_blades")
+	for k in 4:
+		var bl := MeshKit.pivot(blades)
+		bl.rotation.z = k * PI / 2.0
+		MeshKit.part(bl, MeshKit.box(Vector3(0.9, 3.4, 0.08)), Toon.mat(Color("#f6efe2"), {"outline": 0.02}), Vector3(0, 2.0, 0))
+	MeshKit.part(blades, MeshKit.sphere(0.35, 10, 8), Toon.mat(Color("#6b4630")))
+	_cyl_collider(mill.position, 2.0, 7.0)
+	# Observatório em ruínas
+	var obs := MeshKit.pivot(root, at(62.0, -48.0))
+	for k in 10:
+		var a := k * TAU / 10.0
+		if k in [2, 7]:
+			continue
+		var hh := 3.0 + (k % 3) * 1.4
+		MeshKit.part(obs, MeshKit.box(Vector3(1.4, hh, 0.7)), stone, Vector3(sin(a) * 5.5, hh * 0.5, cos(a) * 5.5), Vector3(0, rad_to_deg(a), (k % 2) * 6 - 3))
+		_cyl_collider(obs.position + Vector3(sin(a) * 5.5, 0, cos(a) * 5.5), 0.7, hh)
+	MeshKit.part(obs, MeshKit.sphere(5.6, 20, 10, true), Toon.mat(Color("#8a8796"), {"outline": 0.03, "double_sided": true}), Vector3(1.5, 5.0, 0), Vector3(0, 0, 38), Vector3(1.0, 0.5, 1.0))
+	var scope := MeshKit.pivot(obs, Vector3(0, 0.8, 0))
+	scope.rotation_degrees = Vector3(-35, 30, 0)
+	MeshKit.part(obs, MeshKit.cylinder(0.3, 0.5, 0.8, 8), Toon.mat(Color("#c9a24a"), {"metal": 0.5, "outline": 0.02}), Vector3(0, 0.4, 0))
+	MeshKit.part(scope, MeshKit.cylinder(0.22, 0.35, 3.2, 12), Toon.mat(Color("#c9a24a"), {"metal": 0.6, "rim": 0.5, "outline": 0.02}), Vector3(0, 1.6, 0))
+	var obs_c := HarvestNode.new()
+	obs_c.setup("observatorio_estrela", "po_estrela", "crystal", 1)
+	_add(obs_c, at(64.0, -45.0))
+	# Anel de Cogumelos (fadas)
+	var ring := MeshKit.pivot(root, at(-62.0, -56.0))
+	for k in 16:
+		var a := k * TAU / 16.0
+		var sc := 0.7 + (k % 3) * 0.25
+		MeshKit.part(ring, MeshKit.cylinder(0.08 * sc, 0.11 * sc, 0.5 * sc, 8), Toon.mat(Color("#f3e6cf")), Vector3(sin(a) * 4.0, 0.25 * sc, cos(a) * 4.0))
+		MeshKit.part(ring, MeshKit.sphere(0.32 * sc, 10, 6, true), Toon.mat(Color("#9fe8ff") if k % 2 == 0 else Color("#d6b8ff"), {"emission": 1.2, "outline": 0.01}), Vector3(sin(a) * 4.0, 0.48 * sc, cos(a) * 4.0), Vector3.ZERO, Vector3(1.0, 0.6, 1.0))
+	MeshKit.light(ring, Color("#b6d8ff"), 1.5, 9.0, Vector3(0, 1.5, 0))
+	var orq := HarvestNode.new()
+	orq.setup("orquidea_anel", "orquidea_sombra", "flower", 1)
+	_add(orq, at(-62.0, -56.0))
+	# Pomar Abandonado: árvores secas (o Crescimento as faz florescer)
+	for k in 9:
+		var p := Vector2(-64.0 + (k % 3) * 6.0, 36.0 + int(k / 3.0) * 6.0)
+		var prop := MagicProp.new()
+		prop.setup("pomar_%d" % k, "dead_bush" if k % 2 == 0 else "stump")
+		_add(prop, at(p.x, p.y))
+		var trunk := MeshKit.pivot(root, at(p.x + 1.5, p.y + 1.2))
+		MeshKit.part(trunk, MeshKit.cylinder(0.15, 0.25, 2.6, 7), Toon.mat(Color("#6b5a48"), {"outline": 0.02}), Vector3(0, 1.3, 0), Vector3(0, 0, 6))
+		for b in 3:
+			MeshKit.part(trunk, MeshKit.cylinder(0.03, 0.08, 1.2, 5), Toon.mat(Color("#6b5a48")), Vector3(0, 2.4, 0), Vector3(b * 40 - 40, b * 120, 35))
+	# Clareira dos Cogumelos Gigantes
+	for k in 7:
+		var a := k * TAU / 7.0 + 0.3
+		var p := Vector2(-76.0 + sin(a) * 7.0, 4.0 + cos(a) * 7.0)
+		var sc := rng.randf_range(1.5, 3.0)
+		var mush := MeshKit.pivot(root, at(p.x, p.y))
+		MeshKit.part(mush, MeshKit.cylinder(0.35 * sc, 0.5 * sc, 2.2 * sc, 12), Toon.mat(Color("#f3e6cf"), {"outline": 0.03}), Vector3(0, 1.1 * sc, 0))
+		MeshKit.part(mush, MeshKit.sphere(1.3 * sc, 16, 10, true), Toon.mat([Color("#d9442f"), Color("#9a6ad8"), Color("#e8a94a")][k % 3], {"rim": 0.4, "outline": 0.04}), Vector3(0, 2.1 * sc, 0), Vector3.ZERO, Vector3(1.0, 0.65, 1.0))
+		_cyl_collider(mush.position, 0.5 * sc, 2.2 * sc)
+	for p in [Vector2(-74.0, 6.0), Vector2(-78.0, 1.0)]:
+		var f := CreatureActor.new()
+		f.setup("frog", Callable(terrain, "height"))
+		_add(f, at(p.x, p.y))
+
+
+## Objetos mágicos espalhados para experimentar feitiços.
+func _build_magic_props() -> void:
+	var props := [
+		["casa_pedra_1", "rock", Vector2(4.0, 3.0)], ["casa_pedra_2", "rock", Vector2(-3.5, 6.0)],
+		["casa_caixa_1", "crate", Vector2(3.6, -4.3)], ["casa_barril_1", "barrel", Vector2(4.7, -4.3)],
+		["casa_abobora_1", "pumpkin", Vector2(-11.0, 6.8)], ["casa_abobora_2", "pumpkin", Vector2(-10.2, 7.6)],
+		["casa_poca_1", "puddle", Vector2(1.5, 10.5)], ["casa_botao_1", "bud", Vector2(-2.0, 4.5)],
+		["casa_botao_2", "bud", Vector2(5.5, 7.0)], ["casa_toco_1", "stump", Vector2(-13.0, -6.0)],
+		["casa_lampiao_1", "lamp", Vector2(2.2, 2.2)], ["casa_lampiao_2", "lamp", Vector2(-2.2, 2.2)],
+		["trilha_seco_1", "dead_bush", Vector2(-4.0, -16.0)], ["trilha_seco_2", "dead_bush", Vector2(3.0, -24.0)],
+		["trilha_seco_3", "dead_bush", Vector2(-6.0, -30.0)], ["trilha_pedra_1", "rock", Vector2(-9.0, 14.0)],
+		["trilha_poca_1", "puddle", Vector2(-17.0, 16.0)], ["mirela_barril", "barrel", Vector2(25.0, 9.5)],
+		["mirela_caixa", "crate", Vector2(18.0, 9.0)], ["bento_caixa", "crate", Vector2(13.4, 18.0)],
+		["bento_abobora", "pumpkin", Vector2(12.6, 14.6)], ["salgueiro_pedra", "rock", Vector2(-24.0, 6.0)],
+		["lagoa_botao", "bud", Vector2(-23.5, -15.0)], ["circulo_pedra", "rock", Vector2(15.0, -20.0)],
+		["aldeia_abobora_1", "pumpkin", Vector2(-18.0, 57.0)], ["aldeia_abobora_2", "pumpkin", Vector2(-16.5, 57.5)],
+		["aldeia_abobora_3", "pumpkin", Vector2(-15.0, 56.8)], ["aldeia_barril_1", "barrel", Vector2(9.0, 66.5)],
+		["aldeia_caixa_1", "crate", Vector2(10.0, 67.5)], ["aldeia_lampiao_1", "lamp", Vector2(-1.0, 64.0)],
+		["aldeia_lampiao_2", "lamp", Vector2(4.0, 80.0)], ["aldeia_poca", "puddle", Vector2(-4.0, 72.0)],
+		["aldeia_botao", "bud", Vector2(6.0, 73.0)], ["lavanda_pedra", "rock", Vector2(50.0, 40.0)],
+		["lavanda_toco", "stump", Vector2(66.0, 40.0)], ["obs_pedra", "rock", Vector2(58.0, -44.0)],
+		["obs_caixa", "crate", Vector2(66.0, -50.0)], ["fadas_botao", "bud", Vector2(-58.0, -52.0)],
+		["cogumelos_pedra", "rock", Vector2(-72.0, 8.0)], ["santuario_seco", "dead_bush", Vector2(40.0, -12.0)],
+	]
+	for pr in props:
+		var mp := MagicProp.new()
+		mp.setup(pr[0], pr[1])
+		var p: Vector2 = pr[2]
+		_add(mp, at(p.x, p.y), rng.randf_range(0, 360))
 
 
 func _willow(p: Vector2) -> void:
@@ -788,7 +986,8 @@ func _build_creatures() -> void:
 
 func _build_ambient() -> void:
 	var cols := [Color("#ff9fb2"), Color("#fff3a0"), Color("#c8a2ff"), Color("#8fd6ff")]
-	for p in [Vector2(-6, 8), Vector2(12, 10), Vector2(-14, 22), Vector2(-20, -2), Vector2(14, -10), Vector2(4, 22), Vector2(-30, 10), Vector2(-36, -32)]:
+	for p in [Vector2(-6, 8), Vector2(12, 10), Vector2(-14, 22), Vector2(-20, -2), Vector2(14, -10), Vector2(4, 22), Vector2(-30, 10), Vector2(-36, -32),
+			Vector2(55, 40), Vector2(62, 46), Vector2(52, 44), Vector2(-58, 40), Vector2(-62, 46), Vector2(-4, 70), Vector2(8, 78), Vector2(-60, -54)]:
 		var b := ButterflyModel.new()
 		b.color = cols[rng.randi() % cols.size()]
 		b.center = at(p.x, p.y)

@@ -4,14 +4,16 @@ extends RefCounted
 ## esculpidos, clareiras aplainadas e trilhas. Função de altura analítica usada
 ## tanto para a malha quanto para posicionar objetos.
 
-const SIZE := 136.0
+const SIZE := 220.0
 const STEP := 1.6
 const POND_CENTER := Vector2(-31.0, -14.0)
 const POND_RADIUS := 7.5
 const ISLET_RADIUS := 2.2
 const POND_LEVEL := -0.9
 const CREEK_LEVEL := -0.8
-const BOUNDARY := 54.0
+const BOUNDARY := 92.0
+const MOUNTAIN_START := 84.0
+const INTERIOR_X := 300.0
 
 var noise := FastNoiseLite.new()
 var detail := FastNoiseLite.new()
@@ -32,7 +34,7 @@ func _init() -> void:
 	# Riacho leste: de z=8 até as montanhas do sul, serpenteando.
 	creek = PackedVector2Array()
 	var z := 7.0
-	while z <= 62.0:
+	while z <= 104.0:
 		creek.append(Vector2(30.0 + sin(z * 0.15) * 2.0, z))
 		z += 3.0
 	_define_paths()
@@ -50,6 +52,13 @@ func _define_paths() -> void:
 		[Vector2(-25, -13), Vector2(-26, -21), Vector2(-33, -29), Vector2(-37, -33)],
 		[Vector2(3, -7), Vector2(11, -15), Vector2(18, -21)],
 		[Vector2(7.5, 20), Vector2(18, 21), Vector2(27, 22), Vector2(34, 23), Vector2(40, 25)],
+		[Vector2(8, 50), Vector2(5, 60), Vector2(0, 66), Vector2(-8, 70), Vector2(-14, 76)],
+		[Vector2(0, 66), Vector2(9, 72), Vector2(4, 82), Vector2(-6, 84)],
+		[Vector2(40, 25), Vector2(50, 33), Vector2(58, 42), Vector2(62, 52)],
+		[Vector2(43, -9), Vector2(52, -26), Vector2(58, -40), Vector2(62, -47)],
+		[Vector2(-37, -33), Vector2(-49, -44), Vector2(-61, -55)],
+		[Vector2(-19, 20), Vector2(-34, 30), Vector2(-50, 38), Vector2(-58, 42)],
+		[Vector2(-25, 2), Vector2(-48, 4), Vector2(-74, 4)],
 	]
 	for p in raw:
 		paths.append(PackedVector2Array(p))
@@ -69,6 +78,12 @@ func _define_flats() -> void:
 		[Vector2(-36, -33), 9.0, 0.3],     # bosque das corujas
 		[Vector2(19, -24), 7.0, 2.6],      # círculo de pedras (no alto da colina)
 		[Vector2(40, 25), 5.0, 0.3],       # recanto do gelo
+		[Vector2(0, 74), 22.0, 0.4],       # Aldeia Vime
+		[Vector2(58, 44), 13.0, 0.6],      # campos de lavanda
+		[Vector2(62, -48), 8.0, 1.4],      # observatório em ruínas
+		[Vector2(-62, -56), 8.0, 0.3],     # anel de cogumelos
+		[Vector2(-58, 42), 13.0, 0.5],     # pomar abandonado
+		[Vector2(-76, 4), 10.0, 0.3],      # cogumelos gigantes
 	]
 
 
@@ -108,13 +123,16 @@ func raw_height(x: float, z: float) -> float:
 	var h := noise.get_noise_2d(x, z) * 1.8 + detail.get_noise_2d(x, z) * 0.25
 	h += 3.2 * exp(-(pow(x - 19.0, 2.0) + pow(z + 24.0, 2.0)) / 90.0)
 	h += 1.6 * exp(-(pow(x + 18.0, 2.0) + pow(z - 38.0, 2.0)) / 220.0)
+	h += 2.4 * exp(-(pow(x - 62.0, 2.0) + pow(z + 48.0, 2.0)) / 160.0)
 	var r := Vector2(x, z).length()
-	if r > 48.0:
-		h += pow((r - 48.0) * 0.6, 1.65)
+	if r > MOUNTAIN_START:
+		h += pow((r - MOUNTAIN_START) * 0.6, 1.65)
 	return h
 
 
 func height(x: float, z: float) -> float:
+	if x > INTERIOR_X:
+		return 0.0     # interiores das casas ficam fora do mapa, com piso em y = 0
 	var h := raw_height(x, z)
 	for f in flats:
 		var d: float = Vector2(x, z).distance_to(f[0])
@@ -149,8 +167,10 @@ func ground_color(x: float, z: float, h: float) -> Color:
 	if h < CREEK_LEVEL - 0.3:
 		c = Color("#6a7a6a")
 	var r := Vector2(x, z).length()
-	if r > 50.0:
-		c = c.lerp(Color("#8d8aa0"), _ss(50.0, 56.0, r))
+	if r > MOUNTAIN_START + 1.0:
+		c = c.lerp(Color("#8d8aa0"), _ss(MOUNTAIN_START + 1.0, MOUNTAIN_START + 7.0, r))
+	if Vector2(x, z).distance_to(Vector2(58, 44)) < 14.0 and dist_to_path(x, z) > 1.8:
+		c = c.lerp(Color("#9a7ad8"), 0.55 * _ss(14.0, 9.0, Vector2(x, z).distance_to(Vector2(58, 44))))
 	if h > 9.0:
 		c = c.lerp(Color("#eef2fb"), _ss(9.0, 12.0, h))
 	return c
@@ -194,4 +214,4 @@ func is_free(x: float, z: float, margin: float = 0.0) -> bool:
 	for f in flats:
 		if Vector2(x, z).distance_to(f[0]) < float(f[1]) * 0.8 + margin:
 			return false
-	return Vector2(x, z).length() < 60.0
+	return Vector2(x, z).length() < BOUNDARY + 2.0
