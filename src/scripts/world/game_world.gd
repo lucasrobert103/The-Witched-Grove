@@ -279,7 +279,12 @@ func _apply_quality() -> void:
 	RenderingServer.directional_soft_shadow_filter_set_quality([RenderingServer.SHADOW_QUALITY_HARD, RenderingServer.SHADOW_QUALITY_SOFT_LOW, RenderingServer.SHADOW_QUALITY_SOFT_MEDIUM][q])
 	RenderingServer.positional_soft_shadow_filter_set_quality([RenderingServer.SHADOW_QUALITY_HARD, RenderingServer.SHADOW_QUALITY_SOFT_LOW, RenderingServer.SHADOW_QUALITY_SOFT_LOW][q])
 	env.glow_enabled = q >= 1
-	get_viewport().scaling_3d_scale = [0.7, 0.85, 1.0][q]
+	var vp := get_viewport()
+	vp.scaling_3d_scale = [0.7, 0.85, 1.0][q]
+	# reescala com nitidez (FSR) e bordas lisas: MSAA nas geometrias, FXAA na qualidade baixa
+	vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_FSR if q < 2 else Viewport.SCALING_3D_MODE_BILINEAR
+	vp.msaa_3d = [Viewport.MSAA_DISABLED, Viewport.MSAA_2X, Viewport.MSAA_4X][q]
+	vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_FXAA if q == 0 else Viewport.SCREEN_SPACE_AA_DISABLED
 	_fireflies.amount = [20, 40, 60][q]
 
 

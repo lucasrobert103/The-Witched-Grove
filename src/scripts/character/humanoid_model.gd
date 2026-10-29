@@ -7,10 +7,12 @@ extends Node3D
 ## A aparência vem de data/npcs/npcs.json → "appearance". Frente = -Z.
 
 const ANKLE_Y := 0.065
-const THIGH := 0.4
-const SHIN := 0.4
-const WAIST_Y := 0.98
-const HEAD_LOCAL_Y := 0.515      # centro da cabeça (altura dos olhos) acima da cintura
+const THIGH := 0.36
+const SHIN := 0.36
+const WAIST_Y := 0.9
+## Estilização: cabeça maior que a real (≈4,8 cabeças de altura) — expressiva e fofa,
+## como nos RPGs de anime atuais; o corpo segue proporções naturais.
+const HEAD_STYLE := 1.36
 
 var appearance: Dictionary = {}
 var move_amount: float = 0.0          # 0 parado .. 1 correndo
@@ -29,6 +31,8 @@ var _height: float = 1.0
 var _wide: float = 1.0
 var _fem: bool = false
 var _hp: Dictionary = {}              # forma da cabeça
+var _head_y: float = 0.586           # centro da cabeça (altura dos olhos) acima da cintura
+var _head_s: float = 1.0
 var _body: Node3D
 var _torso: Node3D
 var _head: Node3D
@@ -176,11 +180,11 @@ func _skirt_sections(kind: String) -> Array:
 	var w := _wide
 	match kind:
 		"coat_dress":
-			return [[0.035, 0.124 * w, 0.088 * w], [-0.06, 0.15 * w, 0.108 * w], [-0.16, 0.178 * w, 0.13 * w], [-0.28, 0.205 * w, 0.153 * w], [-0.41, 0.236 * w, 0.18 * w], [-0.53, 0.262 * w, 0.205 * w]]
+			return [[0.035, 0.124 * w, 0.088 * w], [-0.06, 0.15 * w, 0.108 * w], [-0.16, 0.178 * w, 0.13 * w], [-0.27, 0.203 * w, 0.152 * w], [-0.38, 0.232 * w, 0.177 * w], [-0.48, 0.256 * w, 0.2 * w]]
 		"robe":
-			return [[0.035, 0.126 * w, 0.09 * w], [-0.12, 0.172 * w, 0.125 * w], [-0.36, 0.215 * w, 0.165 * w], [-0.62, 0.262 * w, 0.21 * w], [-0.9, 0.31 * w, 0.26 * w]]
+			return [[0.035, 0.126 * w, 0.09 * w], [-0.12, 0.172 * w, 0.125 * w], [-0.34, 0.212 * w, 0.163 * w], [-0.58, 0.258 * w, 0.207 * w], [-0.8, 0.3 * w, 0.252 * w]]
 		"dress":
-			return [[0.035, 0.124 * w, 0.088 * w], [-0.1, 0.165 * w, 0.12 * w], [-0.3, 0.215 * w, 0.17 * w], [-0.5, 0.265 * w, 0.215 * w], [-0.6, 0.285 * w, 0.235 * w]]
+			return [[0.035, 0.124 * w, 0.088 * w], [-0.1, 0.165 * w, 0.12 * w], [-0.28, 0.212 * w, 0.168 * w], [-0.46, 0.258 * w, 0.21 * w], [-0.55, 0.278 * w, 0.23 * w]]
 		"coat":
 			return [[0.035, 0.128 * w, 0.092 * w], [-0.1, 0.165 * w, 0.122 * w], [-0.28, 0.19 * w, 0.145 * w], [-0.48, 0.215 * w, 0.17 * w]]
 	return [[0.035, 0.13 * w, 0.094 * w], [-0.08, 0.162 * w, 0.12 * w], [-0.2, 0.178 * w, 0.132 * w], [-0.26, 0.184 * w, 0.138 * w]]
@@ -299,7 +303,7 @@ func _build_torso(acc: Array) -> void:
 	# pescoço
 	var skin := _c("skin", "#e0ac8a")
 	_mi(_torso, OrganicMesh.cached("neck", func():
-		return OrganicMesh.tube([Vector3(0, 0.35, 0.012), Vector3(0, 0.42, 0.006), Vector3(0, 0.47, 0.0)], [0.036, 0.033, 0.032], {"segs": 16})), CharMat.skin(skin))
+		return OrganicMesh.tube([Vector3(0, 0.35, 0.012), Vector3(0, 0.42, 0.006), Vector3(0, 0.47, 0.0)], [0.04, 0.037, 0.036], {"segs": 16})), CharMat.skin(skin))
 	if appearance.get("outfit", "") in ["robe", "dress"]:
 		# faixa na cintura
 		_mi(_torso, _ring_mesh(0.03, secs, 0.006, 0.014, 0.75), CharMat.fabric(accent, {"sheen": 0.55}))
@@ -344,15 +348,25 @@ func _build_torso(acc: Array) -> void:
 		if not shawl:
 			_mi(_torso, MeshKit.sphere(0.013, 12, 8), metal, Vector3(0, 0.375, -0.072))
 	if "scarf" in acc:
-		var m_scarf := CharMat.fabric(_c("scarf_color", "#2fb9a8"), {"weave": 400.0, "weave_strength": 0.9})
-		var ring: Array = []
-		var rr: Array = []
-		for k in 12:
-			var a := float(k) / 12.0 * TAU
-			ring.append(Vector3(sin(a) * 0.07, 0.385 - 0.01 * cos(a), -cos(a) * 0.065 + 0.01))
-			rr.append(0.024)
-		_mi(_torso, OrganicMesh.tube(ring, rr, {"segs": 10, "closed": true}), m_scarf)
-		_mi(_torso, OrganicMesh.tube([Vector3(0.03, 0.37, -0.075), Vector3(0.045, 0.3, -0.105), Vector3(0.05, 0.2, -0.11)], [0.022, 0.02, 0.018], {"segs": 8, "flat": 0.6}), m_scarf)
+		# cachecol de tricô: gola enrolada com dobras e duas pontas caindo na frente
+		var scarf_c := _c("scarf_color", "#2fb9a8")
+		var m_scarf := CharMat.fabric(scarf_c, {"weave": 420.0, "weave_strength": 1.4, "sheen": 0.3, "grain": 0.1})
+		_mi(_torso, OrganicMesh.loft([[0.345, 0.082, 0.078, 0.006], [0.37, 0.088, 0.084, 0.008], [0.395, 0.074, 0.07, 0.01], [0.415, 0.06, 0.057, 0.01]], 36, 3, {"folds": 0.07, "fold_n": 7, "fold_y": [0.42, 0.34], "cap_bottom": false}), m_scarf)
+		var tails := [
+			[Vector3(0.035, 0.36, -0.085), Vector3(0.05, 0.3, -0.11), Vector3(0.06, 0.22, -0.12), Vector3(0.062, 0.15, -0.118)],
+			[Vector3(0.012, 0.355, -0.088), Vector3(0.018, 0.29, -0.112), Vector3(0.02, 0.2, -0.124)],
+		]
+		for tl in tails:
+			var pts: Array = tl
+			var rr: Array = []
+			for i in pts.size():
+				rr.append(0.026 if i < pts.size() - 1 else 0.022)
+			_mi(_torso, OrganicMesh.tube(pts, rr, {"segs": 10, "flat": 0.72, "up": Vector3(0, 0, -1)}), m_scarf)
+			# franjas na ponta
+			var tip: Vector3 = pts[pts.size() - 1]
+			for f in 4:
+				var fx := (float(f) - 1.5) * 0.011
+				_mi(_torso, OrganicMesh.tube([tip + Vector3(fx, 0.004, 0), tip + Vector3(fx, -0.022, -0.002)], [0.003, 0.002], {"segs": 5}), m_scarf)
 
 
 ## Anel que acompanha a seção do tronco numa altura (cinto, faixa).
@@ -432,10 +446,13 @@ func _build_arms(acc: Array) -> void:
 		MeshKit.part(_wand_tip, MeshKit.sphere(0.008, 12, 8), Toon.glow(Color("#fff3c4"), 3.0), Vector3.ZERO, Vector3.ZERO, Vector3.ONE, false)
 	if "staff" in acc:
 		var staff := MeshKit.pivot(_hand_r, Vector3(0, -0.06, -0.01), "Staff")
-		staff.rotation_degrees = Vector3(-8, 0, 0)
+		staff.rotation_degrees = Vector3(-10, 0, -12)
 		_mi(staff, OrganicMesh.tube([Vector3(0, -0.72, 0), Vector3(0, 0.0, 0.01), Vector3(0, 0.62, 0), Vector3(0.03, 0.72, 0), Vector3(0.0, 0.78, 0)], [0.016, 0.017, 0.019, 0.016, 0.01], {"segs": 10}), CharMat.wood(Color("#7a4f2e")))
 		_crystal = _mi(staff, MeshKit.crystal(0.04), Toon.glow(Color("#c58cff"), 2.2), Vector3(0, 0.84, 0))
 		_crystal_light = MeshKit.light(staff, Color("#c58cff"), 0.5, 2.5, Vector3(0, 0.86, 0))
+		if _wand_tip == null:
+			# os feitiços saem do cristal do cajado
+			_wand_tip = MeshKit.pivot(staff, Vector3(0, 0.84, 0), "WandTip")
 	if "lantern" in acc:
 		_lantern = MeshKit.pivot(_hand_l, Vector3(0.0, -0.075, -0.01), "Lantern")
 		var m_iron := CharMat.metal(Color("#3a3028"), 0.5)
@@ -521,13 +538,13 @@ func _face_params() -> Dictionary:
 		"beard_shadow": 0.25 if appearance.get("beard", "none") != "none" else 0.0,
 	}
 	if anime:
-		f["eye_center"] = Vector2(0.03, -0.007)
-		f["eye_half"] = Vector2(0.0185, 0.0178)
+		f["eye_center"] = Vector2(0.031, -0.012)
+		f["eye_half"] = Vector2(0.0205, 0.0198)
 		f["eye_tilt"] = 0.1
-		f["brow_y"] = 0.03
-		f["blush"] = 0.42
+		f["brow_y"] = 0.029
+		f["blush"] = 0.5
 		f["lash_weight"] = 1.0
-		f["mouth_y"] = -0.064
+		f["mouth_y"] = -0.066
 		f["mouth_w"] = 0.0075
 		f["freckles"] = 0.35 if "freckles" in acc else 0.0
 	elif age == "child":
@@ -545,10 +562,11 @@ func _face_params() -> Dictionary:
 
 func _build_head(acc: Array) -> void:
 	var age: String = appearance.get("age", "adult")
-	var head_scale := 1.22 if age == "child" else 1.0
+	_head_s = HEAD_STYLE * (1.14 if age == "child" else 1.0)
+	_head_y = 0.44 + 0.097 * _head_s
 	_hp = _head_params()
-	_head = MeshKit.pivot(_torso, Vector3(0, HEAD_LOCAL_Y, -0.004), "Head")
-	_head.scale = Vector3.ONE * head_scale
+	_head = MeshKit.pivot(_torso, Vector3(0, _head_y, -0.004), "Head")
+	_head.scale = Vector3.ONE * _head_s
 	var skin := _c("skin", "#e0ac8a")
 	_face_mi = _mi(_head, OrganicMesh.head(_hp), CharMat.face(skin, _face_params()))
 	var ear := OrganicMesh.cached("ear", func():
@@ -664,7 +682,7 @@ func _build_hair(style: String) -> void:
 	match style:
 		"long", "long_braid":
 			var n := 16
-			var length := 0.55 if style == "long" else 0.22
+			var length := 0.55 if style == "long" else 0.3
 			for i in n:
 				var th := lerpf(1.55, TAU - 1.55, float(i) / float(n - 1)) + rng.randf_range(-0.04, 0.04)
 				var a := OrganicMesh.on_head(_hp, 0.35, th, g)
@@ -782,25 +800,53 @@ func _build_tail(parts: Array, sx: float, rng: RandomNumberGenerator) -> void:
 		_mi(_head, OrganicMesh.tube(lp, [0.006, 0.01, 0.012, 0.01, 0.006], {"segs": 8, "flat": 0.6, "up": t1}), m_tie)
 
 
+## Trança de três mechas que sai de trás da orelha direita, passa por cima do ombro
+## e cai na frente do peito, presa por um laço (a "assinatura" da Asterion).
 func _build_braid(parts: Array) -> void:
-	var top := OrganicMesh.on_head(_hp, 2.0, PI, 0.03)
-	var path: Array = []
-	for i in 8:
-		path.append(top + Vector3(0, -0.06 * i, 0.03 + 0.01 * sin(i * 0.5)))
-	for s in 3:
+	var g := 0.009
+	var hp := Vector3(0, _head_y, -0.004)
+	var tor := [Vector3(0.1, 0.43, 0.045), Vector3(0.135, 0.37, -0.03), Vector3(0.132, 0.29, -0.108), Vector3(0.118, 0.19, -0.138), Vector3(0.112, 0.09, -0.124), Vector3(0.11, 0.025, -0.114)]
+	var ctrl: Array = [OrganicMesh.on_head(_hp, 1.8, 2.15, g + 0.012)]
+	for q in tor:
+		ctrl.append(((q as Vector3) - hp) / _head_s)
+	var path := OrganicMesh.smooth_points(ctrl, 6)
+	var n := path.size()
+	var r0 := 0.026 / _head_s
+	for strand in 3:
 		var pts: Array = []
 		var rr: Array = []
-		for i in 25:
-			var t := float(i) / 24.0 * 7.0
-			var base: Vector3 = (path[int(t)] as Vector3).lerp(path[mini(int(t) + 1, 7)], fmod(t, 1.0))
-			var a := t * 2.4 + s * TAU / 3.0
-			pts.append(base + Vector3(sin(a) * 0.016, 0, cos(a) * 0.01))
-			rr.append(0.016 * (1.0 - float(i) / 30.0))
+		for i in n:
+			var p: Vector3 = path[i]
+			var t := ((path[mini(i + 1, n - 1)] as Vector3) - (path[maxi(i - 1, 0)] as Vector3)).normalized()
+			var n1 := t.cross(Vector3(0, 0, 1)).normalized()
+			if n1.length_squared() < 0.01:
+				n1 = Vector3.RIGHT
+			var n2 := t.cross(n1).normalized()
+			var k := float(i) / float(n - 1)
+			var taper := lerpf(0.75, 1.0, sin(minf(k * 3.0, 1.0) * PI * 0.5)) * lerpf(1.0, 0.7, k)
+			var a := k * 26.0 + float(strand) * TAU / 3.0
+			pts.append(p + (n1 * cos(a) + n2 * sin(a)) * r0 * 0.55 * taper)
+			rr.append(r0 * 0.62 * taper)
 		parts.append([OrganicMesh.tube(pts, rr, {"segs": 8, "sub": 2})])
-	var tie_p: Vector3 = path[7]
-	var m_tie := CharMat.fabric(_c("scarf_color", "#2fb9a8"))
-	_mi(_head, OrganicMesh.loft([[tie_p.y - 0.01, 0.016, 0.014, tie_p.z], [tie_p.y + 0.01, 0.017, 0.015, tie_p.z]], 14, 2), m_tie)
-	parts.append(_lock([tie_p, tie_p + Vector3(0, -0.04, 0.004), tie_p + Vector3(0, -0.07, 0.0)], [0.018, 0.016, 0.002], 0.3, Vector3.BACK))
+	var tie: Vector3 = path[n - 1]
+	var dir_end := (tie - (path[n - 2] as Vector3)).normalized()
+	var tuft := [tie, tie + dir_end * 0.03 / _head_s + Vector3(0, 0, -0.004), tie + dir_end * 0.075 / _head_s + Vector3(0.004, 0, -0.008)]
+	parts.append(_lock(tuft, [r0 * 0.7, r0 * 0.85, 0.002], 0.25, Vector3.BACK))
+	# laço turquesa
+	var m_tie := CharMat.fabric(_c("scarf_color", "#2fb9a8"), {"sheen": 0.6, "weave": 1400.0})
+	var t1 := dir_end.cross(Vector3(0, 0, 1)).normalized()
+	var t2 := dir_end.cross(t1).normalized()
+	var ring: Array = []
+	var rr2: Array = []
+	for k in 12:
+		var a2 := float(k) / 12.0 * TAU
+		ring.append(tie + (t1 * cos(a2) + t2 * sin(a2)) * r0 * 0.75)
+		rr2.append(r0 * 0.32)
+	_mi(_head, OrganicMesh.tube(ring, rr2, {"segs": 8, "closed": true}), m_tie)
+	for lob: float in [-1.0, 1.0]:
+		var lp: Array = [tie, tie + t1 * r0 * 1.4 * lob + t2 * r0 * 0.5, tie + t1 * r0 * 2.3 * lob - dir_end * r0 * 0.2, tie + t1 * r0 * 1.3 * lob - t2 * r0 * 0.6, tie]
+		_mi(_head, OrganicMesh.tube(lp, [r0 * 0.3, r0 * 0.5, r0 * 0.6, r0 * 0.5, r0 * 0.3], {"segs": 8, "flat": 0.6, "up": t2}), m_tie)
+		_mi(_head, OrganicMesh.tube([tie, tie + dir_end * r0 * 1.6 + t1 * r0 * 0.6 * lob, tie + dir_end * r0 * 3.2 + t1 * r0 * 1.1 * lob], [r0 * 0.3, r0 * 0.28, r0 * 0.12], {"segs": 6, "flat": 0.7, "up": t2}), m_tie)
 
 
 # ---------------------------------------------------------------- chapéus
@@ -820,12 +866,14 @@ func _build_hat(kind: String) -> void:
 			_hat = MeshKit.pivot(_head, Vector3(0, 0.072, 0.008), "Hat")
 			# inclinado para trás: o rosto aparece mesmo com a câmera acima
 			_hat.rotation_degrees = Vector3(5, 0, 5)
-			var outer := 0.31 if wide else 0.24
+			var outer := 0.31 if wide else 0.275
 			var under := hat_c.lerp(_c("hat_under", ""), 0.4) if appearance.has("hat_under") else hat_c.darkened(0.2)
-			_mi(_hat, OrganicMesh.brim(0.094, outer, 0.04 if wide else 0.022, 0.012, 0.0055, 80, 1.0, 1), m_hat, Vector3.ZERO, Vector3.ZERO, Vector3(1.0, 1.0, 1.08))
-			_mi(_hat, OrganicMesh.brim(0.094, outer, 0.04 if wide else 0.022, 0.012, 0.0055, 80, 1.0, 2), CharMat.fabric(under, {"rough": 0.9}), Vector3.ZERO, Vector3.ZERO, Vector3(1.0, 1.0, 1.08))
-			var h := 1.0 if wide else 1.25
-			var pts := [Vector3(0, -0.012, 0), Vector3(0, 0.07 * h, 0.004), Vector3(0, 0.14 * h, 0.016), Vector3(0.006, 0.2 * h, 0.042), Vector3(0.026, 0.24 * h, 0.09), Vector3(0.056, 0.245 * h, 0.135), Vector3(0.084, 0.226 * h, 0.168)]
+			_mi(_hat, OrganicMesh.brim(0.094, outer, 0.04 if wide else 0.034, 0.012 if wide else 0.016, 0.0055, 80, 1.0, 1), m_hat, Vector3.ZERO, Vector3.ZERO, Vector3(1.0, 1.0, 1.08))
+			_mi(_hat, OrganicMesh.brim(0.094, outer, 0.04 if wide else 0.034, 0.012 if wide else 0.016, 0.0055, 80, 1.0, 2), CharMat.fabric(under, {"rough": 0.9}), Vector3.ZERO, Vector3.ZERO, Vector3(1.0, 1.0, 1.08))
+			var pts := [Vector3(0, -0.012, 0), Vector3(0, 0.07, 0.004), Vector3(0, 0.14, 0.016), Vector3(0.006, 0.2, 0.042), Vector3(0.026, 0.24, 0.09), Vector3(0.056, 0.245, 0.135), Vector3(0.084, 0.226, 0.168)]
+			if not wide:
+				# chapéu clássico: cone alto que entorta no alto e cai para trás
+				pts = [Vector3(0, -0.012, 0), Vector3(0, 0.09, 0.006), Vector3(0, 0.18, 0.018), Vector3(-0.004, 0.27, 0.04), Vector3(0.012, 0.34, 0.08), Vector3(0.045, 0.37, 0.13), Vector3(0.085, 0.35, 0.17)]
 			var radii := [0.1, 0.092, 0.077, 0.058, 0.038, 0.02, 0.003]
 			_crown(_hat, pts, radii, m_hat, 0.08)
 			# faixa e fivela
@@ -833,11 +881,11 @@ func _build_hat(kind: String) -> void:
 			_mi(_hat, OrganicMesh.rounded_box(Vector3(0.042, 0.036, 0.008), 0.005), metal, Vector3(0.03, 0.02, -0.105), Vector3(0, -16, 0))
 			_mi(_hat, OrganicMesh.rounded_box(Vector3(0.026, 0.022, 0.01), 0.004), CharMat.fabric(accent), Vector3(0.03, 0.02, -0.108), Vector3(0, -16, 0))
 			_hat_tip = MeshKit.pivot(_hat, pts[4], "HatTip")
-			if wide:
+			if wide or anime:
 				_charm = MeshKit.pivot(_hat, pts[6], "Charm")
 				_mi(_charm, OrganicMesh.tube([Vector3.ZERO, Vector3(0, -0.05, 0), Vector3(0, -0.09, 0)], [0.0018, 0.0018, 0.0018], {"segs": 5}), CharMat.leather(Color("#3a2a1a")))
 				_mi(_charm, MeshKit.star(0.03, 0.013, 0.01), Toon.glow(Color("#f3c74f"), 1.6), Vector3(0, -0.11, 0))
-			else:
+			if not wide:
 				_mi(_hat, MeshKit.star(0.03, 0.013, 0.008), Toon.glow(Color("#fff3b0"), 1.6), Vector3(-0.03, 0.022, -0.106), Vector3(0, 16, 0))
 		"hood":
 			_hat = MeshKit.pivot(_head, Vector3.ZERO, "Hood")
@@ -906,7 +954,7 @@ func _cap_line(_th: float) -> float:
 
 # ---------------------------------------------------------------- animação
 
-## Posição global da ponta da varinha (origem dos feitiços).
+## Posição global de onde saem os feitiços (ponta da varinha ou cristal do cajado).
 func wand_tip_position() -> Vector3:
 	if _wand_tip and _wand_tip.is_inside_tree():
 		return _wand_tip.global_position
@@ -917,7 +965,7 @@ func wand_tip_position() -> Vector3:
 
 ## Altura (em espaço do modelo, já com a escala) do centro do rosto — enquadramento de retratos.
 func face_height() -> float:
-	return (WAIST_Y + HEAD_LOCAL_Y) * _height
+	return (WAIST_Y + _head_y) * _height
 
 
 func play_cast() -> void:

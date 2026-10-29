@@ -1420,14 +1420,14 @@
         ]
       },
       "pedido": {
-        "text": "Ai, que alívio! A massa está ali na bancada. É só apontar sua varinha e fazer aquilo que vocês, bruxas, fazem. Só não exagera, viu? Da última vez que a Ondina ajudou, o pão saiu pela chaminé."
+        "text": "Ai, que alívio! A massa está ali na bancada. É só apontar seu cajado e fazer aquilo que vocês, bruxas, fazem. Só não exagera, viu? Da última vez que a Ondina ajudou, o pão saiu pela chaminé."
       },
       "juniper": {
         "text": "Aquele menino só fala da tal Faísca. Se você puder ajudar ele também, eu te faço um bolo do tamanho de um chapéu.",
         "goto_after": "pedido"
       },
       "esperando": {
-        "text": "A massa continua dormindo, meu bem. Aponta a varinha pra ela — crescimento, adubo, carinho, o que for!"
+        "text": "A massa continua dormindo, meu bem. Aponta o cajado pra ela — crescimento, adubo, carinho, o que for!"
       },
       "cresceu": {
         "text": "OLHA ISSO! Ela cresceu, ela cresceu! Tá fofinha que nem nuvem! Toma, os primeiros pães de mel encantado da temporada. E volte sempre — aqui você nunca paga pão.",
@@ -1521,7 +1521,7 @@
         ]
       },
       "lavanda": {
-        "text": "Os Campos de Lavanda e as colmeias das abelhas-lanterna. O mel delas é o melhor do mundo. A ponte de vinhas está dormindo há anos — mas uma bruxa com uma varinha boa resolve isso num piscar."
+        "text": "Os Campos de Lavanda e as colmeias das abelhas-lanterna. O mel delas é o melhor do mundo. A ponte de vinhas está dormindo há anos — mas uma bruxa com um cajado bom resolve isso num piscar."
       }
     }
   }

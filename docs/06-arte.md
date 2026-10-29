@@ -41,12 +41,14 @@ roupa (manto, vestido, casaco, túnica, casaco-vestido), cores, chapéu, altura,
 acessórios (cachecol, cajado, varinha, lanterna, estrelas, sardas, xale, capinha, bengala, avental, bolsa,
 cinto, alça, luvas, botas altas, óculos, livro).
 
-**Asterion (estilo anime, `"style": "anime"`):** pele clara `#f2cdb0`, cabelo loiro-mel `#d9b46e`
-em **duas marias-chiquinhas longas** que balançam com o passo, olhos âmbar grandes com brilho duplo
-(estilo anime, cílios e sobrancelhas suaves), **chapéu de bruxa de aba larga** marrom `#4a3626` com faixa
-laranja e berloque pendurado, **casaco-vestido** marrom `#6e5340` com forro vinho, **capinha** sobre os
-ombros, cinto, alça cruzada, bolsa, luvas, **botas altas**, lanterna na cintura com luz quente e
-**varinha de salgueiro** com ponta luminosa (de onde saem os feitiços). Meia-calça escura e botas de couro marrom.
+**Asterion (estilo anime, `"style": "anime"`)** — a bruxinha roxa da primeira versão, agora com o
+visual novo: pele morena-clara `#e3a982`, cabelo **lavanda** `#cbb8f2` com franja e uma **trança** que
+passa por cima do ombro direito e cai na frente do peito, presa por **laço turquesa**; olhos **âmbar**
+grandes; **manto roxo** `#4b2a8a` com estrelas douradas que brilham, faixa e cinto; **cachecol turquesa**;
+**chapéu de bruxa roxo** `#3a2068`, alto e de ponta torta, com faixa e estrela douradas e estrelinha
+pendurada; **cajado com ametista** luminosa (de onde saem os feitiços).
+
+Estilização: cabeça ~1,36× a real (≈4,8 cabeças de altura) — expressiva como nos RPGs de anime atuais.
 
 Animação procedural: respiração, piscar, passos, balanço do manto, braços, mola na ponta do chapéu,
 nas marias-chiquinhas, no berloque e na lanterna, aceno, fala (aceno de cabeça), lançamento (braço erguido + flash do cristal), modo fantasma (Véu), e a Metamorfose troca o modelo por um gato (`CatModel`).

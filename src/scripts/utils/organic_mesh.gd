@@ -342,16 +342,20 @@ static func head_point(d: Vector3, p: Dictionary) -> Vector3:
 	var cheek := float(p.get("cheek", 0.004))
 	var y := d.y
 	# largura: cheia no crânio, afina na mandíbula
+	# (afinamento concentrado embaixo: bochechas redondas e queixo pequeno, sem "V")
 	var sx := 1.0
-	if y < -0.15:
-		var k := smoothstep(-0.15, -1.0, y)
-		sx = lerpf(1.0, 1.0 - jaw * 0.8, pow(k, 1.5))
-	# profundidade: nuca mais cheia, rosto achatado
+	if y < -0.3:
+		var k := smoothstep(-0.3, -1.0, y)
+		sx = lerpf(1.0, 1.0 - jaw * 0.55, pow(k, 2.0))
+	# profundidade: nuca mais cheia, rosto levemente achatado
 	var front := d.z < 0.0
+	var fz0 := maxf(0.0, -d.z)
 	var sz := 1.0 if front else 1.06
 	if front:
-		sz *= lerpf(1.0, 0.9, smoothstep(0.2, -0.6, y) * 0.6)
+		sz *= lerpf(1.0, 0.95, smoothstep(0.2, -0.6, y) * 0.6)
 	var x := d.x * w * sx
+	# bochechas cheias na metade de baixo do rosto
+	x *= 1.0 + 0.07 * exp(-pow((y + 0.48) / 0.24, 2.0)) * fz0
 	# rosto mais curto abaixo dos olhos (proporção anime), crânio mais alto
 	var yy := y * h * (1.0 if y > 0.0 else 0.86) + (0.016 if y > 0.0 else 0.0) * y
 	var z := d.z * dp * sz
@@ -360,7 +364,7 @@ static func head_point(d: Vector3, p: Dictionary) -> Vector3:
 		yy += 0.008 * maxf(0.0, y) * (-d.z)
 	# queixo: puxa a parte de baixo da frente para frente
 	var fz := maxf(0.0, -d.z)
-	z -= chin * smoothstep(-0.55, -0.98, y) * pow(fz, 2.0)
+	z -= chin * 0.6 * smoothstep(-0.6, -0.98, y) * pow(fz, 2.0)
 	yy -= 0.006 * smoothstep(-0.6, -1.0, y)
 	# nariz (gaussiana pequena)
 	var nx := d.x / 0.2

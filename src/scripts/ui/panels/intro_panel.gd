@@ -8,7 +8,7 @@ const CARDS := [
 	["Ondina Vael", "Ondina ensinou tudo o que cabia num dia: a ouvir as raízes, a falar baixo com o fogo, a nunca ferver a sálvia.\n\nNa noite do eclipse, saiu sem chá e sem casaco para \"buscar a fonte\". Deixou um bilhete embaixo do seu travesseiro. Não voltou."],
 	["O Silêncio Cinzento", "Desde então, um cinza silencioso avança pelo bosque. As flores esquecem a própria cor. O Guardião Musgo, a árvore mais antiga do vale, dorme um sono sem sonhos.\n\nNa aldeia, o pão não cresce e as crianças sonham em preto e branco."],
 	["O Círculo Sombra", "Um homem educado demais chegou ao vale vestindo cinza. Kael Morvane diz que o Éter é perigoso e precisa de dono.\n\nEle oferece atalhos. Atalhos sempre cobram depois."],
-	["Varinha de Salgueiro", "Ondina deixou para você a varinha de salgueiro, seis feitiços já gravados no cabo e Nimbus, um gato-mariposa convencido.\n\nToque num feitiço e ele sai da ponta da varinha na hora — fogo que acende, gelo que congela, penas que levitam, pedras que viram sapos."],
+	["Cajado de Ametista", "Ondina deixou para você o cajado de ametista, seis feitiços já gravados na madeira e Nimbus, um gato-mariposa convencido.\n\nToque num feitiço e ele sai do cristal do cajado na hora — fogo que acende, gelo que congela, penas que levitam, pedras que viram sapos."],
 	["Asterion", "Não há espada nesta história: só estudo, curiosidade e escolhas. Cada coisa que você transformar ensina algo ao grimório.\n\nVocê acorda na cabana da Clareira. O grimório de Ondina espera no atril, e há uma carta embaixo do travesseiro."],
 ]
 

@@ -40,7 +40,7 @@ Não há espadas: você progride **estudando, experimentando, cultivando e escol
   casa de bonecas — cama (com uma carta sob o travesseiro), atril, caldeirão, baú, lareira, estantes;
   também a casa de chá de Sálvia e a padaria da Dorinha.
 - **Feitiços na hora, desde o início**: 6 botões de feitiço em arco; tocou, a magia sai da ponta da
-  varinha e voa até o alvo mais próximo à frente (mira assistida + anel de mira). Chama, Cristal de Gelo,
+  cajado e voa até o alvo mais próximo à frente (mira assistida + anel de mira). Chama, Cristal de Gelo,
   Levitação, Transfiguração, Lume Estelar e Metamorfose (vira gato!).
 - **Transformações**: pedras viram sapos, caixas viram bules, abóboras viram carruagens, tocos viram
   casinhas de cogumelo — cada descoberta nova conta para a missão "Aprendiz de Transfiguração".

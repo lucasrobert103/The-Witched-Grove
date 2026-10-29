@@ -13,7 +13,7 @@ espalhadas pelo vale e um selo no Portal das Ruínas.
 Dezessete invernos atrás, numa chuva de estrelas, o Círculo de Pedras brilhou e Ondina Vael encontrou
 no meio dele um cesto de vime com uma menina rindo para o céu. Ondina a criou na Cabana da Clareira e
 deu-lhe o nome de uma estrela. Asterion não sabe (até ler a carta sob o travesseiro) que carrega um
-pouco do Éter dos Primeiros — por isso as plantas lhe respondem e a magia sai da varinha tão fácil.
+pouco do Éter dos Primeiros — por isso as plantas lhe respondem e a magia sai do cajado tão fácil.
 
 ### O que aconteceu na noite do eclipse
 O Círculo Sombra, liderado por **Kael Morvane**, cravou **Agulhas de Silêncio** no bosque: estacas
@@ -28,8 +28,8 @@ Cada atalho aceito (Pó Cinzento, por exemplo) aproxima o vale do controle total
 
 ## 2. Estrutura em atos
 
-**Prólogo (jogável):** Asterion acorda na cabana. Já sabe seis feitiços gravados na varinha de
-salgueiro (Chama, Cristal de Gelo, Levitação, Transfiguração, Lume Estelar e Metamorfose) e começa
+**Prólogo (jogável):** Asterion acorda na cabana. Já sabe seis feitiços gravados no cajado de
+ametista (Chama, Cristal de Gelo, Levitação, Transfiguração, Lume Estelar e Metamorfose) e começa
 a explorar transformando o mundo ao redor — cada transformação nova é registrada no grimório.
 
 **Ato I — Despertar (jogável):** ler a Folha I, curar o jardim, visitar Vovó Sálvia, decidir como
@@ -88,7 +88,7 @@ Diversidade: idades de criança a anciã, tons de pele variados, corpos diversos
 | Marcas Estelares | Investigação | 3 marcas à noite com luz estelar → Visão Noturna + Pó de Estrela |
 | Encomenda do Bento | Secundária | 2 Tônicos → EP + sementes |
 | Pão que Não Cresce | Secundária | Entrar na padaria, lançar Crescimento Rápido na massa → pães de mel |
-| Varinha de Salgueiro | Tutorial · exploração | Descobrir 5 transformações diferentes (pedra→sapo, caixa→bule, abóbora→carruagem…) |
+| Aprendiz de Transfiguração | Tutorial · exploração | Descobrir 5 transformações diferentes (pedra→sapo, caixa→bule, abóbora→carruagem…) |
 
 ### Exemplos de consequências coerentes
 - Usar o Pó Cinzento: o Guardião passa a repetir "TUDO ESTÁ EM ORDEM", Sálvia fica em silêncio, Druidas desconfiam.

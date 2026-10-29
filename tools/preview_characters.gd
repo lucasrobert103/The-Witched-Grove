@@ -12,6 +12,7 @@ func _ready() -> void:
 	e.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	env.environment = e
 	add_child(env)
+	get_viewport().msaa_3d = Viewport.MSAA_4X
 	var sun := DirectionalLight3D.new()
 	sun.rotation_degrees = Vector3(-40, 30, 0)
 	sun.light_energy = 1.2
@@ -38,12 +39,12 @@ func _ready() -> void:
 	var cam := Camera3D.new()
 	add_child(cam)
 	if only == "asterion":
-		cam.position = Vector3(0.0, 1.2, -2.7)
-		cam.look_at(Vector3(0, 0.95, 0))
+		cam.position = Vector3(0.0, 1.15, -3.3)
+		cam.look_at(Vector3(0, 1.0, 0))
 		cam.fov = 38
 	elif only == "rosto":
-		cam.position = Vector3(0.12, 1.5, -0.66)
-		cam.look_at(Vector3(0, 1.47, 0))
+		cam.position = Vector3(0.12, 1.42, -0.8)
+		cam.look_at(Vector3(0, 1.39, 0))
 		cam.fov = 30
 	else:
 		cam.position = Vector3(0, 1.25, -7.4)
