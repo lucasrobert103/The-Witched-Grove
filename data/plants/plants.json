@@ -1,0 +1,30 @@
+{
+  "rules": {
+    "water_drain_per_day": 0.5,
+    "dry_threshold": 0.2,
+    "dry_growth_mult": 0.25,
+    "light_match_mult": 1.0,
+    "light_mismatch_mult": 0.6,
+    "season_ideal_mult": 1.25,
+    "season_neutral_mult": 1.0,
+    "season_opposite_mult": 0.5,
+    "fertilizer_mult": 1.5,
+    "full_moon_bonus": 0.25,
+    "reveal_schedule": [2, 3, 3, 4, 4, 5],
+    "seed_return": 1
+  },
+  "seasons": ["primavera", "verao", "outono", "inverno"],
+  "season_names": {"primavera": "Primavera", "verao": "Verão", "outono": "Outono", "inverno": "Inverno"},
+  "plants": [
+    {"id": "orvalheira",        "name": "Orvalheira",         "produces": "folha_orvalho",     "seed": "semente_orvalheira", "season": "primavera", "growth_days": 1.0, "light": "meia", "humidity": "umida", "yield": 3, "color": "#6fd38a", "shape": "rosette",  "lunar": false},
+    {"id": "lucidalia",         "name": "Lucidália",          "produces": "petala_claridade",  "seed": "semente_lucidalia",  "season": "primavera", "growth_days": 1.5, "light": "sol",  "humidity": "media", "yield": 3, "color": "#f6f0a8", "shape": "flower",   "lunar": false},
+    {"id": "lavanda",           "name": "Lavanda Sonolenta",  "produces": "lavanda_sonolenta", "seed": "semente_lavanda",    "season": "verao",     "growth_days": 2.0, "light": "sol",  "humidity": "seca",  "yield": 3, "color": "#b18cff", "shape": "spikes",   "lunar": false},
+    {"id": "cogumelo_brasa",    "name": "Cogumelo-Brasa",     "produces": "cogumelo_brasa",    "seed": "semente_cogumelo",   "season": "outono",    "growth_days": 2.0, "light": "sombra","humidity": "umida","yield": 3, "color": "#ff7a3c", "shape": "mushroom", "lunar": false},
+    {"id": "flor_aurora",       "name": "Flor-Aurora",        "produces": "flor_aurora",       "seed": "semente_aurora",     "season": "verao",     "growth_days": 3.0, "light": "sol",  "humidity": "media", "yield": 2, "color": "#ff9fb2", "shape": "flower",   "lunar": false},
+    {"id": "musgo_lunar",       "name": "Musgo Lunar",        "produces": "musgo_lunar",       "seed": "semente_musgo",      "season": "inverno",   "growth_days": 3.0, "light": "sombra","humidity": "umida","yield": 2, "color": "#9fb7e8", "shape": "moss",     "lunar": true},
+    {"id": "pimenta_dragao",    "name": "Pimenta-Dragão",     "produces": "pimenta_dragao",    "seed": "semente_pimenta",    "season": "verao",     "growth_days": 4.0, "light": "sol",  "humidity": "seca",  "yield": 3, "color": "#e8322e", "shape": "bush",     "lunar": false},
+    {"id": "raiz_concentracao", "name": "Raiz de Concentração","produces": "raiz_concentracao","seed": "semente_raiz",       "season": "outono",    "growth_days": 4.0, "light": "meia", "humidity": "media", "yield": 2, "color": "#b5835a", "shape": "root",     "lunar": false},
+    {"id": "trevo_quatro",      "name": "Trevo Quadrifólio",  "produces": "trevo_quatro",      "seed": "semente_trevo",      "season": "primavera", "growth_days": 6.0, "light": "meia", "humidity": "umida", "yield": 1, "color": "#39d27a", "shape": "clover",   "lunar": true},
+    {"id": "orquidea_sombra",   "name": "Orquídea-Sombra",    "produces": "orquidea_sombra",   "seed": "semente_orquidea",   "season": "inverno",   "growth_days": 7.0, "light": "sombra","humidity": "umida","yield": 1, "color": "#4a2d6e", "shape": "flower",   "lunar": true}
+  ]
+}

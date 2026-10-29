@@ -1,0 +1,19 @@
+{
+  "creatures": [
+    {"id": "lumecula", "name": "Lumécula", "kind": "espírito de luz", "active": "noite",
+     "notes": ["Pequenos espíritos de luz que dançam sobre águas paradas.", "Aproximam-se de quem carrega luz própria — um Lume Estelar, por exemplo.", "Cada lumécula pisca em um ritmo único; crianças da aldeia dão nomes a elas."],
+     "resolution": "Luz acalma; nunca as prenda por muito tempo."},
+    {"id": "cogumelo_resmungao", "name": "Cogumelo Resmungão", "kind": "fungo senciente", "active": "sempre",
+     "notes": ["Enorme, teimoso e sonolento. Solta esporos que ardem quando irritado.", "Os esporos não atravessam um Escudo Pessoal.", "Adora chás doces. Odeia barulho e pressa."],
+     "resolution": "Um Chá Calmante o transforma em amigo; o Véu permite passar sem ser notada."},
+    {"id": "sapo_cristal", "name": "Sapo-Cristal", "kind": "anfíbio arcano", "active": "dia",
+     "notes": ["Sua pele translúcida mostra um pequeno cristal no peito.", "Coaxa em tons musicais quando a chuva se aproxima.", "Dizem que engole pedaços de luar."],
+     "resolution": "Apenas observe. Ele observa de volta."},
+    {"id": "borboleta_eter", "name": "Borboleta-do-Éter", "kind": "inseto etéreo", "active": "dia",
+     "notes": ["Asas que mudam de cor conforme as emoções de quem está perto.", "Polinizam flores mágicas e espalham propriedades entre elas.", "Desaparecem onde o Silêncio Cinzento avança."],
+     "resolution": "Sinal da saúde do bosque."},
+    {"id": "guardiao_musgo", "name": "Guardião Musgo", "kind": "espírito arbóreo", "active": "sempre",
+     "notes": ["Uma árvore antiga com coração de espírito. Guarda o vale há mil invernos.", "O Silêncio Cinzento drena sua cor e sua voz.", "Lembra de Ondina. E do que ela foi buscar."],
+     "resolution": "Purificação: alquimia, contra-magia... ou o atalho de Kael."}
+  ]
+}

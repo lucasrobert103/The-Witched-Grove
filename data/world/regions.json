@@ -1,0 +1,62 @@
+{
+  "regions": [
+    {
+      "id": "vale_sussurros", "name": "Vale dos Sussurros", "focus": "Botânica (início)", "status": "jogavel_v1",
+      "mood": "Clareira dourada, colinas suaves, riachos e salgueiros que cochicham ao vento.",
+      "palette": ["#7fcf6a", "#f3d27a", "#7a4fc4", "#8fd6ff"],
+      "unlock": "inicio",
+      "pois": [
+        {"id": "cabana_asterion",   "name": "Cabana da Clareira",     "pos": [0, -6],    "desc": "Sua casa: biblioteca, laboratório, jardim e dormitório."},
+        {"id": "fonte_salvia",      "name": "Fonte de Sálvia",        "pos": [-22, 24],  "desc": "Casa de chá da Vovó Sálvia e o manancial que nunca congela."},
+        {"id": "carroca_bento",     "name": "Carroça do Bento",       "pos": [9, 17],    "desc": "Sementes, mel, ferramentas e fofocas."},
+        {"id": "acampamento_mirela","name": "Acampamento de Mirela",  "pos": [21, 7],    "desc": "Uma alquimista rival e seu caldeirão fumegante."},
+        {"id": "passagem_cogumelo", "name": "Passagem Resmungona",    "pos": [30, -4],   "desc": "Um cogumelo enorme e mal-humorado bloqueia a trilha leste."},
+        {"id": "santuario_leste",   "name": "Santuário do Fogo Paciente","pos": [43, -10],"desc": "Altar esquecido onde Ondina escondeu uma folha do grimório."},
+        {"id": "grande_arvore",     "name": "Árvore do Guardião",     "pos": [0, -38],   "desc": "O Guardião Musgo dorme aqui, drenado pelo Silêncio Cinzento."},
+        {"id": "portal_ruinas",     "name": "Portal das Ruínas",      "pos": [-15, -44], "desc": "Arco rúnico selado que leva às Ruínas Antigas."},
+        {"id": "salgueiro_oco",     "name": "Salgueiro Oco",          "pos": [-27, 3],   "desc": "Uma inscrição antiga no tronco ensina a arte do Véu."},
+        {"id": "lagoa_luzes",       "name": "Lagoa das Luzes",        "pos": [-31, -14], "desc": "À noite, luméculas dançam sobre a água."},
+        {"id": "bosque_corujas",    "name": "Bosque das Corujas",     "pos": [-36, -32], "desc": "Atrás das sarças: trevos raros e corujas sábias."},
+        {"id": "circulo_pedras",    "name": "Círculo de Pedras",      "pos": [19, -24],  "desc": "Monólitos antigos. Lyra observa as estrelas aqui à noite."},
+        {"id": "recanto_gelo",      "name": "Recanto do Gelo",        "pos": [40, 25],   "desc": "Do outro lado do riacho, uma pedra fria guarda um segredo."}
+      ],
+      "plants": ["folha_orvalho", "petala_claridade", "lavanda_sonolenta", "musgo_lunar", "cogumelo_brasa", "casca_salgueiro", "trevo_quatro"],
+      "creatures": ["lumecula", "cogumelo_resmungao", "sapo_cristal", "borboleta_eter"],
+      "npcs": ["salvia", "bento", "mirela", "juniper", "musgo", "lyra", "tome", "kael"]
+    },
+    {
+      "id": "floresta_encantada", "name": "Floresta Encantada", "focus": "Mistério e fauna", "status": "planejada_v1",
+      "mood": "Árvores gigantes, cogumelos bioluminescentes, trilhas que mudam de lugar.",
+      "palette": ["#2f6b4f", "#9effc7", "#b48cd9", "#1b2a3a"], "unlock": "flag:mq02_concluida",
+      "pois": [
+        {"id": "teia_nox", "name": "Tear de Nox", "pos": [0, 0], "desc": "Onde a Fiandeira Nox tece sonhos."},
+        {"id": "anel_fadas", "name": "Anel de Cogumelos", "pos": [0, 0], "desc": "Um portal de fadas — ou só cogumelos muito organizados."}
+      ],
+      "plants": ["orquidea_sombra", "cogumelo_brasa"], "creatures": ["mariposa_lua"], "npcs": ["nox"]
+    },
+    {
+      "id": "picos_lua", "name": "Picos da Lua", "focus": "Alquimia, gelado", "status": "planejada_v1",
+      "mood": "Picos nevados, observatório alquímico, ventos cortantes.",
+      "palette": ["#e6f7ff", "#7f8cff", "#e2a93b", "#2d3550"], "unlock": "spell:elemental:chama_controlada",
+      "pois": [{"id": "observatorio", "name": "Observatório de Ornel", "pos": [0, 0], "desc": "Laboratório alquímico no topo do mundo."}],
+      "plants": ["flocos_neve"], "creatures": ["raposa_neve"], "npcs": ["ornel"]
+    },
+    {
+      "id": "lagoa_espelhada", "name": "Lagoa Espelhada", "focus": "Magia Astral, meditação", "status": "planejada_v1",
+      "mood": "Um lago perfeitamente parado que reflete outro céu.",
+      "palette": ["#1b2a5a", "#7f8cff", "#fff3b0", "#d9e6ff"], "unlock": "flag:lyra_confia",
+      "pois": [{"id": "ilha_reflexo", "name": "Ilha do Reflexo", "pos": [0, 0], "desc": "No reflexo, a ilha tem um templo."}],
+      "plants": ["pena_coruja"], "creatures": ["peixe_estrela"], "npcs": ["celeste"]
+    },
+    {
+      "id": "ruinas_antigas", "name": "Ruínas Antigas", "focus": "Conhecimento e Runas", "status": "planejada_v1",
+      "mood": "Arcos partidos dos Primeiros, runas que acendem ao toque.",
+      "palette": ["#9a9aa6", "#c9a5ff", "#e2a93b", "#3a3048"], "unlock": "flag:selo_ruinas_aberto",
+      "pois": [{"id": "biblioteca_primeiros", "name": "Biblioteca dos Primeiros", "pos": [0, 0], "desc": "Onde o mistério de Ondina continua."}],
+      "plants": ["po_estrela"], "creatures": ["golem_runico"], "npcs": ["tome"]
+    },
+    {"id": "caverna_subterranea", "name": "Caverna Subterrânea", "focus": "Transmutação, escuridão", "status": "futura", "mood": "Cristais vivos e rios de mercúrio.", "palette": ["#2a2238", "#e07fb4"], "unlock": "—", "pois": [], "plants": [], "creatures": [], "npcs": []},
+    {"id": "torre_isolada", "name": "Torre Isolada", "focus": "Ilusão e Proteção", "status": "futura", "mood": "Uma torre que ninguém consegue ver do mesmo jeito duas vezes.", "palette": ["#b48cd9", "#7fd6e0"], "unlock": "—", "pois": [], "plants": [], "creatures": [], "npcs": []},
+    {"id": "santuario_interdimensional", "name": "Santuário Interdimensional", "focus": "Final", "status": "futura", "mood": "Onde o Éter encosta no mundo. Onde Ondina espera.", "palette": ["#fffbe0", "#7a4fc4"], "unlock": "—", "pois": [], "plants": [], "creatures": [], "npcs": []}
+  ]
+}

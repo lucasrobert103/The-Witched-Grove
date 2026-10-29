@@ -1,0 +1,18 @@
+{
+  "reputation_tiers": [
+    {"min": -100, "name": "Inimiga"},
+    {"min": -50,  "name": "Desconfiada"},
+    {"min": -10,  "name": "Neutra"},
+    {"min": 20,   "name": "Amigável"},
+    {"min": 50,   "name": "Aliada"},
+    {"min": 85,   "name": "Irmã de Alma"}
+  ],
+  "factions": [
+    {"id": "druidas",           "name": "Druidas da Floresta",     "tradition": "Druídica",  "goal": "Preservar a natureza e seus ciclos.",              "relation": "Aliança em Botânica.",                 "color": "#4fbf6a", "start": 10},
+    {"id": "alquimistas",       "name": "Alquimistas Ancestrais",  "tradition": "Acadêmica", "goal": "Dominar a transformação da matéria.",              "relation": "Competição ou cooperação.",            "color": "#e2a93b", "start": 0},
+    {"id": "guardioes_astrais", "name": "Guardiões Astrais",       "tradition": "Mística",   "goal": "Explorar as dimensões do Éter.",                   "relation": "Conhecimento astral.",                 "color": "#7f8cff", "start": 0},
+    {"id": "escribas",          "name": "Escribas de Runas",       "tradition": "Acadêmica", "goal": "Guardar os segredos dos Primeiros.",               "relation": "Desafios e testes.",                   "color": "#c9a5ff", "start": 0},
+    {"id": "circulo_sombra",    "name": "Círculo Sombra",          "tradition": "Mística",   "goal": "Usar o Éter para impor ordem — custe o que custar.","relation": "Antagonista moral; oferece atalhos.", "color": "#6e4a8c", "start": -5},
+    {"id": "aldeia_vime",       "name": "Povo da Aldeia Vime",     "tradition": "—",         "goal": "Viver em paz, com pão quente e colheita farta.",   "relation": "Comércio, pedidos e amizades.",        "color": "#f2b77a", "start": 5}
+  ]
+}

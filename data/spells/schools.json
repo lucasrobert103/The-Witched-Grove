@@ -1,0 +1,45 @@
+{
+  "attributes": {
+    "intellect":    {"name": "Intelecto",      "description": "Aprendizado mágico e compreensão de runas."},
+    "arcane_sense": {"name": "Sentido Arcano", "description": "Sensibilidade à magia e percepção de auras."},
+    "dexterity":    {"name": "Destreza",       "description": "Precisão de movimento, colheita e trabalho manual."},
+    "endurance":    {"name": "Resistência",    "description": "Vigor físico e mental, capacidade de concentração."},
+    "insight":      {"name": "Perspicácia",    "description": "Descoberta, investigação e leitura de pistas."}
+  },
+  "schools": {
+    "botany":        {"name": "Botânica Arcana",          "identity": "Crescimento, identificação, potencialização.", "color": "#4fbf6a", "affinity": ["insight", "dexterity"]},
+    "alchemy":       {"name": "Alquimia",                 "identity": "Transformação, extração, fixação.",            "color": "#e2a93b", "affinity": ["intellect", "dexterity"]},
+    "astral":        {"name": "Magia Astral",             "identity": "Exploração, visão, comunicação dimensional.",  "color": "#7f8cff", "affinity": ["arcane_sense", "insight"]},
+    "runes":         {"name": "Runas e Encantamentos",    "identity": "Marcas permanentes, estruturas, selos.",        "color": "#c9a5ff", "affinity": ["intellect", "insight"]},
+    "protection":    {"name": "Proteção e Contra-magia",  "identity": "Escudos, purificação, resistência.",           "color": "#7fd6e0", "affinity": ["endurance", "arcane_sense"]},
+    "transmutation": {"name": "Transmutação",             "identity": "Transformação, mudança de forma, duplicação.",  "color": "#e07fb4", "affinity": ["intellect", "arcane_sense"]},
+    "illusion":      {"name": "Ilusão e Percepção",       "identity": "Engano, camuflagem, ilusão sensorial.",         "color": "#b48cd9", "affinity": ["insight", "dexterity"]},
+    "elemental":     {"name": "Magia Elemental",          "identity": "Fogo, gelo, água e ar aplicados ao mundo.",     "color": "#ff8a5c", "affinity": ["arcane_sense", "endurance"]}
+  },
+  "specializations": [
+    {"id": "criadora_pocoes",   "name": "Criadora de Poções",      "schools": ["alchemy", "botany"],        "bonus": "Poções +10% de qualidade e ingredientes colhidos +1."},
+    {"id": "guardia_saber",     "name": "Guardiã do Saber",        "schools": ["runes", "protection"],      "bonus": "Leitura de páginas +5% de compreensão; escudos duram 50% mais."},
+    {"id": "investigadora",     "name": "Investigadora Astral",    "schools": ["astral", "illusion"],       "bonus": "Segredos são revelados a distância maior; Lume dura o dobro."},
+    {"id": "teorica",           "name": "Teórica Transmutadora",   "schools": ["transmutation", "alchemy"], "bonus": "Experimentos falhos sempre geram uma intuição nova."},
+    {"id": "tecela_elementos",  "name": "Tecelã dos Elementos",    "schools": ["elemental", "protection"],  "bonus": "Feitiços elementais custam 20% menos mana."}
+  ],
+  "property_names": {
+    "claridade": "Claridade", "estabilidade": "Estabilidade", "forca": "Força", "calma": "Calma",
+    "calor": "Calor", "frio": "Frio", "vitalidade": "Vitalidade", "luz": "Luz", "sombra": "Sombra",
+    "crescimento": "Crescimento", "protecao": "Proteção", "volatilidade": "Volatilidade",
+    "docura": "Doçura", "turvo": "Turvo", "eterea": "Etérea"
+  },
+  "incompatible_properties": [
+    ["calor", "frio"],
+    ["luz", "sombra"],
+    ["estabilidade", "volatilidade"],
+    ["claridade", "turvo"]
+  ],
+  "techniques": {
+    "moer":     "Moer",
+    "aquecer":  "Aquecer",
+    "mexer":    "Mexer",
+    "esfriar":  "Esfriar",
+    "destilar": "Destilar"
+  }
+}

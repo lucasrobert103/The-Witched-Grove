@@ -1,0 +1,16 @@
+{
+  "rooms": [
+    {"id": "biblioteca",  "name": "Biblioteca",      "function": "Ler grimórios e pesquisar.",        "start_level": 1, "max_level": 3, "unlock": "inicio",
+     "upgrade_costs": [0, 600, 1400], "effects": {"read_bonus_per_level": 2}, "upgrade_desc": ["Estante simples", "Prateleiras organizadas (+2% por leitura)", "Atlas de símbolos (+4% por leitura)"]},
+    {"id": "laboratorio", "name": "Laboratório",     "function": "Alquimia.",                          "start_level": 1, "max_level": 3, "unlock": "inicio",
+     "upgrade_costs": [0, 700, 1800], "effects": {"slots": [3, 4, 4], "quality_bonus_per_level": 0.05}, "upgrade_desc": ["Caldeirão herdado", "Alambique (+1 ingrediente)", "Alambique reforçado (+qualidade)"]},
+    {"id": "jardim",      "name": "Jardim Botânico", "function": "Plantar e colher.",                  "start_level": 0, "max_level": 3, "unlock": "school:botany:1",
+     "upgrade_costs": [0, 500, 1200], "effects": {"plots": [0, 4, 6, 9]}, "upgrade_desc": ["Terra bruta", "4 canteiros", "6 canteiros", "9 canteiros"]},
+    {"id": "sala_ritual", "name": "Sala Ritual",     "function": "Feitiços mais potentes.",            "start_level": 0, "max_level": 2, "unlock": "two_schools:20",
+     "upgrade_costs": [0, 1500], "effects": {"spell_power_per_level": 0.1}, "upgrade_desc": ["Selada", "Círculo desperto (+10% potência)", "Círculo estelar (+20% potência)"]},
+    {"id": "dormitorio",  "name": "Dormitório",      "function": "Descanso e salvamento.",             "start_level": 1, "max_level": 2, "unlock": "inicio",
+     "upgrade_costs": [0, 500], "effects": {"rest_mana_bonus": 20}, "upgrade_desc": ["Cama de palha", "Cama de penas (+20 mana máxima ao acordar)"]},
+    {"id": "armazem",     "name": "Armazém",         "function": "Guardar itens.",                     "start_level": 1, "max_level": 3, "unlock": "inicio",
+     "upgrade_costs": [0, 500, 1300], "effects": {"capacity": [40, 80, 160]}, "upgrade_desc": ["Baú", "Estantes (80 de peso)", "Despensa encantada (160 de peso)"]}
+  ]
+}

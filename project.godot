@@ -1,0 +1,62 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="The Witched Grove — Asterion"
+config/description="RPG 3D de bruxaria: estudo, alquimia, botânica e descobertas."
+config/version="0.1.0"
+run/main_scene="res://src/scenes/ui/main_menu.tscn"
+config/features=PackedStringArray("4.7", "Mobile")
+config/icon="res://icon.svg"
+boot_splash/bg_color=Color(0.105, 0.078, 0.169, 1)
+config/quit_on_go_back=false
+
+buses/default_bus_layout="res://src/resources/default_bus_layout.tres"
+
+[autoload]
+
+EventBus="*res://src/autoload/event_bus.gd"
+DataRegistry="*res://src/autoload/data_registry.gd"
+Settings="*res://src/autoload/settings.gd"
+Game="*res://src/autoload/game.gd"
+SaveManager="*res://src/autoload/save_manager.gd"
+AudioManager="*res://src/autoload/audio_manager.gd"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/handheld/orientation=4
+window/vsync/vsync_mode=1
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
+pointing/emulate_mouse_from_touch=false
+
+[physics]
+
+common/physics_ticks_per_second=60
+3d/physics_engine="Jolt Physics"
+
+[rendering]
+
+renderer/rendering_method="mobile"
+renderer/rendering_method.mobile="mobile"
+textures/vram_compression/import_etc2_astc=true
+anti_aliasing/quality/msaa_3d=1
+lights_and_shadows/directional_shadow/size=2048
+lights_and_shadows/directional_shadow/size.mobile=1024
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality=1
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality.mobile=0
+environment/defaults/default_clear_color=Color(0.105, 0.078, 0.169, 1)

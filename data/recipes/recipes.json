@@ -1,0 +1,29 @@
+{
+  "rules": {
+    "property_active_min_count": 2,
+    "base_slots": 3,
+    "max_technique_steps": 3,
+    "technique_factor": {"exact": 1.0, "same_steps": 0.85, "partial": 0.7, "none": 0.55},
+    "quality_tiers": [
+      {"min": 0.0,  "name": "Rústica"},
+      {"min": 0.6,  "name": "Comum"},
+      {"min": 0.9,  "name": "Refinada"},
+      {"min": 1.15, "name": "Primorosa"}
+    ],
+    "failure_item": "mistura_turva"
+  },
+  "recipes": [
+    {"id": "tonico_revigorante",   "name": "Tônico Revigorante",       "requires": ["vitalidade"],                  "forbids": [],              "technique": ["moer", "aquecer"],             "output": "tonico_revigorante",   "alchemy_level": 0,  "xp": 4,  "hint": "Duas plantas que compartilhem Vitalidade."},
+    {"id": "pocao_foco_claro",     "name": "Poção de Foco Claro",      "requires": ["claridade", "estabilidade"],   "forbids": ["volatilidade"],"technique": ["moer", "aquecer", "esfriar"],  "output": "pocao_foco_claro",     "alchemy_level": 0,  "xp": 6,  "hint": "Claridade firme como uma pedra de rio."},
+    {"id": "cha_calmante",         "name": "Chá Calmante",             "requires": ["calma", "docura"],             "forbids": ["forca"],       "technique": ["aquecer", "mexer"],            "output": "cha_calmante",         "alchemy_level": 0,  "xp": 4,  "hint": "Calma adoçada. Sálvia jura por lavanda e mel."},
+    {"id": "elixir_luminoso",      "name": "Elixir Luminoso",          "requires": ["luz", "eterea"],               "forbids": [],              "technique": ["destilar", "esfriar"],         "output": "elixir_luminoso",      "alchemy_level": 0,  "xp": 6,  "hint": "Luz que não pesa."},
+    {"id": "unguento_protetor",    "name": "Unguento Protetor",        "requires": ["protecao", "estabilidade"],    "forbids": [],              "technique": ["moer", "mexer"],               "output": "unguento_protetor",    "alchemy_level": 0,  "xp": 5,  "hint": "Proteção que não escorre."},
+    {"id": "adubo_vital",          "name": "Adubo Vital",              "requires": ["crescimento", "vitalidade"],   "forbids": [],              "technique": ["moer", "mexer"],               "output": "adubo_vital",          "alchemy_level": 0,  "xp": 4,  "hint": "O que faz crescer e o que faz viver."},
+    {"id": "tintura_purificadora", "name": "Tintura Purificadora",     "requires": ["luz", "claridade", "protecao"],"forbids": ["turvo"],       "technique": ["destilar", "aquecer", "esfriar"], "output": "tintura_purificadora", "alchemy_level": 5, "xp": 12, "hint": "Luz, clareza e proteção — o oposto exato do cinza."},
+    {"id": "caldo_brasa",          "name": "Caldo de Brasa",           "requires": ["calor", "forca"],              "forbids": [],              "technique": ["aquecer", "mexer"],            "output": "caldo_brasa",          "alchemy_level": 0,  "xp": 4,  "hint": "Quente e teimoso."},
+    {"id": "orvalho_gelido",       "name": "Orvalho Gélido",           "requires": ["frio", "estabilidade"],        "forbids": [],              "technique": ["esfriar", "destilar"],         "output": "orvalho_gelido",       "alchemy_level": 0,  "xp": 4,  "hint": "Frio que fica onde é colocado."},
+    {"id": "tinta_runica",         "name": "Tinta Rúnica",             "requires": ["sombra", "protecao", "eterea"],"forbids": [],              "technique": ["moer", "destilar"],            "output": "tinta_runica",         "alchemy_level": 10, "xp": 10, "hint": "Escreva com sombra para proteger o que é etéreo."},
+    {"id": "pocao_sono_leve",      "name": "Poção do Sono Leve",       "requires": ["calma", "sombra"],             "forbids": [],              "technique": ["aquecer", "esfriar"],          "output": "pocao_sono_leve",      "alchemy_level": 0,  "xp": 5,  "hint": "Calma que apaga a luz."},
+    {"id": "essencia_verdejante",  "name": "Essência Verdejante",      "requires": ["crescimento", "luz", "vitalidade"], "forbids": [],         "technique": ["moer", "aquecer", "destilar"], "output": "essencia_verdejante",  "alchemy_level": 5,  "xp": 10, "hint": "Tudo que uma semente pede ao sol."}
+  ]
+}
