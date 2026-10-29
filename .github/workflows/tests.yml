@@ -1,0 +1,43 @@
+name: Testes
+
+on:
+  push:
+  pull_request:
+
+env:
+  GODOT_VERSION: 4.7.2
+
+jobs:
+  dados:
+    name: Validar dados (JSON)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python3 tools/data_validator.py
+
+  godot:
+    name: Testes Godot (unidade, integração e mundo 3D)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Baixar Godot ${{ env.GODOT_VERSION }}
+        run: |
+          curl -sSL -o godot.zip "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          unzip -q godot.zip
+          mv "Godot_v${GODOT_VERSION}-stable_linux.x86_64" godot
+          chmod +x godot
+      - name: Importar projeto
+        run: ./godot --headless --import || true
+      - name: Testes de sistemas (tests/test_runner.tscn)
+        run: |
+          ./godot --headless --audio-driver Dummy res://tests/test_runner.tscn 2>&1 | tee runner.log
+          ! grep -q "SCRIPT ERROR" runner.log
+          grep -q ", 0 falhas" runner.log
+      - name: Fumaça do mundo 3D (tests/smoke_world.tscn)
+        run: |
+          ./godot --headless --audio-driver Dummy res://tests/smoke_world.tscn 2>&1 | tee smoke.log
+          ! grep -q "SCRIPT ERROR" smoke.log
+          grep -q "SMOKE OK" smoke.log

@@ -53,6 +53,8 @@ func _find(dir: String, sound_name: String) -> AudioStream:
 	for ext in [".ogg", ".wav"]:
 		var s := _load(dir + sound_name + ext)
 		if s:
+			if dir == MUSIC_DIR and s is AudioStreamOggVorbis:
+				s.loop = true
 			return s
 	return null
 
@@ -118,3 +120,11 @@ func set_rain(active: bool) -> void:
 			_rain.play()
 	elif not active and _rain.playing:
 		_rain.stop()
+
+
+func _exit_tree() -> void:
+	# Libera fluxos ao sair (evita vazamentos de playback ao fechar o app).
+	for p in _pool + [_music_a, _music_b, _ambient, _rain]:
+		p.stop()
+		p.stream = null
+	_sfx_cache.clear()

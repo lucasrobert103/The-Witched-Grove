@@ -516,6 +516,8 @@ func brew(ingredient_ids: Array, technique: Array) -> Dictionary:
 			discover("receita", r.recipe_id, "Receita descoberta por experimentação: %s!" % recipe.name)
 			EventBus.recipe_learned.emit(r.recipe_id)
 		add_school_xp("alchemy", float(recipe.get("xp", 3)) * (1.5 if r.new_recipe else 1.0))
+		if r.new_recipe:
+			_check_experimentation_unlocks()
 		set_flag("crafted." + r.recipe_id)
 		set_flag("crafted.any")
 		if r.insight != "":
@@ -530,6 +532,22 @@ func brew(ingredient_ids: Array, technique: Array) -> Dictionary:
 	EventBus.brew_finished.emit(r)
 	request_quest_refresh()
 	return r
+
+
+## Feitiços com unlock_method "experimentation" surgem de tanto experimentar:
+## ao descobrir EXPERIMENT_RECIPES receitas, o padrão se revela sozinho.
+const EXPERIMENT_RECIPES := 8
+
+
+func _check_experimentation_unlocks() -> void:
+	if grimoire.known_recipes.size() < EXPERIMENT_RECIPES:
+		return
+	for sid in DataRegistry.spell_order:
+		var d: Dictionary = DataRegistry.spells[sid]
+		if d.get("unlock_method", "") == "experimentation" and d.get("implemented", false) and not spells.is_known(sid):
+			if spells.add_knowledge(sid, 10.0):
+				discover("feitico", sid, "De tanto experimentar, um padrão se revelou: %s!" % d.name)
+				EventBus.spell_learned.emit(sid)
 
 
 # =================================================================== botânica

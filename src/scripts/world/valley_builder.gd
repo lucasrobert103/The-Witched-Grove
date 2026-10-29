@@ -379,6 +379,9 @@ func _build_home() -> void:
 	bubbles.position = Vector3(0, 1.3, 0)
 	lab.add_child(bubbles)
 	_cyl_collider(lab.position, 0.8, 1.4)
+	var receituario := Readable.new()
+	receituario.setup("receituario_caldeirao", "book")
+	_add(receituario, at(7.4, -2.9, 1.25))
 	# prateleira de ingredientes
 	MeshKit.part(lab, MeshKit.box(Vector3(1.6, 0.08, 0.4)), wood, Vector3(0, 1.4, -1.6))
 	for k in 5:

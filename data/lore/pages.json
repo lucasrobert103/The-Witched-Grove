@@ -6,54 +6,215 @@
     "read_minutes": 30
   },
   "research": {
-    "misterio_ondina": {"name": "O Desaparecimento de Ondina", "description": "Para onde foi sua mestra na noite do eclipse?"},
-    "silencio_cinzento": {"name": "O Silêncio Cinzento", "description": "O que está drenando a cor do bosque?"}
+    "misterio_ondina": {
+      "name": "O Desaparecimento de Ondina",
+      "description": "Para onde foi sua mestra na noite do eclipse?"
+    },
+    "silencio_cinzento": {
+      "name": "O Silêncio Cinzento",
+      "description": "O que está drenando a cor do bosque?"
+    }
   },
   "pages": [
-    {"id": "ondina_1", "title": "Grimório de Ondina — Folha I: O Verde que Escuta", "school": "botany", "teaches": {"spell": "botany:crescimento_rapido"},
-     "text": "Minha querida Asterion: se você lê isto, eu não voltei a tempo. Comece pelo jardim. As plantas falam devagar — fale devagar com elas. Toque a terra, respire três vezes e peça. Não ordene: peça. O verde escuta quem tem paciência.",
-     "symbols": {"folha_espiral": "crescimento"}},
-    {"id": "ondina_2", "title": "Grimório de Ondina — Folha II: Luz que Guia", "school": "astral", "teaches": {"spell": "astral:lume"},
-     "text": "Há uma estrela em cada um de nós; algumas só precisam ser lembradas. Junte as mãos em concha, pense no primeiro céu que você viu e sopre. Ela vai segui-la como um filhote. As luméculas da lagoa adoram companhia luminosa.",
-     "symbols": {"estrela_cinco": "luz"}},
-    {"id": "ondina_3", "title": "Grimório de Ondina — Folha III: O Fogo Paciente", "school": "elemental", "teaches": {"spell": "elemental:chama_controlada"},
-     "text": "Escondi esta folha longe da cabana porque fogo sem paciência é só destruição. A chama controlada queima apenas o que você nomeia. Diga 'sarça' e ela queimará a sarça — e nada mais. As sarças do oeste escondem o Bosque das Corujas.",
-     "symbols": {"triangulo_ponto": "calor"}},
-    {"id": "ondina_4", "title": "Grimório de Ondina — Folha IV: O Sopro", "school": "elemental", "teaches": {"spell": "elemental:brisa_suave"},
-     "text": "O vento é o carteiro das flores. Uma brisa suave sobre uma planta madura espalha seu pólen e revela o que ela guardava em segredo. Também afasta brumas teimosas.",
-     "symbols": {"tres_ondas": "ar"}},
-    {"id": "ondina_5", "title": "Grimório de Ondina — Folha V: Raiz e Coração", "school": "botany", "teaches": {"spell": "botany:sincronia_natureza"},
-     "text": "Quando seu coração bater no ritmo da seiva, você poderá curar o que é verde. Mas atenção: o Silêncio Cinzento não é doença — é ausência. Não se cura uma ausência; preenche-se.",
-     "symbols": {"raiz_coracao": "vida"}, "research": {"silencio_cinzento": 25}},
-    {"id": "diario_ondina", "title": "Diário de Ondina (página rasgada)", "school": "astral", "teaches": {},
-     "text": "Noite do eclipse. O Círculo Sombra está colhendo Éter das árvores antigas — por isso o cinza. Kael diz que é para 'proteger o mundo de magia descontrolada'. Vou atrás da fonte do Éter, do outro lado do Portal das Ruínas. Se eu não voltar, Asterion, confie no Guardião. E não aceite atalhos.",
-     "symbols": {}, "research": {"misterio_ondina": 35, "silencio_cinzento": 15}},
-    {"id": "inscricao_salgueiro", "title": "Inscrição no Salgueiro Oco", "school": "illusion", "teaches": {"spell": "illusion:veu"},
-     "text": "Entalhado em letras tortas: 'Quem quer passar sem ser visto deve primeiro aceitar ser ninguém. Feche os olhos, esqueça seu nome por um instante e caminhe.' Ao lado, alguém desenhou um gato com chapéu.",
-     "symbols": {"olho_fechado": "ocultar"}},
-    {"id": "tabua_viajante", "title": "Tábua do Viajante", "school": "protection", "teaches": {"spell": "protection:escudo_pessoal"},
-     "text": "Placa de madeira presa a um poste: 'Viajante! Espinhos, esporos e geadas não perguntam seu nome. Desenhe um círculo no ar com o dedo, imagine uma bolha de sabão bem firme e siga em frente.' — Assinado: um viajante que aprendeu do jeito difícil.",
-     "symbols": {"circulo_aberto": "proteção"}},
-    {"id": "caderno_salvia", "title": "Caderno de Chás de Sálvia", "school": "botany", "teaches": {"spell": "botany:identificar_propriedades", "recipe": "cha_calmante"},
-     "text": "Receita do Chá Calmante: lavanda sonolenta e mel silvestre, aquecer e mexer. E um segredo de velha: antes de usar uma planta, segure-a perto do ouvido. Toda planta diz o que é, se você souber perguntar.",
-     "symbols": {}},
-    {"id": "notas_mirela", "title": "Notas de Mirela (emprestadas)", "school": "alchemy", "teaches": {"spell": "alchemy:estabilizacao"},
-     "text": "Fórmulas apressadas, borrões de tinta e uma ideia genial: 'Se duas propriedades brigam, dê a elas uma terceira coisa para odiar juntas. Estabilização: mão firme, mente fria.' Em letra miúda: 'Não conte ao Professor Ornel.'",
-     "symbols": {"balanca": "equilíbrio"}},
-    {"id": "carta_lyra", "title": "Carta Celeste de Lyra", "school": "astral", "teaches": {"spell": "astral:visao_noturna"},
-     "text": "Um mapa estelar desenhado em tinta prateada. 'Você encontrou as três marcas. Os Primeiros as deixaram para quem soubesse olhar no escuro. Agora aprenda a olhar sempre assim.'",
-     "symbols": {"olho_estrela": "visão"}, "research": {"misterio_ondina": 15}},
-    {"id": "tabuleta_tome", "title": "Tabuleta de Purificação dos Escribas", "school": "protection", "teaches": {"spell": "protection:limpeza_magica"},
-     "text": "Gravado em pedra: 'O cinza é só uma cor esquecida. Diga o nome da cor e ela volta.' Abaixo, uma lista de nomes de cores em uma língua que você quase entende.",
-     "symbols": {"circulo_raios": "purificar"}, "research": {"silencio_cinzento": 20}},
-    {"id": "pedra_retorno", "title": "Pedra da Marca de Retorno", "school": "runes", "teaches": {"spell": "runes:marca_retorno"},
-     "text": "Uma runa gravada na soleira da sua própria porta, que você nunca tinha notado. Ondina a deixou ali. 'Para voltar para casa, basta lembrar da porta.'",
-     "symbols": {"porta_runa": "retorno"}},
-    {"id": "runas_circulo", "title": "Runas do Círculo de Pedras", "school": "runes", "teaches": {"spell": "runes:circulo_protecao"},
-     "text": "Os monólitos têm marcas que formam um círculo contínuo. Traduzindo devagar: 'Um traço, um nome, uma promessa. O que estiver dentro não secará.' A terceira pedra mostra uma folha espiral seguida de uma estrela de cinco pontas.",
-     "symbols": {"circulo_fechado": "proteger"}},
-    {"id": "folha_gelo", "title": "Folha Perdida: Cristal de Gelo", "school": "elemental", "teaches": {"spell": "elemental:cristal_gelo"},
-     "text": "Presa sob uma pedra fria, uma folha do grimório de Ondina: 'A água também sabe esperar. Peça que ela prenda a respiração e caminhe sobre o lago.'",
-     "symbols": {"floco": "frio"}}
+    {
+      "id": "ondina_1",
+      "title": "Grimório de Ondina — Folha I: O Verde que Escuta",
+      "school": "botany",
+      "teaches": {
+        "spell": "botany:crescimento_rapido"
+      },
+      "text": "Minha querida Asterion: se você lê isto, eu não voltei a tempo. Comece pelo jardim. As plantas falam devagar — fale devagar com elas. Toque a terra, respire três vezes e peça. Não ordene: peça. O verde escuta quem tem paciência.",
+      "symbols": {
+        "folha_espiral": "crescimento"
+      }
+    },
+    {
+      "id": "ondina_2",
+      "title": "Grimório de Ondina — Folha II: Luz que Guia",
+      "school": "astral",
+      "teaches": {
+        "spell": "astral:lume"
+      },
+      "text": "Há uma estrela em cada um de nós; algumas só precisam ser lembradas. Junte as mãos em concha, pense no primeiro céu que você viu e sopre. Ela vai segui-la como um filhote. As luméculas da lagoa adoram companhia luminosa.",
+      "symbols": {
+        "estrela_cinco": "luz"
+      }
+    },
+    {
+      "id": "ondina_3",
+      "title": "Grimório de Ondina — Folha III: O Fogo Paciente",
+      "school": "elemental",
+      "teaches": {
+        "spell": "elemental:chama_controlada"
+      },
+      "text": "Escondi esta folha longe da cabana porque fogo sem paciência é só destruição. A chama controlada queima apenas o que você nomeia. Diga 'sarça' e ela queimará a sarça — e nada mais. As sarças do oeste escondem o Bosque das Corujas.",
+      "symbols": {
+        "triangulo_ponto": "calor"
+      }
+    },
+    {
+      "id": "ondina_4",
+      "title": "Grimório de Ondina — Folha IV: O Sopro",
+      "school": "elemental",
+      "teaches": {
+        "spell": "elemental:brisa_suave"
+      },
+      "text": "O vento é o carteiro das flores. Uma brisa suave sobre uma planta madura espalha seu pólen e revela o que ela guardava em segredo. Também afasta brumas teimosas.",
+      "symbols": {
+        "tres_ondas": "ar"
+      }
+    },
+    {
+      "id": "ondina_5",
+      "title": "Grimório de Ondina — Folha V: Raiz e Coração",
+      "school": "botany",
+      "teaches": {
+        "spell": "botany:sincronia_natureza"
+      },
+      "text": "Quando seu coração bater no ritmo da seiva, você poderá curar o que é verde. Mas atenção: o Silêncio Cinzento não é doença — é ausência. Não se cura uma ausência; preenche-se.",
+      "symbols": {
+        "raiz_coracao": "vida"
+      },
+      "research": {
+        "silencio_cinzento": 25
+      }
+    },
+    {
+      "id": "diario_ondina",
+      "title": "Diário de Ondina (página rasgada)",
+      "school": "astral",
+      "teaches": {},
+      "text": "Noite do eclipse. O Círculo Sombra está colhendo Éter das árvores antigas — por isso o cinza. Kael diz que é para 'proteger o mundo de magia descontrolada'. Vou atrás da fonte do Éter, do outro lado do Portal das Ruínas. Se eu não voltar, Asterion, confie no Guardião. E não aceite atalhos.",
+      "symbols": {},
+      "research": {
+        "misterio_ondina": 35,
+        "silencio_cinzento": 15
+      }
+    },
+    {
+      "id": "inscricao_salgueiro",
+      "title": "Inscrição no Salgueiro Oco",
+      "school": "illusion",
+      "teaches": {
+        "spell": "illusion:veu"
+      },
+      "text": "Entalhado em letras tortas: 'Quem quer passar sem ser visto deve primeiro aceitar ser ninguém. Feche os olhos, esqueça seu nome por um instante e caminhe.' Ao lado, alguém desenhou um gato com chapéu.",
+      "symbols": {
+        "olho_fechado": "ocultar"
+      }
+    },
+    {
+      "id": "tabua_viajante",
+      "title": "Tábua do Viajante",
+      "school": "protection",
+      "teaches": {
+        "spell": "protection:escudo_pessoal"
+      },
+      "text": "Placa de madeira presa a um poste: 'Viajante! Espinhos, esporos e geadas não perguntam seu nome. Desenhe um círculo no ar com o dedo, imagine uma bolha de sabão bem firme e siga em frente.' — Assinado: um viajante que aprendeu do jeito difícil.",
+      "symbols": {
+        "circulo_aberto": "proteção"
+      }
+    },
+    {
+      "id": "caderno_salvia",
+      "title": "Caderno de Chás de Sálvia",
+      "school": "botany",
+      "teaches": {
+        "spell": "botany:identificar_propriedades",
+        "recipe": "cha_calmante"
+      },
+      "text": "Receita do Chá Calmante: lavanda sonolenta e mel silvestre, aquecer e mexer. E um segredo de velha: antes de usar uma planta, segure-a perto do ouvido. Toda planta diz o que é, se você souber perguntar.",
+      "symbols": {}
+    },
+    {
+      "id": "notas_mirela",
+      "title": "Notas de Mirela (emprestadas)",
+      "school": "alchemy",
+      "teaches": {
+        "spell": "alchemy:estabilizacao"
+      },
+      "text": "Fórmulas apressadas, borrões de tinta e uma ideia genial: 'Se duas propriedades brigam, dê a elas uma terceira coisa para odiar juntas. Estabilização: mão firme, mente fria.' Em letra miúda: 'Não conte ao Professor Ornel.'",
+      "symbols": {
+        "balanca": "equilíbrio"
+      }
+    },
+    {
+      "id": "carta_lyra",
+      "title": "Carta Celeste de Lyra",
+      "school": "astral",
+      "teaches": {
+        "spell": "astral:visao_noturna"
+      },
+      "text": "Um mapa estelar desenhado em tinta prateada. 'Você encontrou as três marcas. Os Primeiros as deixaram para quem soubesse olhar no escuro. Agora aprenda a olhar sempre assim.'",
+      "symbols": {
+        "olho_estrela": "visão"
+      },
+      "research": {
+        "misterio_ondina": 15
+      }
+    },
+    {
+      "id": "tabuleta_tome",
+      "title": "Tabuleta de Purificação dos Escribas",
+      "school": "protection",
+      "teaches": {
+        "spell": "protection:limpeza_magica"
+      },
+      "text": "Gravado em pedra: 'O cinza é só uma cor esquecida. Diga o nome da cor e ela volta.' Abaixo, uma lista de nomes de cores em uma língua que você quase entende.",
+      "symbols": {
+        "circulo_raios": "purificar"
+      },
+      "research": {
+        "silencio_cinzento": 20
+      }
+    },
+    {
+      "id": "pedra_retorno",
+      "title": "Pedra da Marca de Retorno",
+      "school": "runes",
+      "teaches": {
+        "spell": "runes:marca_retorno"
+      },
+      "text": "Uma runa gravada na soleira da sua própria porta, que você nunca tinha notado. Ondina a deixou ali. 'Para voltar para casa, basta lembrar da porta.'",
+      "symbols": {
+        "porta_runa": "retorno"
+      }
+    },
+    {
+      "id": "runas_circulo",
+      "title": "Runas do Círculo de Pedras",
+      "school": "runes",
+      "teaches": {
+        "spell": "runes:circulo_protecao"
+      },
+      "text": "Os monólitos têm marcas que formam um círculo contínuo. Traduzindo devagar: 'Um traço, um nome, uma promessa. O que estiver dentro não secará.' A terceira pedra mostra uma folha espiral seguida de uma estrela de cinco pontas.",
+      "symbols": {
+        "circulo_fechado": "proteger"
+      }
+    },
+    {
+      "id": "folha_gelo",
+      "title": "Folha Perdida: Cristal de Gelo",
+      "school": "elemental",
+      "teaches": {
+        "spell": "elemental:cristal_gelo"
+      },
+      "text": "Presa sob uma pedra fria, uma folha do grimório de Ondina: 'A água também sabe esperar. Peça que ela prenda a respiração e caminhe sobre o lago.'",
+      "symbols": {
+        "floco": "frio"
+      }
+    },
+    {
+      "id": "receituario_caldeirao",
+      "title": "Receituário do Caldeirão (letra de Ondina)",
+      "school": "alchemy",
+      "teaches": {
+        "spell": "alchemy:dissolucao_precisa"
+      },
+      "text": "Colado na prateleira, com manchas de chá: 'Antes de despejar, peça a cada grão que se solte do outro. Uma mistura bem dissolvida é uma mistura bem-educada. P.S.: quem experimenta muito acaba descobrindo segredos que nenhum livro conta.'",
+      "symbols": {
+        "gota_tripla": "dissolver"
+      }
+    }
   ]
 }

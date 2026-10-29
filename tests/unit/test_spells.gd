@@ -72,3 +72,14 @@ func test_efeitos_proprios() -> void:
 	Game.spells.add_knowledge("alchemy:dissolucao_precisa", 10.0)
 	Game.cast_spell("alchemy:dissolucao_precisa")
 	assert_true(Game.pending_brew_bonus > 0.0, "bônus de preparo pendente")
+
+
+func test_desbloqueio_por_experimentacao() -> void:
+	for rid in DataRegistry.recipe_order.slice(0, 7):
+		Game.grimoire.learn_recipe(rid)
+	Game._check_experimentation_unlocks()
+	assert_false(Game.spells.is_known("alchemy:transmutar_essencia"), "7 receitas não bastam")
+	Game.grimoire.learn_recipe(DataRegistry.recipe_order[7])
+	Game._check_experimentation_unlocks()
+	assert_true(Game.spells.is_known("alchemy:transmutar_essencia"), "8 receitas revelam Transmutação de Essência")
+	assert_false(Game.spells.is_known("transmutation:replicacao"), "feitiços sem efeito na V1 não são revelados")
