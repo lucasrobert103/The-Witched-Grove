@@ -19,7 +19,7 @@ func _ready() -> void:
 	add_child(sun)
 	var ground := MeshInstance3D.new()
 	ground.mesh = MeshKit.plane(Vector2(40, 40))
-	ground.material_override = Toon.mat(Color("#5f9a4f"))
+	ground.material_override = Toon.mat(Color("#4f7f45"))
 	add_child(ground)
 	var defs: Array = [DataRegistry.player_def]
 	var only: String = get_tree().root.get_meta("debug_cam", "") if get_tree().root.has_meta("debug_cam") else ""
@@ -27,14 +27,14 @@ func _ready() -> void:
 		defs.append(DataRegistry.npcs[id])
 	if only == "asterion":
 		defs = [DataRegistry.player_def]
-	var x := -(defs.size() - 1) * 0.55
+	var x := -(defs.size() - 1) * 0.5
 	for d in defs:
 		var m := HumanoidModel.new()
 		add_child(m)
 		m.build(d.appearance)
 		m.position = Vector3(x, 0, 0)
 		m.rotation_degrees.y = 15
-		x += 1.1
+		x += 1.0
 	var cam := Camera3D.new()
 	add_child(cam)
 	if only == "asterion":
@@ -42,7 +42,7 @@ func _ready() -> void:
 		cam.look_at(Vector3(0, 1.0, 0))
 		cam.fov = 38
 	else:
-		cam.position = Vector3(0, 1.6, -9.5)
-		cam.look_at(Vector3(0, 0.9, 0))
-		cam.fov = 50
+		cam.position = Vector3(0, 1.25, -7.4)
+		cam.look_at(Vector3(0, 0.95, 0))
+		cam.fov = 53
 	cam.current = true
