@@ -20,7 +20,7 @@ func setup(p_page: String, p_style: String = "scroll", p_flag: String = "") -> v
 func _ready() -> void:
 	_visual = MeshKit.pivot(self)
 	var paper := Toon.mat(Color("#f3e6c4"), {"rim": 0.3, "outline": 0.01})
-	var stone := Toon.mat(Color("#8a8796"), {"outline": 0.02})
+	var stone := Toon.mat(Color("#8a8796"), {"surface": "stone", "outline": 0.02})
 	match style:
 		"scroll":
 			MeshKit.part(self, MeshKit.cylinder(0.25, 0.32, 0.9, 8), stone, Vector3(0, 0.45, 0))
@@ -33,7 +33,7 @@ func _ready() -> void:
 			MeshKit.part(self, MeshKit.box(Vector3(0.9, 1.2, 0.25)), stone, Vector3(0, 0.6, 0))
 			MeshKit.part(_visual, MeshKit.box(Vector3(0.6, 0.7, 0.02)), Toon.glow(Color("#c9a5ff"), 0.9), Vector3(0, 0.7, -0.14))
 		"sign":
-			var wood := Toon.mat(Color("#8a5a36"), {"outline": 0.015})
+			var wood := Toon.mat(Color("#8a5a36"), {"surface": "wood", "outline": 0.015})
 			MeshKit.part(self, MeshKit.cylinder(0.05, 0.06, 1.4, 6), wood, Vector3(0, 0.7, 0))
 			MeshKit.part(_visual, MeshKit.box(Vector3(0.8, 0.5, 0.06)), wood, Vector3(0, 1.3, 0))
 			MeshKit.part(_visual, MeshKit.box(Vector3(0.6, 0.3, 0.01)), paper, Vector3(0, 1.3, -0.04))

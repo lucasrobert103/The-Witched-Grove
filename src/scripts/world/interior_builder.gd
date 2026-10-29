@@ -10,9 +10,9 @@ const ORIGINS := {
 }
 
 var root: Node3D
-var wood := Toon.mat(Color("#8a5a36"), {"outline": 0.02})
-var dark_wood := Toon.mat(Color("#5a3a26"), {"outline": 0.02})
-var stone := Toon.mat(Color("#8f8b9c"), {"outline": 0.02})
+var wood := Toon.mat(Color("#8a5a36"), {"surface": "wood", "outline": 0.02})
+var dark_wood := Toon.mat(Color("#5a3a26"), {"surface": "wood", "outline": 0.02})
+var stone := Toon.mat(Color("#8f8b9c"), {"surface": "stone", "outline": 0.02})
 var glow := Toon.glow(Color("#ffd27a"), 1.8)
 
 
@@ -95,7 +95,7 @@ func _herbs(parent: Node3D, pos: Vector3) -> void:
 	var cols := [Color("#7fb85a"), Color("#b18cff"), Color("#d9b56a"), Color("#6fd38a")]
 	for i in 5:
 		var p := pos + Vector3(i * 0.35 - 0.7, 0, 0)
-		_part(parent, MeshKit.cylinder(0.005, 0.005, 0.3, 4), Toon.mat(Color("#5a3d2a")), p + Vector3(0, -0.15, 0))
+		_part(parent, MeshKit.cylinder(0.005, 0.005, 0.3, 4), Toon.mat(Color("#5a3d2a"), {"surface": "wood"}), p + Vector3(0, -0.15, 0))
 		_part(parent, MeshKit.cylinder(0.1, 0.02, 0.32, 6), Toon.mat(cols[i % cols.size()], {"outline": 0.008}), p + Vector3(0, -0.45, 0))
 
 

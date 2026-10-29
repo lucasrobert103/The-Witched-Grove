@@ -33,6 +33,17 @@ float noise(vec2 p) {
 		mix(hash2(i + vec2(0.0, 1.0)), hash2(i + vec2(1.0, 1.0)), u.x), u.y);
 }
 
+float fbm(vec2 p) {
+	float v = 0.0;
+	float a = 0.5;
+	for (int i = 0; i < 5; i++) {
+		v += noise(p) * a;
+		p = p * 2.03 + vec2(1.7, 9.2);
+		a *= 0.5;
+	}
+	return v;
+}
+
 void sky() {
 	vec3 d = normalize(EYEDIR);
 	float t = clamp(d.y * 1.5, 0.0, 1.0);
@@ -64,12 +75,21 @@ void sky() {
 	float shade = smoothstep(-0.02, 0.02, dot(d - md, side) + (moon_phase - 0.5) * 0.07);
 	col = mix(col, moon_color * mix(0.25, 1.0, shade), disc * moon_visible);
 	col += moon_color * pow(max(mdot, 0.0), 80.0) * 0.25 * moon_visible;
-	// Nuvens em faixas
-	if (d.y > 0.02) {
-		vec2 uv = d.xz / (d.y + 0.15) * 1.4 + vec2(TIME * 0.006, 0.0);
-		float c = noise(uv * 1.3) * 0.6 + noise(uv * 3.1) * 0.4;
-		float cm = smoothstep(1.0 - cloud_amount * 0.6, 1.0 - cloud_amount * 0.6 + 0.06, c);
-		col = mix(col, cloud_color, cm * 0.85 * clamp(d.y * 6.0, 0.0, 1.0));
+	// Brilho do sol espalhado no horizonte (Mie)
+	col += sun_color * pow(max(sd, 0.0), 6.0) * 0.12 * sun_visible * (1.0 - t * 0.6);
+	// Nuvens volumosas (fbm) com base sombreada e borda iluminada pelo sol
+	if (d.y > 0.0) {
+		// projeção num "teto" de nuvens: perto do horizonte as nuvens somem na névoa
+		vec2 uv = d.xz / max(d.y + 0.28, 0.3) * 1.1 + vec2(TIME * 0.004, TIME * 0.0015);
+		float c = fbm(uv * 1.4);
+		float lo = 0.7 - cloud_amount * 0.3;
+		float cm = smoothstep(lo, lo + 0.22, c);
+		float dens = fbm(uv * 1.4 + normalize(sun_dir).xz * 0.08);
+		vec3 lit = cloud_color;
+		vec3 shadow = cloud_color * vec3(0.7, 0.72, 0.8);
+		vec3 cc = mix(lit, shadow, smoothstep(0.45, 0.85, dens) * 0.9);
+		cc += sun_color * pow(max(sd, 0.0), 8.0) * 0.25 * sun_visible * (1.0 - cm);
+		col = mix(col, cc, cm * 0.92 * smoothstep(0.06, 0.35, d.y));
 	}
 	COLOR = col;
 }

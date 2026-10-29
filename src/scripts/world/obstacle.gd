@@ -57,7 +57,7 @@ func _ready() -> void:
 			MeshKit.part(_visual, MeshKit.torus(0.18, 0.26, 10, 4), vine, Vector3(-length * 0.5 - 0.6, 0.15, (i - 3) * 0.25), Vector3(90, i * 30, 0))
 		MeshKit.part(_visual, MeshKit.sphere(0.35, 8, 6), Toon.mat(Color("#8a7a4a")), Vector3(-length * 0.5 - 0.6, 0.2, 0), Vector3.ZERO, Vector3(1.0, 0.5, 1.0))
 		_bridge = MeshKit.pivot(self)
-		var plank := Toon.mat(Color("#9a6a3e"), {"outline": 0.015})
+		var plank := Toon.mat(Color("#9a6a3e"), {"surface": "wood", "outline": 0.015})
 		var green := Toon.mat(Color("#5fb85a"), {"rim": 0.4, "outline": 0.015})
 		var n := int(length / 0.45)
 		for i in n:

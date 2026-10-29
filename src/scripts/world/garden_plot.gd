@@ -19,12 +19,12 @@ func setup(i: int) -> void:
 
 
 func _ready() -> void:
-	var wood := Toon.mat(Color("#8a5a36"), {"outline": 0.01})
+	var wood := Toon.mat(Color("#8a5a36"), {"surface": "wood", "outline": 0.01})
 	for side in [Vector3(0, 0.1, -0.75), Vector3(0, 0.1, 0.75)]:
 		MeshKit.part(self, MeshKit.box(Vector3(1.6, 0.2, 0.1)), wood, side)
 	for side in [Vector3(-0.75, 0.1, 0), Vector3(0.75, 0.1, 0)]:
 		MeshKit.part(self, MeshKit.box(Vector3(0.1, 0.2, 1.4)), wood, side)
-	_soil = MeshKit.part(self, MeshKit.box(Vector3(1.4, 0.16, 1.4)), Toon.mat(Color("#4a3426")), Vector3(0, 0.08, 0))
+	_soil = MeshKit.part(self, MeshKit.box(Vector3(1.4, 0.16, 1.4)), Toon.mat(Color("#4a3426"), {"surface": "wood"}), Vector3(0, 0.08, 0))
 	_water_ring = MeshKit.part(self, MeshKit.box(Vector3(1.38, 0.01, 1.38)), Toon.translucent(Color("#6ab0d8"), 0.35), Vector3(0, 0.17, 0), Vector3.ZERO, Vector3.ONE, false)
 	_rune_ring = MeshKit.part(self, MeshKit.torus(0.78, 0.84, 24, 4), Toon.glow(Color("#c9a5ff"), 1.5), Vector3(0, 0.22, 0), Vector3.ZERO, Vector3.ONE, false)
 	_plant_root = MeshKit.pivot(self, Vector3(0, 0.16, 0))

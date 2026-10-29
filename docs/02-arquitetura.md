@@ -8,7 +8,7 @@
 3. **Um orquestrador.** O autoload `Game` possui as instâncias dos sistemas e aplica regras que cruzam sistemas
    (recompensas, descobertas, consequências, tempo). Mundo e UI falam com o jogo **só** por `Game` e `EventBus`.
 4. **Mundo gerado em código.** Terreno, vegetação, personagens e props são montados a partir de primitivas
-   (sem assets externos), com materiais cel-shading. Modelos `.glb` podem substituí-los sem mudar a lógica.
+   (sem assets externos), com malhas orgânicas (`OrganicMesh`) e materiais PBR/shaders próprios (`Toon`, `CharMat`). Modelos `.glb` podem substituí-los sem mudar a lógica.
 
 ## 2. Autoloads (`src/autoload/`)
 
@@ -82,7 +82,7 @@ GameWorld (game_world.gd)
 - Vegetação em **MultiMesh** (troncos, copas, cones, grama, flores, arbustos) → poucas draw calls.
 - Partículas **CPUParticles3D** (compatíveis com GLES3).
 - `scaling_3d_scale` 0,7 / 0,85 / 1,0 por nível de qualidade; densidade de grama 1400/3200/5600.
-- Materiais e malhas cacheados (`Toon`, `MeshKit`).
+- Materiais e malhas cacheados (`Toon`, `CharMat`, `MeshKit`, `OrganicMesh`); peças estáticas de casas unidas por material (`MeshKit.batch`).
 - Próximos passos (Fase 5): LOD por `visibility_range`, occlusion culling, bake de personagens em malha única.
 
 ## 7. Testes

@@ -172,8 +172,8 @@ func _build_portrait() -> Control:
 		h.build(ap)
 		_portrait_model = h
 		var hh := float(ap.get("height", 1.0))
-		var head_y := 1.28 * hh
-		cam.transform = _look(Vector3(0.15, head_y + 0.05, -1.05 * maxf(hh, 0.8)), Vector3(0, head_y - 0.04, 0))
+		var head_y := h.face_height()
+		cam.transform = _look(Vector3(0.1, head_y + 0.03, -0.75 * maxf(hh, 0.8)), Vector3(0, head_y - 0.03, 0))
 		cam.fov = 34
 	cam.current = true
 	return frame

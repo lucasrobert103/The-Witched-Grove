@@ -126,7 +126,12 @@ func raw_height(x: float, z: float) -> float:
 	h += 2.4 * exp(-(pow(x - 62.0, 2.0) + pow(z + 48.0, 2.0)) / 160.0)
 	var r := Vector2(x, z).length()
 	if r > MOUNTAIN_START:
-		h += pow((r - MOUNTAIN_START) * 0.6, 1.65)
+		# cordilheira: cristas e vales pela direção, picos limitados, rugosidade na encosta
+		var k := r - MOUNTAIN_START
+		var ang := atan2(z, x)
+		var ridge := 1.0 - absf(noise.get_noise_2d(cos(ang) * 38.0, sin(ang) * 38.0))
+		var peak := minf(pow(k * 0.6, 1.5), 26.0 + 22.0 * ridge)
+		h += peak * (0.5 + 0.5 * ridge) + detail.get_noise_2d(x * 0.35, z * 0.35) * 2.5 * clampf(k / 8.0, 0.0, 1.0)
 	return h
 
 
@@ -168,11 +173,13 @@ func ground_color(x: float, z: float, h: float) -> Color:
 		c = Color("#6a7a6a")
 	var r := Vector2(x, z).length()
 	if r > MOUNTAIN_START + 1.0:
-		c = c.lerp(Color("#8d8aa0"), _ss(MOUNTAIN_START + 1.0, MOUNTAIN_START + 7.0, r))
+		c = c.lerp(Color("#7d766c"), _ss(MOUNTAIN_START + 1.0, MOUNTAIN_START + 7.0, r))
 	if Vector2(x, z).distance_to(Vector2(58, 44)) < 14.0 and dist_to_path(x, z) > 1.8:
 		c = c.lerp(Color("#9a7ad8"), 0.55 * _ss(14.0, 9.0, Vector2(x, z).distance_to(Vector2(58, 44))))
 	if h > 9.0:
-		c = c.lerp(Color("#eef2fb"), _ss(9.0, 12.0, h))
+		c = c.lerp(Color("#6e6a66"), _ss(9.0, 13.0, h) * 0.5)
+	if h > 22.0:
+		c = c.lerp(Color("#e8edf6"), _ss(22.0, 28.0, h + detail.get_noise_2d(x, z) * 3.0))
 	return c
 
 

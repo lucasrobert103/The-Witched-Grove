@@ -25,7 +25,7 @@ func _ready() -> void:
 	var only: String = get_tree().root.get_meta("debug_cam", "") if get_tree().root.has_meta("debug_cam") else ""
 	for id in ["salvia", "bento", "mirela", "juniper", "lyra", "tome", "kael", "dorinha", "ornel", "celeste", "nox"]:
 		defs.append(DataRegistry.npcs[id])
-	if only == "asterion":
+	if only in ["asterion", "rosto"]:
 		defs = [DataRegistry.player_def]
 	var x := -(defs.size() - 1) * 0.5
 	for d in defs:
@@ -38,9 +38,13 @@ func _ready() -> void:
 	var cam := Camera3D.new()
 	add_child(cam)
 	if only == "asterion":
-		cam.position = Vector3(0.0, 1.25, -2.6)
-		cam.look_at(Vector3(0, 1.0, 0))
+		cam.position = Vector3(0.0, 1.2, -2.7)
+		cam.look_at(Vector3(0, 0.95, 0))
 		cam.fov = 38
+	elif only == "rosto":
+		cam.position = Vector3(0.12, 1.5, -0.66)
+		cam.look_at(Vector3(0, 1.47, 0))
+		cam.fov = 30
 	else:
 		cam.position = Vector3(0, 1.25, -7.4)
 		cam.look_at(Vector3(0, 0.95, 0))

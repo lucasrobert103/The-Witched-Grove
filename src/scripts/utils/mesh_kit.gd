@@ -12,7 +12,14 @@ static func _cached(key: String, maker: Callable) -> Mesh:
 	return _meshes[key]
 
 
+## Fator de suavidade: as primitivas recebem mais segmentos (sem facetas visíveis).
+static func _seg(n: int, cap: int) -> int:
+	return clampi(n * 2, n, cap) if Settings.quality > 0 else n
+
+
 static func sphere(r: float, segs: int = 16, rings: int = 10, hemi: bool = false) -> Mesh:
+	segs = _seg(segs, 36)
+	rings = _seg(rings, 20)
 	return _cached("sph|%f|%d|%d|%s" % [r, segs, rings, hemi], func():
 		var m := SphereMesh.new()
 		m.radius = r
@@ -24,16 +31,18 @@ static func sphere(r: float, segs: int = 16, rings: int = 10, hemi: bool = false
 
 
 static func capsule(r: float, h: float, segs: int = 12) -> Mesh:
+	segs = _seg(segs, 28)
 	return _cached("cap|%f|%f|%d" % [r, h, segs], func():
 		var m := CapsuleMesh.new()
 		m.radius = r
 		m.height = maxf(h, r * 2.0)
 		m.radial_segments = segs
-		m.rings = 4
+		m.rings = 8
 		return m)
 
 
 static func cylinder(top: float, bottom: float, h: float, segs: int = 14) -> Mesh:
+	segs = _seg(segs, 32)
 	return _cached("cyl|%f|%f|%f|%d" % [top, bottom, h, segs], func():
 		var m := CylinderMesh.new()
 		m.top_radius = top
@@ -46,6 +55,7 @@ static func cylinder(top: float, bottom: float, h: float, segs: int = 14) -> Mes
 
 ## Tronco de cone aberto (sem tampas) — capas, saias e abajures.
 static func open_cone(top: float, bottom: float, h: float, segs: int = 24) -> Mesh:
+	segs = _seg(segs, 40)
 	return _cached("ocone|%f|%f|%f|%d" % [top, bottom, h, segs], func():
 		var m := CylinderMesh.new()
 		m.top_radius = top
@@ -58,7 +68,11 @@ static func open_cone(top: float, bottom: float, h: float, segs: int = 24) -> Me
 		return m)
 
 
+## Caixa com quinas levemente chanfradas (pegam luz como madeira e pedra de verdade).
 static func box(size: Vector3) -> Mesh:
+	var mn := minf(size.x, minf(size.y, size.z))
+	if Settings.quality > 0 and mn > 0.015:
+		return OrganicMesh.rounded_box(size, clampf(mn * 0.12, 0.004, 0.06))
 	return _cached("box|%s" % str(size), func():
 		var m := BoxMesh.new()
 		m.size = size
@@ -66,6 +80,8 @@ static func box(size: Vector3) -> Mesh:
 
 
 static func torus(inner: float, outer: float, segs: int = 20, ring_segs: int = 8) -> Mesh:
+	segs = _seg(segs, 40)
+	ring_segs = _seg(ring_segs, 14)
 	return _cached("tor|%f|%f|%d" % [inner, outer, segs], func():
 		var m := TorusMesh.new()
 		m.inner_radius = inner
@@ -128,52 +144,165 @@ static func star(outer: float, inner: float, depth: float) -> Mesh:
 		return st.commit())
 
 
-## Tufo de grama: três lâminas cruzadas e afiladas (para MultiMesh).
+## Tufo de grama: lâminas curvas e afiladas em leque (para MultiMesh).
 static func grass_clump() -> Mesh:
-	return _cached("grass_clump", func():
+	return _cached("grass_clump2", func():
 		var st := SurfaceTool.new()
 		st.begin(Mesh.PRIMITIVE_TRIANGLES)
-		for i in 3:
-			var a := i * PI / 3.0
-			var dir := Vector3(cos(a), 0, sin(a))
-			var w := 0.09
-			var hgt := 0.42 + 0.08 * i
-			var lean := Vector3(sin(a * 2.0), 0, cos(a * 3.0)) * 0.08
-			var p0 := -dir * w
-			var p1 := dir * w
-			var p2 := Vector3(0, hgt, 0) + lean
-			st.set_uv(Vector2(0, 1)); st.add_vertex(p0)
-			st.set_uv(Vector2(1, 1)); st.add_vertex(p1)
-			st.set_uv(Vector2(0.5, 0)); st.add_vertex(p2)
-		st.generate_normals()
-		return st.commit())
-
-
-## Pedra low-poly: esfera deformada com faces planas.
-static func rock(seed_value: int, r: float = 1.0) -> Mesh:
-	return _cached("rock|%d|%f" % [seed_value, r], func():
-		var base := SphereMesh.new()
-		base.radius = r
-		base.height = r * 1.6
-		base.radial_segments = 7
-		base.rings = 4
-		var arrays := base.get_mesh_arrays()
-		var verts: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
-		var idx: PackedInt32Array = arrays[Mesh.ARRAY_INDEX]
 		var rng := RandomNumberGenerator.new()
-		rng.seed = seed_value
-		var offsets := {}
-		for i in verts.size():
-			var key := (verts[i] * 100.0).round()
-			if not offsets.has(key):
-				offsets[key] = rng.randf_range(0.82, 1.15)
-			verts[i] *= offsets[key]
-		var st := SurfaceTool.new()
-		st.begin(Mesh.PRIMITIVE_TRIANGLES)
-		for i in idx:
-			st.add_vertex(verts[i])
+		rng.seed = 5
+		for i in 7:
+			var a := float(i) / 7.0 * TAU + rng.randf_range(-0.3, 0.3)
+			var dir := Vector3(cos(a), 0, sin(a))
+			var side := Vector3(-dir.z, 0, dir.x)
+			var hgt := rng.randf_range(0.32, 0.55)
+			var w := rng.randf_range(0.022, 0.034)
+			var lean := rng.randf_range(0.08, 0.2)
+			var base := dir * rng.randf_range(0.0, 0.06)
+			var segs := 3
+			var prev_l := base - side * w
+			var prev_r := base + side * w
+			for k in segs:
+				var t := float(k + 1) / float(segs)
+				var c := base + Vector3(0, hgt * t, 0) + dir * lean * t * t
+				var ww := w * (1.0 - t * 0.92)
+				var l := c - side * ww
+				var r := c + side * ww
+				var v0 := float(k) / float(segs)
+				st.set_uv(Vector2(0, 1.0 - v0)); st.add_vertex(prev_l)
+				st.set_uv(Vector2(1, 1.0 - v0)); st.add_vertex(prev_r)
+				st.set_uv(Vector2(0, 1.0 - t)); st.add_vertex(l)
+				st.set_uv(Vector2(1, 1.0 - v0)); st.add_vertex(prev_r)
+				st.set_uv(Vector2(1, 1.0 - t)); st.add_vertex(r)
+				st.set_uv(Vector2(0, 1.0 - t)); st.add_vertex(l)
+				prev_l = l
+				prev_r = r
 		st.generate_normals()
 		return st.commit())
+
+
+## Pedra natural: esfera deformada por ruído em várias escalas, normais suaves.
+static func rock(seed_value: int, r: float = 1.0) -> Mesh:
+	return _cached("rock2|%d|%f" % [seed_value, r], func():
+		var n := FastNoiseLite.new()
+		n.seed = seed_value * 17 + 3
+		n.frequency = 0.9
+		n.fractal_octaves = 4
+		var rows: Array = []
+		var rings := 16
+		var segs := 24
+		for i in rings + 1:
+			var phi := float(i) / float(rings) * PI
+			var row := PackedVector3Array()
+			for j in segs:
+				var th := float(j) / float(segs) * TAU
+				var d := Vector3(sin(phi) * sin(th), cos(phi), -sin(phi) * cos(th))
+				var k := 1.0 + n.get_noise_3dv(d * 1.3) * 0.32 + n.get_noise_3dv(d * 4.0) * 0.06
+				var p := d * r * k
+				p.y *= 0.8
+				# base achatada (assenta no chão)
+				p.y = maxf(p.y, -r * 0.5)
+				row.append(p)
+			rows.append(row)
+		return OrganicMesh.grid(rows, true))
+
+
+## Copa de árvore: massa irregular com "tufos" (ruído de baixa frequência), normais suaves.
+static func canopy(seed_value: int, r: float = 1.25) -> Mesh:
+	return _cached("canopy|%d|%f" % [seed_value, r], func():
+		var n := FastNoiseLite.new()
+		n.seed = seed_value * 31 + 7
+		n.frequency = 1.4
+		n.fractal_octaves = 2
+		var rows: Array = []
+		var rings := 14
+		var segs := 22
+		for i in rings + 1:
+			var phi := float(i) / float(rings) * PI
+			var row := PackedVector3Array()
+			for j in segs:
+				var th := float(j) / float(segs) * TAU
+				var d := Vector3(sin(phi) * sin(th), cos(phi), -sin(phi) * cos(th))
+				var k := 1.0 + n.get_noise_3dv(d) * 0.28
+				var p := d * r * k
+				if p.y < 0.0:
+					p.y *= 0.72
+				row.append(p)
+			rows.append(row)
+		return OrganicMesh.grid(rows, true))
+
+
+## Camada de pinheiro: cone com borda recortada em pontas que caem (galhos).
+static func pine_tier(r: float = 1.4, h: float = 1.9, points: int = 9) -> Mesh:
+	return _cached("pine|%f|%f|%d" % [r, h, points], func():
+		var rows: Array = []
+		var segs := points * 4
+		var rings := 6
+		for i in rings + 1:
+			var t := float(i) / float(rings)      # 0 = ponta, 1 = base
+			var row := PackedVector3Array()
+			for j in segs:
+				var th := float(j) / float(segs) * TAU
+				var spike := 0.5 + 0.5 * cos(th * points)
+				var rr := r * t * (0.8 + 0.2 * spike * t)
+				var y := h * 0.5 - h * t - spike * 0.18 * h * t * t
+				row.append(Vector3(sin(th) * rr, y, -cos(th) * rr))
+			rows.append(row)
+		# fundo (levemente côncavo)
+		var bottom := PackedVector3Array()
+		for j in segs:
+			bottom.append(Vector3(0, -h * 0.32, 0))
+		rows.append(bottom)
+		return OrganicMesh.grid(rows, true))
+
+
+## Junta as peças estáticas de um conjunto (casa, cerca…) numa malha por material:
+## centenas de peças viram poucas chamadas de desenho. Subárvores com script
+## (interativos) e nós com nome próprio que o jogo procura ficam de fora.
+static func batch(root_node: Node3D) -> void:
+	var groups: Dictionary = {}       # chave -> [material, [[mesh, xform], ...], sombra]
+	var victims: Array = []
+	_collect(root_node, root_node, Transform3D.IDENTITY, groups, victims)
+	for key in groups:
+		var g: Array = groups[key]
+		var parts: Array = g[1]
+		if parts.size() < 2:
+			continue
+		var st := SurfaceTool.new()
+		st.begin(Mesh.PRIMITIVE_TRIANGLES)
+		for e in parts:
+			var pe: Array = e
+			st.append_from(pe[0], 0, pe[1])
+			(pe[2] as Node).queue_free()
+		var mi := MeshInstance3D.new()
+		mi.mesh = st.commit()
+		mi.material_override = g[0]
+		if not g[2]:
+			mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		root_node.add_child(mi)
+
+
+static func _collect(n: Node, root_node: Node3D, xf: Transform3D, groups: Dictionary, victims: Array) -> void:
+	for c in n.get_children():
+		if not (c is Node3D) or c.get_script() != null or not c.get_groups().is_empty():
+			continue
+		var c3: Node3D = c
+		var cx := xf * c3.transform
+		if c is MeshInstance3D:
+			var mi: MeshInstance3D = c
+			var anonymous := str(mi.name).begins_with("@")
+			if anonymous and mi.mesh and mi.material_override and mi.material_overlay == null and mi.get_child_count() == 0 and mi.mesh.get_surface_count() == 1:
+				var shadow := mi.cast_shadow != GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+				# primitivas e malhas geradas têm formatos de vértice diferentes: grupos separados
+				var fmt := -1
+				if mi.mesh is ArrayMesh:
+					fmt = (mi.mesh as ArrayMesh).surface_get_format(0) & (Mesh.ARRAY_FORMAT_NORMAL | Mesh.ARRAY_FORMAT_TANGENT | Mesh.ARRAY_FORMAT_TEX_UV | Mesh.ARRAY_FORMAT_COLOR)
+				var key := "%d|%d|%s" % [mi.material_override.get_instance_id(), fmt, str(shadow)]
+				if not groups.has(key):
+					groups[key] = [mi.material_override, [], shadow]
+				(groups[key][1] as Array).append([mi.mesh, cx, mi])
+		elif c.get_class() == "Node3D":
+			_collect(c, root_node, cx, groups, victims)
 
 
 ## Cria um MeshInstance3D filho com transformação local.

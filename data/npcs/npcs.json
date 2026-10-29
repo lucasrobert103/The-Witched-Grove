@@ -31,9 +31,11 @@
         "gloves",
         "tall_boots",
         "lantern",
-        "wand",
-        "freckles"
-      ]
+        "wand"
+      ],
+      "figure": "f",
+      "legwear_color": "#2a2224",
+      "boot_color": "#6b4a30"
     }
   },
   "familiar": {
@@ -95,7 +97,8 @@
         "accessories": [
           "shawl",
           "cane"
-        ]
+        ],
+        "figure": "f"
       }
     },
     {
@@ -165,7 +168,8 @@
         "age": "adult",
         "accessories": [
           "apron"
-        ]
+        ],
+        "figure": "m"
       }
     },
     {
@@ -212,7 +216,8 @@
         "accessories": [
           "satchel",
           "freckles"
-        ]
+        ],
+        "figure": "f"
       }
     },
     {
@@ -344,7 +349,8 @@
         "age": "adult",
         "accessories": [
           "stars"
-        ]
+        ],
+        "figure": "f"
       }
     },
     {
@@ -392,7 +398,8 @@
         "accessories": [
           "glasses",
           "book"
-        ]
+        ],
+        "figure": "m"
       }
     },
     {
@@ -435,7 +442,8 @@
         "height": 1.12,
         "build": "slim",
         "age": "adult",
-        "accessories": []
+        "accessories": [],
+        "figure": "m"
       }
     },
     {
@@ -479,7 +487,8 @@
         "age": "adult",
         "accessories": [
           "apron"
-        ]
+        ],
+        "figure": "f"
       }
     },
     {
@@ -514,7 +523,8 @@
         "age": "elder",
         "accessories": [
           "glasses"
-        ]
+        ],
+        "figure": "m"
       }
     },
     {
@@ -546,7 +556,8 @@
         "height": 1.0,
         "build": "slim",
         "age": "adult",
-        "accessories": []
+        "accessories": [],
+        "figure": "f"
       }
     },
     {
@@ -579,7 +590,8 @@
         "age": "adult",
         "accessories": [
           "stars"
-        ]
+        ],
+        "figure": "f"
       }
     },
     {
@@ -632,7 +644,8 @@
         "age": "elder",
         "accessories": [
           "cane"
-        ]
+        ],
+        "figure": "m"
       }
     }
   ]

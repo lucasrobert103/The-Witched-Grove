@@ -112,6 +112,7 @@ func _debug_camera(preset: String) -> void:
 		"circulo": [Vector3(19.0, 0, -15.0), 0.0, -0.3, 10.0],
 		"aldeia": [Vector3(-6.0, 0, 72.0), 0.5, -0.32, 13.0],
 		"props": [Vector3(1.5, 0, 6.5), 0.2, -0.4, 9.0],
+		"perto": [Vector3(-2.0, 0, 9.0), 0.4, -0.1, 2.6, PI],
 	}
 	if get_tree().root.has_meta("debug_panel"):
 		_debug_seed_state()
@@ -134,6 +135,8 @@ func _debug_camera(preset: String) -> void:
 		player.place_at(builder.at(pos.x, pos.z, 0.1), sp[1])
 		player.cam_pitch = sp[2]
 		player.cam_dist = sp[3]
+		if sp.size() > 4:
+			player.cam_yaw = float(sp[1]) + float(sp[4])
 		nimbus.global_position = player.global_position + Vector3(-1, 1.5, 1)
 
 
@@ -148,28 +151,38 @@ func _build_environment() -> void:
 	sky.radiance_size = Sky.RADIANCE_SIZE_64
 	sky.process_mode = Sky.PROCESS_MODE_REALTIME
 	env.sky = sky
-	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_energy = 0.6
-	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
-	env.tonemap_exposure = 0.92
+	# luz ambiente e reflexos vindos do próprio céu (azul de cima, quente no horizonte)
+	env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
+	env.ambient_light_sky_contribution = 0.7
+	env.ambient_light_energy = 0.75
+	env.reflected_light_source = Environment.REFLECTION_SOURCE_SKY
+	env.tonemap_mode = Environment.TONE_MAPPER_ACES
+	env.tonemap_exposure = 0.86
 	env.tonemap_white = 6.0
 	env.fog_enabled = true
 	env.fog_density = 0.004
 	env.fog_sky_affect = 0.15
+	env.fog_sun_scatter = 0.08
+	env.fog_aerial_perspective = 0.15
 	env.glow_enabled = true
-	env.glow_intensity = 0.6
-	env.glow_bloom = 0.08
-	env.glow_hdr_threshold = 1.1
+	env.glow_intensity = 0.55
+	env.glow_bloom = 0.05
+	env.glow_hdr_threshold = 1.0
+	env.glow_blend_mode = Environment.GLOW_BLEND_MODE_SOFTLIGHT
 	env.adjustment_enabled = true
-	env.adjustment_saturation = 1.12
-	env.adjustment_contrast = 1.04
+	env.adjustment_saturation = 1.1
+	env.adjustment_contrast = 1.08
 	we.environment = env
 	add_child(we)
 	sun = DirectionalLight3D.new()
 	sun.shadow_enabled = true
-	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
+	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS
+	sun.directional_shadow_blend_splits = true
 	sun.directional_shadow_max_distance = 45.0
-	sun.shadow_blur = 1.5
+	sun.shadow_blur = 1.2
+	sun.shadow_normal_bias = 1.2
+	sun.light_angular_distance = 0.6
+	sun.light_specular = 0.8
 	add_child(sun)
 
 
@@ -261,6 +274,10 @@ func _apply_quality() -> void:
 	var q := Settings.quality
 	sun.shadow_enabled = q >= 1
 	sun.directional_shadow_max_distance = [20.0, 35.0, 55.0][q]
+	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS if q >= 2 else DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
+	RenderingServer.directional_shadow_atlas_set_size([1024, 2048, 4096][q], true)
+	RenderingServer.directional_soft_shadow_filter_set_quality([RenderingServer.SHADOW_QUALITY_HARD, RenderingServer.SHADOW_QUALITY_SOFT_LOW, RenderingServer.SHADOW_QUALITY_SOFT_MEDIUM][q])
+	RenderingServer.positional_soft_shadow_filter_set_quality([RenderingServer.SHADOW_QUALITY_HARD, RenderingServer.SHADOW_QUALITY_SOFT_LOW, RenderingServer.SHADOW_QUALITY_SOFT_LOW][q])
 	env.glow_enabled = q >= 1
 	get_viewport().scaling_3d_scale = [0.7, 0.85, 1.0][q]
 	_fireflies.amount = [20, 40, 60][q]
@@ -339,6 +356,8 @@ func _do_exit() -> void:
 
 func _apply_interior_env() -> void:
 	env.background_mode = Environment.BG_COLOR
+	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+	env.reflected_light_source = Environment.REFLECTION_SOURCE_DISABLED
 	env.background_color = Color("#140e0c")
 	env.ambient_light_color = Color("#c8a080")
 	env.ambient_light_energy = 0.55
@@ -418,6 +437,8 @@ func _update_sky(_delta: float) -> void:
 		_apply_interior_env()
 		return
 	env.background_mode = Environment.BG_SKY
+	env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
+	env.reflected_light_source = Environment.REFLECTION_SOURCE_SKY
 	env.fog_enabled = true
 	var hour := Game.clock.hour()
 	var s := _sample_sky(hour)
@@ -449,9 +470,9 @@ func _update_sky(_delta: float) -> void:
 	sun.light_color = light_c
 	sun.light_energy = energy
 	env.ambient_light_color = amb
-	env.ambient_light_energy = 0.55 + 0.3 * nf
+	env.ambient_light_energy = 0.5 + 0.35 * nf
 	env.fog_light_color = hor.lerp(top, 0.3)
-	env.fog_density = 0.004 + (0.025 if w == "bruma" else 0.0) + (0.006 if w in ["chuva", "neve"] else 0.0)
+	env.fog_density = 0.0028 + (0.025 if w == "bruma" else 0.0) + (0.006 if w in ["chuva", "neve"] else 0.0)
 	sky_mat.set_shader_parameter("top_color", top)
 	sky_mat.set_shader_parameter("horizon_color", hor)
 	sky_mat.set_shader_parameter("ground_color", Color("#3a4a3a").lerp(Color("#0e1020"), nf))

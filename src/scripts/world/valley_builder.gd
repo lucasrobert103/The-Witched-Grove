@@ -81,7 +81,7 @@ func _build_terrain() -> void:
 	var mi := MeshInstance3D.new()
 	mi.name = "Terrain"
 	mi.mesh = mesh
-	mi.material_override = Toon.vertex_colored({"roughness": 1.0})
+	mi.material_override = Toon.terrain()
 	root.add_child(mi)
 	var body := StaticBody3D.new()
 	body.name = "TerrainBody"
@@ -128,7 +128,7 @@ func _build_water() -> void:
 
 func _build_walls() -> void:
 	## Muralhas de pedra que definem as sub-regiões (portões: cogumelo, sarças, riacho).
-	var rock_m := Toon.mat(Color("#8b889c"), {"rim": 0.2, "outline": 0.03})
+	var rock_m := Toon.mat(Color("#8b889c"), {"surface": "stone", "rim": 0.2, "outline": 0.03})
 	var walls := [
 		[Vector2(28.5, -96), Vector2(28.5, -6.6)],
 		[Vector2(28.5, -1.4), Vector2(28.5, 7.0)],
@@ -217,14 +217,14 @@ func _build_vegetation() -> void:
 			for k in 3:
 				var off := Vector3(rng.randf_range(-0.6, 0.6), 2.4 + k * 0.55 + rng.randf_range(0, 0.3), rng.randf_range(-0.6, 0.6)) * s
 				var bs := s * rng.randf_range(0.9, 1.25) * (1.0 - k * 0.15)
-				blobs.append(Transform3D(Basis().scaled(Vector3(bs, bs * 0.9, bs)), Vector3(x, y, z) + off))
+				blobs.append(Transform3D(Basis(Vector3.UP, rng.randf_range(0, TAU)).scaled(Vector3(bs, bs * 0.9, bs)), Vector3(x, y, z) + off))
 				blob_c.append(lc.lightened(k * 0.05))
 		_cyl_collider(Vector3(x, y, z), 0.35 * s, 3.0)
 		placed += 1
-	var bark := Toon.vertex_colored({"outline": 0.03})
-	_multimesh(MeshKit.cylinder(0.22, 0.34, 2.4, 7), bark, trunks, trunk_c)
-	_multimesh(MeshKit.sphere(1.25, 12, 7), Toon.foliage(), blobs, blob_c)
-	_multimesh(MeshKit.cylinder(0.0, 1.4, 1.9, 8), Toon.foliage(), cones, cone_c)
+	var bark := Toon.vertex_colored({"surface": "wood"})
+	_multimesh(_trunk_mesh(), bark, trunks, trunk_c)
+	_multimesh(MeshKit.canopy(1, 1.25), Toon.foliage(), blobs, blob_c)
+	_multimesh(MeshKit.pine_tier(1.4, 1.9, 9), Toon.foliage(), cones, cone_c)
 
 	# Grama e flores
 	var grass_count: int = [2600, 5600, 9000][clampi(quality, 0, 2)]
@@ -256,7 +256,7 @@ func _build_vegetation() -> void:
 	_multimesh(MeshKit.sphere(0.07, 8, 4), Toon.vertex_colored({"emission": 0.15}), ft, fc, false)
 
 	# Pedras decorativas e arbustos
-	var rock_m := Toon.mat(Color("#9894a8"), {"outline": 0.02})
+	var rock_m := Toon.mat(Color("#9894a8"), {"surface": "stone", "outline": 0.02})
 	var bush_t: Array = []
 	var bush_c: Array = []
 	for i in 170:
@@ -273,7 +273,13 @@ func _build_vegetation() -> void:
 			var s2 := rng.randf_range(0.5, 0.9)
 			bush_t.append(Transform3D(Basis().scaled(Vector3(s2, s2 * 0.75, s2)), at(x, z, 0.25)))
 			bush_c.append(Color("#4f9f55").lerp(Color("#6fbf5c"), rng.randf()))
-	_multimesh(MeshKit.sphere(0.8, 10, 6), Toon.foliage(), bush_t, bush_c)
+	_multimesh(MeshKit.canopy(2, 0.8), Toon.foliage(), bush_t, bush_c)
+
+
+## Tronco com raízes alargadas e uma leve curva (no lugar do cilindro reto).
+func _trunk_mesh() -> Mesh:
+	return OrganicMesh.cached("trunk", func():
+		return OrganicMesh.tube([Vector3(0, -1.3, 0), Vector3(0, -1.0, 0.02), Vector3(0.02, -0.2, 0.0), Vector3(-0.03, 0.6, -0.03), Vector3(0.0, 1.25, 0.02)], [0.42, 0.3, 0.26, 0.23, 0.18], {"segs": 12, "sub": 3}))
 
 
 # ===================================================================== casa
@@ -283,10 +289,10 @@ func _build_home() -> void:
 	var home := Node3D.new()
 	home.name = "Cabana"
 	_add(home, base)
-	var wall := Toon.mat(Color("#f1e3c6"), {"rim": 0.2, "outline": 0.025})
-	var timber := Toon.mat(Color("#6b4630"), {"outline": 0.02})
-	var roof := Toon.mat(Color("#5a3a8a"), {"rim": 0.3, "outline": 0.03})
-	var stone := Toon.mat(Color("#9a96a8"), {"outline": 0.02})
+	var wall := Toon.mat(Color("#f1e3c6"), {"surface": "plaster", "rim": 0.2, "outline": 0.025})
+	var timber := Toon.mat(Color("#6b4630"), {"surface": "wood", "outline": 0.02})
+	var roof := Toon.mat(Color("#5a3a8a"), {"surface": "roof", "rim": 0.3, "outline": 0.03})
+	var stone := Toon.mat(Color("#9a96a8"), {"surface": "stone", "outline": 0.02})
 	var glow := Toon.glow(Color("#ffd27a"), 1.6)
 	# fundação e paredes
 	MeshKit.part(home, MeshKit.box(Vector3(7.4, 0.5, 5.6)), stone, Vector3(0, 0.0, 0))
@@ -321,7 +327,7 @@ func _build_home() -> void:
 			MeshKit.part(home, MeshKit.sphere(0.13, 8, 4), Toon.mat([Color("#ff9fb2"), Color("#fff3a0"), Color("#c8a2ff")][k]), Vector3(wx - 0.35 + k * 0.35, 1.55, 2.72))
 	MeshKit.light(home, Color("#ffcf8a"), 1.4, 7.0, Vector3(0, 2.6, 3.4), false)
 	# varanda
-	MeshKit.part(home, MeshKit.box(Vector3(7.6, 0.18, 2.2)), Toon.mat(Color("#9a6a3e"), {"outline": 0.02}), Vector3(0, 0.3, 3.6))
+	MeshKit.part(home, MeshKit.box(Vector3(7.6, 0.18, 2.2)), Toon.mat(Color("#9a6a3e"), {"surface": "wood", "outline": 0.02}), Vector3(0, 0.3, 3.6))
 	for x in [-3.6, 3.6]:
 		MeshKit.part(home, MeshKit.cylinder(0.1, 0.12, 2.9, 8), timber, Vector3(x, 1.75, 4.5))
 	MeshKit.part(home, MeshKit.box(Vector3(7.8, 0.15, 2.4)), roof, Vector3(0, 3.25, 3.7), Vector3(-14, 0, 0))
@@ -348,7 +354,7 @@ func _build_home() -> void:
 	lab.setup("cauldron")
 	_add(lab, at(6.2, -1.2))
 	lab.map_label = "Caldeirão"
-	var wood := Toon.mat(Color("#8a5a36"), {"outline": 0.02})
+	var wood := Toon.mat(Color("#8a5a36"), {"surface": "wood", "outline": 0.02})
 	for p in [Vector3(-1.4, 0, -1.4), Vector3(1.4, 0, -1.4), Vector3(-1.4, 0, 1.4), Vector3(1.4, 0, 1.4)]:
 		MeshKit.part(lab, MeshKit.cylinder(0.08, 0.1, 2.8, 6), wood, p + Vector3(0, 1.4, 0))
 	MeshKit.part(lab, MeshKit.box(Vector3(3.4, 0.12, 3.4)), roof, Vector3(0, 2.85, 0), Vector3(0, 45, 0))
@@ -409,12 +415,13 @@ func _build_home() -> void:
 	# Lanternas da trilha
 	for p in [Vector2(-1.8, 6), Vector2(1.8, 6), Vector2(-6, 13.5), Vector2(4, 12), Vector2(-14, 18), Vector2(13, 3), Vector2(-2.5, -14), Vector2(-15, 2.5)]:
 		_lantern(p)
+	MeshKit.batch(home)
 
 
 func _lantern(p: Vector2) -> void:
 	var n := MeshKit.pivot(root, at(p.x, p.y))
 	n.add_to_group("lantern")
-	var wood := Toon.mat(Color("#5a3d2a"), {"outline": 0.015})
+	var wood := Toon.mat(Color("#5a3d2a"), {"surface": "wood", "outline": 0.015})
 	MeshKit.part(n, MeshKit.cylinder(0.06, 0.08, 1.8, 6), wood, Vector3(0, 0.9, 0))
 	MeshKit.part(n, MeshKit.box(Vector3(0.5, 0.06, 0.06)), wood, Vector3(0.2, 1.75, 0))
 	var bulb := MeshKit.part(n, MeshKit.sphere(0.14, 10, 6), Toon.glow(Color("#ffd27a"), 2.0), Vector3(0.4, 1.55, 0))
@@ -499,8 +506,8 @@ func _bubble_particles() -> CPUParticles3D:
 # ===================================================================== pontos de interesse
 
 func _build_pois() -> void:
-	var stone := Toon.mat(Color("#9a96a8"), {"outline": 0.025})
-	var wood := Toon.mat(Color("#8a5a36"), {"outline": 0.02})
+	var stone := Toon.mat(Color("#9a96a8"), {"surface": "stone", "outline": 0.025})
+	var wood := Toon.mat(Color("#8a5a36"), {"surface": "wood", "outline": 0.02})
 	var thatch := Toon.mat(Color("#d9b56a"), {"rim": 0.3, "outline": 0.03})
 
 	# --- Casa de chá de Sálvia
@@ -532,7 +539,7 @@ func _build_pois() -> void:
 	cart.rotation_degrees.y = -20
 	MeshKit.part(cart, MeshKit.box(Vector3(2.6, 0.9, 1.5)), wood, Vector3(0, 0.95, 0))
 	for p in [Vector3(-0.9, 0.45, 0.8), Vector3(0.9, 0.45, 0.8), Vector3(-0.9, 0.45, -0.8), Vector3(0.9, 0.45, -0.8)]:
-		MeshKit.part(cart, MeshKit.cylinder(0.45, 0.45, 0.12, 12), Toon.mat(Color("#5a3d2a"), {"outline": 0.02}), p, Vector3(90, 0, 0))
+		MeshKit.part(cart, MeshKit.cylinder(0.45, 0.45, 0.12, 12), Toon.mat(Color("#5a3d2a"), {"surface": "wood", "outline": 0.02}), p, Vector3(90, 0, 0))
 	for k in 5:
 		MeshKit.part(cart, MeshKit.box(Vector3(0.52, 0.06, 1.7)), Toon.mat(Color("#e8574a") if k % 2 == 0 else Color("#fff3e0"), {"outline": 0.015}), Vector3(-1.04 + k * 0.52, 2.5, 0), Vector3(12, 0, 0))
 	for p in [Vector3(-1.2, 1.25, 0.8), Vector3(1.2, 1.25, 0.8)]:
@@ -545,7 +552,7 @@ func _build_pois() -> void:
 	var camp := MeshKit.pivot(root, at(23.5, 7.5))
 	camp.rotation_degrees.y = -35
 	MeshKit.part(camp, MeshKit.prism(Vector3(3.0, 2.2, 3.4)), Toon.mat(Color("#e07a2f"), {"rim": 0.3, "outline": 0.03}), Vector3(0, 1.1, 0))
-	MeshKit.part(camp, MeshKit.prism(Vector3(1.4, 1.2, 0.1)), Toon.mat(Color("#5a3a2a")), Vector3(0, 0.6, -1.72))
+	MeshKit.part(camp, MeshKit.prism(Vector3(1.4, 1.2, 0.1)), Toon.mat(Color("#5a3a2a"), {"surface": "wood"}), Vector3(0, 0.6, -1.72))
 	var mc := MeshKit.pivot(root, at(19.4, 4.2))
 	MeshKit.part(mc, MeshKit.sphere(0.45, 12, 8), Toon.mat(Color("#2a2433"), {"outline": 0.02}), Vector3(0, 0.45, 0), Vector3.ZERO, Vector3(1.0, 0.8, 1.0))
 	MeshKit.part(mc, MeshKit.cylinder(0.36, 0.36, 0.04, 12), Toon.glow(Color("#ff9a3c"), 1.5), Vector3(0, 0.78, 0))
@@ -689,23 +696,8 @@ func _house(c: Vector2, rot: float, w: float, d: float, wall_c: Color, roof_c: C
 	hn.position = base
 	hn.rotation_degrees.y = rot
 	root.add_child(hn)
-	var wall := Toon.mat(wall_c, {"rim": 0.2, "outline": 0.025})
-	var timber := Toon.mat(Color("#6b4630"), {"outline": 0.02})
-	var roof := Toon.mat(roof_c, {"rim": 0.3, "outline": 0.03})
-	MeshKit.part(hn, MeshKit.box(Vector3(w + 0.3, 0.4, d + 0.3)), Toon.mat(Color("#9a96a8"), {"outline": 0.02}), Vector3(0, 0.0, 0))
-	MeshKit.part(hn, MeshKit.box(Vector3(w, 2.8, d)), wall, Vector3(0, 1.6, 0))
-	for x in [-w * 0.5, w * 0.5]:
-		for z in [-d * 0.5, d * 0.5]:
-			MeshKit.part(hn, MeshKit.box(Vector3(0.22, 2.9, 0.22)), timber, Vector3(x, 1.6, z))
-	for side in [-1.0, 1.0]:
-		MeshKit.part(hn, MeshKit.box(Vector3(w + 1.0, 0.25, d * 0.62)), roof, Vector3(0, 3.6, side * d * 0.27), Vector3(side * -38, 0, 0))
-	MeshKit.part(hn, MeshKit.prism(Vector3(w, 1.4, d)), wall, Vector3(0, 3.7, 0))
-	MeshKit.part(hn, MeshKit.box(Vector3(1.1, 1.9, 0.12)), Toon.mat(roof_c.darkened(0.3), {"outline": 0.02}), Vector3(0, 1.15, d * 0.5 + 0.02))
-	for wx in [-w * 0.3, w * 0.3]:
-		MeshKit.part(hn, MeshKit.box(Vector3(0.8, 0.8, 0.08)), Toon.glow(Color("#ffd27a"), 0.9), Vector3(wx, 1.8, d * 0.5 + 0.02))
-		MeshKit.part(hn, MeshKit.box(Vector3(0.95, 0.95, 0.06)), timber, Vector3(wx, 1.8, d * 0.5 + 0.0))
-	var ch := MeshKit.part(hn, MeshKit.cylinder(0.3, 0.35, 1.6, 8), Toon.mat(Color("#9a96a8"), {"outline": 0.02}), Vector3(w * 0.3, 4.2, -d * 0.2))
-	ch.name = "Chimney"
+	_house_body(hn, w, d, wall_c, roof_c)
+	MeshKit.batch(hn)
 	var cs := CollisionShape3D.new()
 	var b := BoxShape3D.new()
 	b.size = Vector3(w + 0.3, 4.0, d + 0.3)
@@ -725,22 +717,107 @@ func _house(c: Vector2, rot: float, w: float, d: float, wall_c: Color, roof_c: C
 	return hn
 
 
+## Casa em enxaimel: fundação de pedra, vigas aparentes com mãos-francesas, janelas
+## com moldura, cruz, peitoril, floreira e venezianas, porta de tábuas, telhado com
+## espessura, beiral e fiadas de telhas, oitões, cumeeira e chaminé de pedra.
+func _house_body(hn: Node3D, w: float, d: float, wall_c: Color, roof_c: Color) -> void:
+	var wall := Toon.mat(wall_c, {"surface": "plaster"})
+	var timber := Toon.mat(Color("#5e3d28"), {"surface": "wood"})
+	var stone := Toon.mat(Color("#8e8a86"), {"surface": "stone"})
+	var roof := Toon.mat(roof_c, {"surface": "roof"})
+	var roof_dark := Toon.mat(roof_c.darkened(0.25), {"surface": "roof"})
+	var top := 3.0
+	MeshKit.part(hn, MeshKit.box(Vector3(w + 0.3, 0.5, d + 0.3)), stone, Vector3(0, 0.05, 0))
+	MeshKit.part(hn, MeshKit.box(Vector3(w, top - 0.3, d)), wall, Vector3(0, 0.3 + (top - 0.3) * 0.5, 0))
+	# vigas horizontais (soleira, meio e frechal) nos quatro lados
+	for y in [0.36, 1.35, top - 0.08]:
+		for sz: float in [-1.0, 1.0]:
+			MeshKit.part(hn, MeshKit.box(Vector3(w + 0.16, 0.16, 0.12)), timber, Vector3(0, y, sz * (d * 0.5 + 0.03)))
+		for sx: float in [-1.0, 1.0]:
+			MeshKit.part(hn, MeshKit.box(Vector3(0.12, 0.16, d + 0.16)), timber, Vector3(sx * (w * 0.5 + 0.03), y, 0))
+	# montantes e mãos-francesas
+	var n_posts := maxi(2, int(w / 1.3))
+	for i in n_posts + 1:
+		var x := -w * 0.5 + w * float(i) / float(n_posts)
+		for sz: float in [-1.0, 1.0]:
+			MeshKit.part(hn, MeshKit.box(Vector3(0.14, top - 0.3, 0.12)), timber, Vector3(x, 0.3 + (top - 0.3) * 0.5, sz * (d * 0.5 + 0.035)))
+	for sx: float in [-1.0, 1.0]:
+		for sz: float in [-1.0, 1.0]:
+			MeshKit.part(hn, MeshKit.box(Vector3(0.1, 1.5, 0.1)), timber, Vector3(sx * (w * 0.5 - 0.45), 2.15, sz * (d * 0.5 + 0.04)), Vector3(0, 0, sx * 35.0))
+		for zz in [-d * 0.3, d * 0.3]:
+			MeshKit.part(hn, MeshKit.box(Vector3(0.12, top - 0.3, 0.14)), timber, Vector3(sx * (w * 0.5 + 0.035), 0.3 + (top - 0.3) * 0.5, zz))
+	# janelas (frente e fundos)
+	var glass := Toon.mat(Color("#2a3440"), {"surface": "ceramic", "roughness": 0.08})
+	var shutter := Toon.mat(roof_c.darkened(0.35).lerp(Color("#3f5a3a"), 0.3), {"surface": "wood"})
+	var flower_cols := [Color("#ff7a9a"), Color("#fff3a0"), Color("#c8a2ff"), Color("#ff9a5a")]
+	for sz: float in [-1.0, 1.0]:
+		for wx in [-w * 0.3, w * 0.3]:
+			var wz: float = sz * (d * 0.5 + 0.05)
+			var win := MeshKit.pivot(hn, Vector3(wx, 1.95, wz))
+			win.rotation_degrees.y = 0.0 if sz > 0.0 else 180.0
+			MeshKit.part(win, MeshKit.box(Vector3(0.78, 0.82, 0.04)), glass, Vector3(0, 0, -0.02))
+			MeshKit.part(win, MeshKit.box(Vector3(0.74, 0.78, 0.02)), Toon.glow(Color("#ffcf7a"), 0.35), Vector3(0, 0, -0.035))
+			for e in [[Vector3(0.96, 0.1, 0.1), Vector3(0, 0.46, 0)], [Vector3(1.0, 0.12, 0.16), Vector3(0, -0.46, 0.03)], [Vector3(0.1, 0.9, 0.1), Vector3(-0.44, 0, 0)], [Vector3(0.1, 0.9, 0.1), Vector3(0.44, 0, 0)], [Vector3(0.05, 0.8, 0.05), Vector3(0, 0, 0.01)], [Vector3(0.78, 0.05, 0.05), Vector3(0, 0.05, 0.01)]]:
+				MeshKit.part(win, MeshKit.box(e[0]), timber, e[1])
+			for side: float in [-1.0, 1.0]:
+				MeshKit.part(win, MeshKit.box(Vector3(0.36, 0.86, 0.04)), shutter, Vector3(side * 0.66, 0, 0.0), Vector3(0, side * 12.0, 0))
+			MeshKit.part(win, MeshKit.box(Vector3(0.9, 0.18, 0.2)), timber, Vector3(0, -0.6, 0.1))
+			for k in 5:
+				MeshKit.part(win, MeshKit.sphere(0.07, 8, 6), Toon.mat(flower_cols[(k + int(wx * 3.0)) % flower_cols.size()], {"surface": "leaf"}), Vector3(-0.32 + k * 0.16, -0.47, 0.12))
+	# porta de tábuas com batente, maçaneta e degrau
+	var door_n := MeshKit.pivot(hn, Vector3(0, 0, d * 0.5 + 0.05))
+	for k in 4:
+		MeshKit.part(door_n, MeshKit.box(Vector3(0.27, 1.95, 0.08)), Toon.mat(roof_c.darkened(0.45).lerp(Color("#6b4630"), 0.5), {"surface": "wood"}), Vector3(-0.41 + k * 0.275, 1.27, 0.0))
+	MeshKit.part(door_n, MeshKit.box(Vector3(1.32, 0.14, 0.14)), timber, Vector3(0, 2.3, 0.02))
+	for sx: float in [-1.0, 1.0]:
+		MeshKit.part(door_n, MeshKit.box(Vector3(0.14, 2.1, 0.14)), timber, Vector3(sx * 0.62, 1.25, 0.02))
+	MeshKit.part(door_n, MeshKit.sphere(0.04, 10, 8), Toon.mat(Color("#c9a24a"), {"metal": 0.8}), Vector3(0.36, 1.2, 0.07))
+	MeshKit.part(door_n, MeshKit.box(Vector3(1.4, 0.18, 0.6)), stone, Vector3(0, 0.12, 0.3))
+	# oitões (paredes triangulares) com viga em X
+	var pitch := deg_to_rad(38.0)
+	var rise := d * 0.5 * tan(pitch)
+	for sx: float in [-1.0, 1.0]:
+		MeshKit.part(hn, MeshKit.prism(Vector3(d, rise, w * 0.02 + 0.2)), wall, Vector3(sx * (w * 0.5 - 0.1), top + rise * 0.5, 0), Vector3(0, 90, 0))
+		MeshKit.part(hn, MeshKit.box(Vector3(0.1, rise * 1.1, 0.1)), timber, Vector3(sx * (w * 0.5 + 0.02), top + rise * 0.45, 0))
+	# telhado: placa com espessura + fiadas de telhas sobrepostas + cumeeira
+	var slope_len := (d * 0.5 + 0.55) / cos(pitch)
+	for sz: float in [-1.0, 1.0]:
+		var dir := Vector3(0, -sin(pitch), sz * cos(pitch))
+		var ridge := Vector3(0, top + rise + 0.12, 0)
+		var nrm := Vector3(0, cos(pitch), sz * sin(pitch))
+		var slab := MeshKit.part(hn, MeshKit.box(Vector3(w + 0.9, 0.12, slope_len)), roof_dark, ridge + dir * slope_len * 0.5, Vector3(sz * rad_to_deg(pitch), 0, 0))
+		slab.name = "Roof"
+		var rows := 7
+		for k in rows:
+			var t := (float(k) + 0.6) / float(rows)
+			var rp := ridge + dir * slope_len * t + nrm * 0.08
+			MeshKit.part(hn, MeshKit.box(Vector3(w + 0.95, 0.06, slope_len / rows * 1.22)), roof if k % 2 == 0 else Toon.mat(roof_c.darkened(0.08), {"surface": "roof"}), rp, Vector3(sz * (rad_to_deg(pitch) + 4.0), 0, 0))
+	var ridge_beam := MeshKit.part(hn, MeshKit.cylinder(0.11, 0.11, w + 1.0, 12), roof_dark, Vector3(0, top + rise + 0.2, 0), Vector3(0, 0, 90))
+	ridge_beam.name = "Ridge"
+	# chaminé de pedra com coroa
+	var ch := MeshKit.pivot(hn, Vector3(w * 0.28, top + rise * 0.6, -d * 0.22))
+	ch.name = "Chimney"
+	MeshKit.part(ch, MeshKit.box(Vector3(0.6, 2.0, 0.6)), stone, Vector3(0, 0.5, 0))
+	MeshKit.part(ch, MeshKit.box(Vector3(0.74, 0.14, 0.74)), stone, Vector3(0, 1.56, 0))
+	MeshKit.part(ch, MeshKit.box(Vector3(0.36, 0.1, 0.36)), Toon.mat(Color("#2a2420"), {"surface": "stone"}), Vector3(0, 1.62, 0))
+
+
 func _build_village() -> void:
 	var walls := [Color("#f1e3c6"), Color("#e8d0b0"), Color("#f6e6d0"), Color("#e6dcc8")]
 	var roofs := [Color("#c4673a"), Color("#5a7f4a"), Color("#7a4f9c"), Color("#3a6a8a")]
 	_house(Vector2(-12.0, 64.0), 70.0, 6.0, 5.0, Color("#f6e6d0"), Color("#d9984a"), "padaria", "Padaria Pão-de-Mel")
 	var signboard := MeshKit.pivot(root, at(-8.6, 62.0))
-	MeshKit.part(signboard, MeshKit.cylinder(0.05, 0.06, 2.2, 6), Toon.mat(Color("#6b4630")), Vector3(0, 1.1, 0))
+	MeshKit.part(signboard, MeshKit.cylinder(0.05, 0.06, 2.2, 6), Toon.mat(Color("#6b4630"), {"surface": "wood"}), Vector3(0, 1.1, 0))
 	MeshKit.part(signboard, MeshKit.sphere(0.45, 12, 8), Toon.mat(Color("#e8a94a"), {"outline": 0.02}), Vector3(0, 2.4, 0), Vector3.ZERO, Vector3(1.2, 0.7, 0.3))
 	var spots := [[Vector2(12, 63), -60.0], [Vector2(14, 78), -110.0], [Vector2(-13, 80), 110.0], [Vector2(2, 89), 180.0], [Vector2(-22, 72), 90.0]]
 	for i in spots.size():
 		_house(spots[i][0], spots[i][1], 5.0 + (i % 2), 4.5, walls[i % walls.size()], roofs[i % roofs.size()])
 	# poço da praça
 	var well := MeshKit.pivot(root, at(0.5, 70.0))
-	MeshKit.part(well, MeshKit.cylinder(1.0, 1.1, 0.9, 16), Toon.mat(Color("#9a96a8"), {"outline": 0.02}), Vector3(0, 0.45, 0))
+	MeshKit.part(well, MeshKit.cylinder(1.0, 1.1, 0.9, 16), Toon.mat(Color("#9a96a8"), {"surface": "stone", "outline": 0.02}), Vector3(0, 0.45, 0))
 	MeshKit.part(well, MeshKit.cylinder(0.85, 0.85, 0.05, 16), Toon.mat(Color("#3a6a8a"), {"emission": 0.2}), Vector3(0, 0.8, 0))
 	for sx in [-1.0, 1.0]:
-		MeshKit.part(well, MeshKit.cylinder(0.07, 0.07, 1.8, 6), Toon.mat(Color("#6b4630"), {"outline": 0.015}), Vector3(sx * 0.9, 1.4, 0))
+		MeshKit.part(well, MeshKit.cylinder(0.07, 0.07, 1.8, 6), Toon.mat(Color("#6b4630"), {"surface": "wood", "outline": 0.015}), Vector3(sx * 0.9, 1.4, 0))
 	MeshKit.part(well, MeshKit.prism(Vector3(2.4, 0.7, 1.4)), Toon.mat(Color("#c4673a"), {"outline": 0.02}), Vector3(0, 2.6, 0))
 	_cyl_collider(well.position, 1.1, 1.0)
 	var placa := Readable.new()
@@ -765,7 +842,7 @@ func _build_village() -> void:
 # ===================================================================== áreas distantes
 
 func _build_far_areas() -> void:
-	var stone := Toon.mat(Color("#a8a4b8"), {"outline": 0.025})
+	var stone := Toon.mat(Color("#a8a4b8"), {"surface": "stone", "outline": 0.025})
 	# Campos de Lavanda: fileiras roxas, colmeias e moinho
 	var lav_t: Array = []
 	var lav_c: Array = []
@@ -801,7 +878,7 @@ func _build_far_areas() -> void:
 		var bl := MeshKit.pivot(blades)
 		bl.rotation.z = k * PI / 2.0
 		MeshKit.part(bl, MeshKit.box(Vector3(0.9, 3.4, 0.08)), Toon.mat(Color("#f6efe2"), {"outline": 0.02}), Vector3(0, 2.0, 0))
-	MeshKit.part(blades, MeshKit.sphere(0.35, 10, 8), Toon.mat(Color("#6b4630")))
+	MeshKit.part(blades, MeshKit.sphere(0.35, 10, 8), Toon.mat(Color("#6b4630"), {"surface": "wood"}))
 	_cyl_collider(mill.position, 2.0, 7.0)
 	# Observatório em ruínas
 	var obs := MeshKit.pivot(root, at(62.0, -48.0))
@@ -812,7 +889,7 @@ func _build_far_areas() -> void:
 		var hh := 3.0 + (k % 3) * 1.4
 		MeshKit.part(obs, MeshKit.box(Vector3(1.4, hh, 0.7)), stone, Vector3(sin(a) * 5.5, hh * 0.5, cos(a) * 5.5), Vector3(0, rad_to_deg(a), (k % 2) * 6 - 3))
 		_cyl_collider(obs.position + Vector3(sin(a) * 5.5, 0, cos(a) * 5.5), 0.7, hh)
-	MeshKit.part(obs, MeshKit.sphere(5.6, 20, 10, true), Toon.mat(Color("#8a8796"), {"outline": 0.03, "double_sided": true}), Vector3(1.5, 5.0, 0), Vector3(0, 0, 38), Vector3(1.0, 0.5, 1.0))
+	MeshKit.part(obs, MeshKit.sphere(5.6, 20, 10, true), Toon.mat(Color("#8a8796"), {"surface": "stone", "outline": 0.03, "double_sided": true}), Vector3(1.5, 5.0, 0), Vector3(0, 0, 38), Vector3(1.0, 0.5, 1.0))
 	var scope := MeshKit.pivot(obs, Vector3(0, 0.8, 0))
 	scope.rotation_degrees = Vector3(-35, 30, 0)
 	MeshKit.part(obs, MeshKit.cylinder(0.3, 0.5, 0.8, 8), Toon.mat(Color("#c9a24a"), {"metal": 0.5, "outline": 0.02}), Vector3(0, 0.4, 0))
@@ -838,9 +915,9 @@ func _build_far_areas() -> void:
 		prop.setup("pomar_%d" % k, "dead_bush" if k % 2 == 0 else "stump")
 		_add(prop, at(p.x, p.y))
 		var trunk := MeshKit.pivot(root, at(p.x + 1.5, p.y + 1.2))
-		MeshKit.part(trunk, MeshKit.cylinder(0.15, 0.25, 2.6, 7), Toon.mat(Color("#6b5a48"), {"outline": 0.02}), Vector3(0, 1.3, 0), Vector3(0, 0, 6))
+		MeshKit.part(trunk, MeshKit.cylinder(0.15, 0.25, 2.6, 7), Toon.mat(Color("#6b5a48"), {"surface": "wood", "outline": 0.02}), Vector3(0, 1.3, 0), Vector3(0, 0, 6))
 		for b in 3:
-			MeshKit.part(trunk, MeshKit.cylinder(0.03, 0.08, 1.2, 5), Toon.mat(Color("#6b5a48")), Vector3(0, 2.4, 0), Vector3(b * 40 - 40, b * 120, 35))
+			MeshKit.part(trunk, MeshKit.cylinder(0.03, 0.08, 1.2, 5), Toon.mat(Color("#6b5a48"), {"surface": "wood"}), Vector3(0, 2.4, 0), Vector3(b * 40 - 40, b * 120, 35))
 	# Clareira dos Cogumelos Gigantes
 	for k in 7:
 		var a := k * TAU / 7.0 + 0.3
@@ -905,7 +982,7 @@ func _willow(p: Vector2) -> void:
 func _owl(pos: Vector3) -> void:
 	var o := MeshKit.pivot(root, pos)
 	var f := Toon.mat(Color("#f2f5ff"), {"rim": 0.5, "outline": 0.01})
-	MeshKit.part(o, MeshKit.box(Vector3(1.2, 0.08, 0.08)), Toon.mat(Color("#5a3d2a")), Vector3(0, -0.05, 0))
+	MeshKit.part(o, MeshKit.box(Vector3(1.2, 0.08, 0.08)), Toon.mat(Color("#5a3d2a"), {"surface": "wood"}), Vector3(0, -0.05, 0))
 	MeshKit.part(o, MeshKit.sphere(0.22, 12, 8), f, Vector3(0, 0.22, 0), Vector3.ZERO, Vector3(1.0, 1.2, 0.9))
 	for sx in [-1.0, 1.0]:
 		MeshKit.part(o, MeshKit.sphere(0.07, 8, 6), Toon.glow(Color("#f3c74f"), 1.0), Vector3(sx * 0.08, 0.32, -0.16))

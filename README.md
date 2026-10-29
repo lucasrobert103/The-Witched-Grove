@@ -1,6 +1,6 @@
 # The Witched Grove — *Asterion e o Silêncio Cinzento*
 
-RPG 3D de bruxaria para **Android** feito em **Godot 4.7.2 + GDScript**, em estilo cartoon.
+RPG 3D de bruxaria para **Android** feito em **Godot 4.7.2 + GDScript**, em estilo realista estilizado (anime).
 Você é **Asterion**, aprendiz de uma bruxa que sumiu na noite do eclipse. O bosque está perdendo a cor.
 Não há espadas: você progride **estudando, experimentando, cultivando e escolhendo**.
 
@@ -17,6 +17,9 @@ Não há espadas: você progride **estudando, experimentando, cultivando e escol
 | ![Aldeia Vime](docs/img/aldeia.jpg) | ![Feitiços na hora, em arco](docs/img/magias.jpg) |
 | ![Armazém com ícones](docs/img/p_storage.jpg) | ![Asterion](docs/img/asterion.jpg) |
 
+| ![Asterion no vale ao entardecer](docs/img/asterion_mundo.jpg) | ![Rosto da Asterion](docs/img/asterion_rosto.jpg) |
+|---|---|
+
 ![Elenco](docs/img/personagens.jpg)
 
 > Todas as imagens são capturas do próprio protótipo. Personagens, cenários, música e sons foram
@@ -30,6 +33,9 @@ Não há espadas: você progride **estudando, experimentando, cultivando e escol
   rival, santuário, árvore do Guardião, portal das ruínas, salgueiro oco, lagoa com ilhota, bosque das
   corujas, círculo de pedras, recanto do gelo, **Aldeia Vime**, campos de lavanda com moinho,
   observatório em ruínas, anel de cogumelos e pomar abandonado.
+- **Gráficos realistas estilizados**: personagens com proporções reais, rosto em alta definição que pisca e
+  fala, cabelo em mechas com brilho de fios, roupas com dobras que balançam; materiais PBR com textura
+  procedural, luz do céu, sombras suaves, água com reflexo, árvores e casas em enxaimel detalhadas.
 - **Casas onde se entra de verdade**: toque na porta e a cena escurece e abre por dentro, em corte como
   casa de bonecas — cama (com uma carta sob o travesseiro), atril, caldeirão, baú, lareira, estantes;
   também a casa de chá de Sálvia e a padaria da Dorinha.

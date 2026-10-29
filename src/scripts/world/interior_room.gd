@@ -46,7 +46,7 @@ func _ready() -> void:
 	var plank_count := int(size.x / 0.5)
 	for i in plank_count:
 		var c := floor_color.darkened(0.06 * (i % 3))
-		MeshKit.part(self, MeshKit.box(Vector3(0.48, 0.06, size.z)), Toon.mat(c), Vector3(-hw + 0.25 + i * 0.5, -0.03, 0), Vector3.ZERO, Vector3.ONE, false)
+		MeshKit.part(self, MeshKit.box(Vector3(0.48, 0.06, size.z)), Toon.mat(c, {"surface": "wood"}), Vector3(-hw + 0.25 + i * 0.5, -0.03, 0), Vector3.ZERO, Vector3.ONE, false)
 	# paredes (planos virados para dentro) + rodapé (sem vigas soltas: a câmera vê de cima)
 	_wall(Vector3(0, 0, -hd), Vector3(0, 0, 1), size.x, 0.0)
 	_wall(Vector3(0, 0, hd), Vector3(0, 0, -1), size.x, 180.0)
@@ -72,15 +72,15 @@ func _wall(center: Vector3, normal: Vector3, length: float, rot_y: float) -> voi
 	var qm := QuadMesh.new()
 	qm.size = Vector2(length, size.y)
 	q.mesh = qm
-	q.material_override = Toon.mat(wall_color)
+	q.material_override = Toon.mat(wall_color, {"surface": "plaster"})
 	q.position = Vector3(0, size.y * 0.5, 0)
 	q.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	g.add_child(q)
 	# rodapé e viga superior pertencem à parede (somem junto no corte)
-	MeshKit.part(g, MeshKit.box(Vector3(length, 0.18, 0.06)), Toon.mat(Color("#6b4630")), Vector3(0, 0.09, 0.03), Vector3.ZERO, Vector3.ONE, false)
+	MeshKit.part(g, MeshKit.box(Vector3(length, 0.18, 0.06)), Toon.mat(Color("#6b4630"), {"surface": "wood"}), Vector3(0, 0.09, 0.03), Vector3.ZERO, Vector3.ONE, false)
 	MeshKit.part(g, MeshKit.box(Vector3(length, 0.1, 0.06)), Toon.mat(wall_color.darkened(0.15)), Vector3(0, 1.0, 0.03), Vector3.ZERO, Vector3.ONE, false)
 	for k in int(length / 2.2) + 1:
-		MeshKit.part(g, MeshKit.box(Vector3(0.16, size.y, 0.1)), Toon.mat(Color("#6b4630"), {"outline": 0.015}), Vector3(-length * 0.5 + k * length / maxf(1.0, floorf(length / 2.2)), size.y * 0.5, 0.05), Vector3.ZERO, Vector3.ONE, false)
+		MeshKit.part(g, MeshKit.box(Vector3(0.16, size.y, 0.1)), Toon.mat(Color("#6b4630"), {"surface": "wood", "outline": 0.015}), Vector3(-length * 0.5 + k * length / maxf(1.0, floorf(length / 2.2)), size.y * 0.5, 0.05), Vector3.ZERO, Vector3.ONE, false)
 	var cs := CollisionShape3D.new()
 	var b := BoxShape3D.new()
 	b.size = Vector3(length + 0.6, size.y + 1.0, 0.4)

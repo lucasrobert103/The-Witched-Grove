@@ -14,7 +14,7 @@ Legenda de status: **[FATO]** verificado no código/dados · **[DECIDIDO]** apro
 |---|---------|--------|
 | D1 | Stack: **Godot 4.7.2 + GDScript** | Prompt mestre |
 | D2 | Plataforma: **Android 8.0+** (API 26) | Prompt mestre |
-| D3 | Estilo **3D cartoon/stylized** | Prompt mestre |
+| D3 | Estilo **3D realista estilizado** (anime) — revisado a pedido do produtor | Prompt mestre + produtor |
 | D4 | Protagonista: **Asterion** | Pedido do produtor |
 | D5 | Liberdade criativa total para personagens, cenários e sons | Pedido do produtor |
 
@@ -129,9 +129,9 @@ protótipo. Qualquer uma pode ser revertida — os impactos estão listados.
 
 ## 6. Problemas conhecidos
 
-1. **Modelos procedurais**: personagens têm ~25–40 malhas cada (mais draw calls que um glTF único de ~2000 tris). Aceitável no protótipo; substituir por modelos `.glb` na Fase 4.
+1. **Modelos procedurais**: personagens têm ~30–45 malhas cada (cabelo unido numa malha por material). Construir o mundo leva ~5 s num PC (mais no celular). Substituir por modelos `.glb` de artista na Fase 4 daria ainda mais fidelidade.
 2. **Rotina de NPCs** usa caminhada em linha reta (sem navmesh). Fase 3: `NavigationRegion3D`.
-3. **Capturas de tela automatizadas** usam o renderizador Compatibility (llvmpipe); cores no aparelho (Mobile/Vulkan) ficam um pouco mais saturadas.
+3. **Capturas de tela automatizadas** usam o renderizador Mobile/Vulkan por software (lavapipe), o mesmo do aparelho.
 4. **Gelo**: ao derreter com a protagonista sobre a água, ela volta à última margem segura (intencional, mas pode surpreender).
 5. Ao fechar o jogo em modo headless há aviso de playbacks de áudio não liberados (inofensivo).
 
@@ -140,4 +140,5 @@ protótipo. Qualquer uma pode ser revertida — os impactos estão listados.
 | Data | Alteração | Aprovado por |
 |------|-----------|--------------|
 | 2026-10-29 | Criação do documento e do protótipo do Ato I com as propostas P1–P10. | Pendente |
+| 2026-10-29 | Gráficos realistas estilizados: novo modelo humano, PBR, céu, água, vegetação e casas. | Pendente |
 | 2026-10-29 | Feitiços iniciais e lançamento instantâneo (R-B8–R-B10), interiores, aldeia, mundo maior, diálogo em ritmo de RPG, Asterion em estilo anime. | Pendente |
